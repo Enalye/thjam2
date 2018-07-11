@@ -1,0 +1,31 @@
+{
+	"name": "th",
+	"authors": [
+		"Drell",
+		"Jonath Kane",
+		"Enalye",
+		"GhoulMage",
+		"Automn"
+	],
+	"dependencies": {
+		"grimoire": "~>0.0.4"
+	},
+	"description": "TouhouJam 2",
+	"copyright": "Copyright © 2018, Drell, Jonath Kane, Enalye, GhoulMage, Automn",
+	"license": "proprietary",
+	"targetName": "thjam2",
+	"targetPath": "build/thjam2",
+	"workingDirectory": "build/thjam2",
+	"configurations": [
+		{
+			"name": "linux-build",
+			"targetType": "executable",
+			"platforms": ["linux"]
+		},
+		{
+			"name": "windows-build",
+			"targetType": "executable",
+			"platforms": ["windows"]
+		}
+	]
+}
