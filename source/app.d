@@ -26,3 +26,8 @@ void main() {
         writeln(e.msg);
     }
 }
+
+void onStage1() {
+	Stage stage1 = new Stage(Vec2u(5, 7));
+	stage1.addEnemyData(Vec2u(0, 5));
+}
