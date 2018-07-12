@@ -1,6 +1,7 @@
 import std.stdio;
 
 import grimoire;
+import th.entity;
 
 void main() {
 	//Set data location
