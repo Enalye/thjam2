@@ -3,6 +3,9 @@ module th.entity;
 import grimoire;
 import th.grid;
 
+alias IndexedArray!(Entity, 50u) EntityArray;
+alias IndexedArray!(EntityPool, 10u) EntityPoolArray;
+
 class Entity {
 	int _life;
 	Type _type;
@@ -15,6 +18,8 @@ class Entity {
 	}
 
 	void update(float deltaTime, Grid grid) {
+		grid.set(Type.None, _position);
+
 		if(_turnBased) {
 			_position += _direction;
 		} //todo else
@@ -30,11 +35,11 @@ class Entity {
 }
 
 class EntityPool {
-	IndexedArray!(Entity, 50u) _entities;
+	EntityArray _entities;
 	Sprite sprite;
 
 	this() {
-		_entities = new IndexedArray!(Entity, 50u);
+		_entities = new EntityArray;
 	}
 
 	void update(float deltaTime, Grid grid) {
@@ -53,12 +58,12 @@ class EntityPool {
 }
 
 class Stage {
-	IndexedArray!(EntityPool, 10u) _pools;
+	EntityPoolArray _pools;
 	Grid _grid;
 
-	this(Grid grid) {
-		_pools = new IndexedArray!(EntityPool, 10u);
-		_grid = grid;
+	this(Vec2u scale) {
+		_pools = new EntityPoolArray;
+		_grid = new Grid(scale);
 	}
 
 	void update(float deltaTime) {
@@ -67,5 +72,13 @@ class Stage {
 		}
 
 		_grid.reset();
+	}
+
+	void addEnemyData(Vec2u position) {
+		_grid.set(Type.Enemy, position);
+	}
+
+	void addPlayerData(Vec2u position) {
+		_grid.set(Type.Player, position);
 	}
 }
