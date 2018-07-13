@@ -64,7 +64,7 @@ private final class Scene: Widget {
 			if(!shot.isAlive)
 				_enemyShots.markInternalForRemoval(index);
 			//Handle collisions with the player
-
+            shot.isInside(_player);
 		}
 
         _playerShots.sweepMarkedData();
