@@ -28,17 +28,21 @@ class Entity {
 	}
 
 	void update(float deltaTime) {
-		currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
-		gridPosition = getUpdatedPosition(direction);
-		direction = Vec2i.zero;
+		if(direction != Vec2i.zero) {
+			currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
+			gridPosition = getUpdatedPosition(direction);
 
-		if(isRealInstance(type) && isOpponent(type, currentGrid.at(gridPosition))) {
-			receiveDamage();
+			if(isRealInstance(type) && isOpponent(type, currentGrid.at(gridPosition))) {
+				receiveDamage();
+			}
 		}
 	}
 
 	void updateGridState() {
-		currentGrid.set(type, gridPosition);
+		if(direction != Vec2i.zero) {
+			currentGrid.set(type, gridPosition);
+			direction = Vec2i.zero;
+		}
 	}
 }
 
@@ -57,7 +61,7 @@ class EntityPool {
 		foreach(Entity entity, uint index; entities) {
 			entity.update(deltaTime);
 
-			if(entity.life < 0) {
+			if(entity.life <= 0) {
 				entities.markInternalForRemoval(index);
 			} else {
 				entity.updateGridState();

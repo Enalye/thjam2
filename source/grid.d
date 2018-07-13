@@ -23,18 +23,22 @@ class Grid {
 	Vec2u widthAndHeight; //width and height
 	Vec2f position;
 	Vec2f topLeft;
+	Tileset tileset;
 
-	this(Vec2u dimensions, Vec2f gridPos) {
+	this(Vec2u dimensions, Vec2f gridPos, string tileSetPath) {
 		widthAndHeight = dimensions;
 		grid = new Type[][](widthAndHeight.x, widthAndHeight.y);
 		position = gridPos;
 		
 		topLeft = Vec2f(position.x - (widthAndHeight.x * GRID_RATIO) / 2,
 			position.y - (widthAndHeight.y * GRID_RATIO) / 2);
+
+		tileset = fetch!Tileset(tileSetPath);
+		tileset.anchor = Vec2f.zero;
 	}
 
 	Type at(Vec2i position) {
-		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
+		if(isPositionValid(position)) {
 			return grid[position.x][position.y];
 		} else {
 			return Type.OutOfGrid;
@@ -54,6 +58,10 @@ class Grid {
 		return position.x < widthAndHeight.x && position.y < widthAndHeight.y;
 	}
 
+	bool alreadyOccupied(Vec2i position) {
+		return grid[position.x][position.y] > Type.OutOfGrid;
+	}
+
 	void reset() {
 		for(uint i = 0; i < widthAndHeight.x; ++i) {
 			for(uint j = 0; j < widthAndHeight.y; ++j) {
@@ -63,9 +71,11 @@ class Grid {
 	}
 
 	void draw() {
-		for(uint i = 0; i < widthAndHeight.x; ++i) {
-			for(uint j = 0; j < widthAndHeight.y; ++j) {
-				drawRect(Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO), Vec2f.one * GRID_RATIO, Color.white);
+		uint cpt;
+		for(uint j = 0; j < widthAndHeight.y; ++j) {
+			for(uint i = 0; i < widthAndHeight.x; ++i) {
+				tileset.draw(i + j * widthAndHeight.y, Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO));
+				writeln("Count ", i + j * widthAndHeight.y);
 			}
 		}
 	}
