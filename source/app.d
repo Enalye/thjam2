@@ -1,7 +1,6 @@
 import std.stdio;
 
 import grimoire;
-import th.entity;
 
 import th.menu;
 
@@ -25,9 +24,4 @@ void main() {
     catch(Exception e) {
         writeln(e.msg);
     }
-}
-
-void onStage1() {
-	Stage stage1 = new Stage(Vec2u(5, 7));
-	stage1.addEnemyData(Vec2u(0, 5));
 }

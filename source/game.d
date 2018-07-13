@@ -3,6 +3,8 @@ module th.game;
 import grimoire;
 
 import th.camera;
+import th.entity;
+import th.stage;
 
 private {
     Scene _scene;
@@ -12,11 +14,13 @@ void startGame() {
     removeWidgets();
     _scene = new Scene;
     addWidget(_scene);
+    _scene.onStage1();
 }
 
 private final class Scene: Widget {
     private {
         Camera _camera;
+        Stage _stage;
     }
 
     this() {
@@ -41,10 +45,19 @@ private final class Scene: Widget {
 		pushView(_camera.view, true);
 		//Render everything in the scene here.
 
-        
+        _stage.draw();        
 
         //End scene rendering
 		popView();
 		_camera.draw();
 	}
+
+    void onStage1() {
+        _stage = new Stage(Vec2u(5, 7));
+        uint playerPoolId = _stage.pools.push(new EntityPool("fairy_default"));
+        uint enemyPoolId = _stage.pools.push(new EntityPool("fairy_default"));
+        _stage.addPlayerData(Vec2u(0, 0), playerPoolId);
+        _stage.addEnemyData(Vec2u(0, 5), enemyPoolId);
+        _stage.addEnemyData(Vec2u(4, 5), enemyPoolId);
+    }
 }
