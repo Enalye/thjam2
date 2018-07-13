@@ -31,6 +31,12 @@ Vec2f getGridPosition(Vec2i gridPosition) {
 	return topLeft + (cast(Vec2f)gridPosition) * getTileSize() + getTileSize() / 2f;
 }
 
+bool isTileFreeForEnemy(Vec2i position) {
+	return (position.x < currentGrid.widthAndHeight.x) && (position.y < currentGrid.widthAndHeight.y)
+        && position.x >= 0 && position.y >= 0
+        && currentGrid.grid[position.x][position.y] == Type.None;
+}
+
 bool isPositionValid(Vec2i position) {
 	return (position.x < currentGrid.widthAndHeight.x) && (position.y < currentGrid.widthAndHeight.y) && canMoveTo(currentGrid.grid[position.x][position.y]);
 }
