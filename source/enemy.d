@@ -2,7 +2,6 @@ module th.enemy;
 
 import grimoire;
 
-import th.stage;
 import th.grid;
 import th.entity;
 

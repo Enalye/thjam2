@@ -6,7 +6,6 @@ import th.entity;
 import th.grid;
 import th.input;
 import th.shot;
-import th.stage;
 
 class Player: Entity {
     private {
