@@ -22,7 +22,7 @@ void startGame() {
     _scene.onStage1();
 }
 
-private final class Scene: Widget {
+private final class Scene: WidgetGroup {
     private {
         //Modules
         Camera _camera;
@@ -58,7 +58,9 @@ private final class Scene: Widget {
         _camera.size = _size;
     }
     
-    override void onEvent(Event event) {}
+    override void onEvent(Event event) {
+        super.onEvent(event);
+    }
 
     override void update(float deltaTime) {
         //Update shots
@@ -104,6 +106,7 @@ private final class Scene: Widget {
 
         _player.updateGridState();
         _camera.update(deltaTime);
+        super.update(deltaTime);
     }
 
     bool checkDirectionValid(Direction direction) {
@@ -122,7 +125,6 @@ private final class Scene: Widget {
         }
 
         _player.draw();
-        _arrows.draw();
 
         foreach(Shot shot; _playerShots) {
             shot.draw();
@@ -135,6 +137,7 @@ private final class Scene: Widget {
         //End scene rendering
 		popView();
 		_camera.draw();
+        super.draw();
 	}
 
     void onStage1() {
@@ -143,7 +146,6 @@ private final class Scene: Widget {
         _player.gridPosition = Vec2i(0, 0);
         moveCameraTo(_player.position, 1f);
         _grid.set(Type.Player, _player.gridPosition);
-        _arrows = new Arrows(_player);
 
         auto enemy = new Enemy;
         enemy.gridPosition = Vec2i(0, 5);
@@ -153,5 +155,10 @@ private final class Scene: Widget {
         enemy.gridPosition = Vec2i(4, 5);
         _grid.set(Type.Enemy, enemy.gridPosition);
         _enemies.push(enemy);
+
+        //UI
+        removeChildren();
+        _arrows = new Arrows(_player);
+        addChild(_arrows);
     }
 }
