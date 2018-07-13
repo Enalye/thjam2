@@ -1,6 +1,7 @@
 module th.shot;
 
 import grimoire;
+import th.entity;
 
 alias ShotArray = IndexedArray!(Shot, 2000);
 
@@ -40,13 +41,6 @@ class Shot {
 
     void draw() {
         _sprite.draw(_position);
-    }
-
-    bool handleCollision(Entity entity) {
-        if(entity.position.distance(_position) < _radius) {
-            entity.receiveDamage();
-            _isAlive = false;
-        }
     }
 }
 
