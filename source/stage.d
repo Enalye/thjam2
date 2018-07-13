@@ -10,9 +10,9 @@ class Stage {
 	EntityPoolArray pools;
 	Grid grid;
 
-	this(Vec2u scale) {
+	this(Vec2u scale, string tilesetPath) {
 		pools = new EntityPoolArray;
-		grid = createGrid(scale);
+		grid = createGrid(scale, tilesetPath);
 	}
 
     ~this() {
@@ -44,9 +44,9 @@ class Stage {
 	}
 
 	void draw() {
+		grid.draw();
 		foreach(EntityPool entitypool; pools) {
 			entitypool.draw();
 		}
-		grid.draw();
 	}
 }
