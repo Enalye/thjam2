@@ -9,3 +9,4 @@ __dummy.html
 *.obj
 *.exe
 *.sublime-workspace
+build/thjam2/thjam2
