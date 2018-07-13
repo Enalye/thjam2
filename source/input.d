@@ -1,3 +1,5 @@
+module th.input;
+
 import std.stdio;
 
 import grimoire;
