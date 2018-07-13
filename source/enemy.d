@@ -11,11 +11,9 @@ import th.shot;
 import th.game;
 
 class Enemy: Entity {
-    this(Vec2i gridPosition) {
+    this(Vec2i gridPosition, string filePath) {
         _type = Type.Enemy;
-        super(gridPosition);
-        _sprite = fetch!Sprite("fairy_default");
-		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+        super(gridPosition, filePath);
     }
 
     override void update(float deltaTime) {
@@ -43,7 +41,7 @@ class Enemy: Entity {
         }
     }
 
-    override void draw() {
+    /*override void draw() {
         _sprite.draw(position);
-    }
+    }*/
 }

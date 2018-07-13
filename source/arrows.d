@@ -21,10 +21,10 @@ public final class Arrows: Widget {
         _arrows[2] = fetch!Sprite("arrow_left");
         _arrows[3] = fetch!Sprite("arrow_right");
 
-        _positions[0] = Vec2f(1126, 112);
-        _positions[1] = Vec2f(1126, 150);
-        _positions[2] = Vec2f(1088, 150);
-        _positions[3] = Vec2f(1164, 150);
+        _positions[0] = Vec2f(1176, 50);
+        _positions[1] = Vec2f(1176, 88);
+        _positions[2] = Vec2f(1138, 88);
+        _positions[3] = Vec2f(1214, 88);
 	}
 
 	override void onEvent(Event event) {}

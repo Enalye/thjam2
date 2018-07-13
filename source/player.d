@@ -18,11 +18,9 @@ class Player: Entity {
 
     bool hasPlayed, canPlay;
     
-    this(Vec2i gridPosition) {
+    this(Vec2i gridPosition, string filePath) {
         _type = Type.Player;
-        super(gridPosition);
-        _sprite = fetch!Sprite("reimu_omg");
-		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+        super(gridPosition, filePath);
     }
 
     override void update(float deltaTime) {
@@ -44,10 +42,6 @@ class Player: Entity {
             createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
             registerPlayerActionOnEpoch();
         }
-    }
-
-    override void draw() {
-        _sprite.draw(position);
     }
 
     int arrowIndexFromLastDirection() {

@@ -29,8 +29,12 @@ class Entity {
             return _gridPosition;
         }
 
-        void setDirection(Direction direction) {
+        void direction(Direction direction) {
         	_direction = direction;
+        }
+
+        bool collected() const {
+        	return (_type == Type.Collected);
         }
 
         bool isAlive() const { return _life > 0; }
@@ -45,9 +49,11 @@ class Entity {
 		}
     }
 
-	this(Vec2i gridPos) {
+	this(Vec2i gridPos, string filePath) {
 		gridPosition = gridPos;
 		currentGrid.set(_type, _gridPosition);
+		_sprite = fetch!Sprite(filePath);
+		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 	}
 
 	void receiveDamage() {
@@ -55,7 +61,7 @@ class Entity {
 	}
 
 	void removeFromGrid() {
-		currentGrid.grid[_gridPosition.x][_gridPosition.y] = Type.None;
+		_type = currentGrid.grid[_gridPosition.x][_gridPosition.y] = Type.OutOfGrid;
 	}
 
 	void update(float deltaTime) {}
@@ -72,7 +78,16 @@ class Entity {
             isPositionValid(getUpdatedPosition(direction));
     }
 
-    abstract void draw();
+    void greyOutSprite(Vec2f position) {
+    	_position = position;
+    	_sprite.color = Color(1f, 1f, 1f, 0.25f);
+    }
+
+    void draw(bool inhibitDraw = false) {
+    	if(_type != Type.None && !inhibitDraw) {
+        	_sprite.draw(position);
+    	}
+    }
 }
 
 class EntityPool {
