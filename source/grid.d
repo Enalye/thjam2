@@ -28,7 +28,7 @@ Vec2f getGridSize() {
 
 Vec2f getGridPosition(Vec2i gridPosition) {
     auto topLeft = centerScreen - (cast(Vec2f)currentGrid.widthAndHeight) * GRID_RATIO / 2f;
-	return topLeft + (cast(Vec2f)gridPosition) * getTileSize();
+	return topLeft + (cast(Vec2f)gridPosition) * getTileSize() + getTileSize() / 2f;
 }
 
 bool isPositionValid(Vec2i position) {
@@ -89,8 +89,8 @@ class Grid {
 
 	void draw() {
 		uint cpt = 0;
-		for(uint j = 0; j < widthAndHeight.y; ++j) {
-			for(uint i = 0; i < widthAndHeight.x; ++i) {
+		for(int j = 0; j < widthAndHeight.y; ++j) {
+			for(int i = 0; i < widthAndHeight.x; ++i) {
 				tileset.draw(cpt, Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO));
 				cpt++;
 			}

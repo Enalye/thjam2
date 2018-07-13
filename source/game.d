@@ -65,7 +65,9 @@ private final class Scene: Widget {
 			if(!shot.isAlive)
 				_playerShots.markInternalForRemoval(index);
 			//Handle collisions with enemies
-
+            foreach(Entity enemy; _enemies) {
+                shot.handleCollision(enemy);
+            }
 		}
 
         foreach(Shot shot, uint index; _enemyShots) {
@@ -96,7 +98,10 @@ private final class Scene: Widget {
         if(inputValid) {
             _player.setDirection(input);
         }
+        _player.update(deltaTime);
         _player.updateGridState();
+
+        _camera.update(deltaTime);
     }
 
     bool checkDirectionValid(Direction direction) {
@@ -133,6 +138,7 @@ private final class Scene: Widget {
         _grid = createGrid(Vec2u(17, 10), "plaine");
         _player = new Player;
         _player.gridPosition = Vec2i(0, 0);
+        moveCameraTo(_player.position, 1f);
         _grid.set(Type.Player, _player.gridPosition);
         auto enemy = new Enemy;
         enemy.gridPosition = Vec2i(0, 5);

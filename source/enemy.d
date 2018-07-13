@@ -14,7 +14,6 @@ class Enemy: Entity {
         _type = Type.Enemy;
 
         _sprite = fetch!Sprite("fairy_default");
-        _sprite.anchor = Vec2f.zero;
 		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
     }
 
