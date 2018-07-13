@@ -6,35 +6,34 @@ import th.grid;
 
 class Stage {
 	EntityPoolArray pools;
-	Grid grid;
 
 	this(Vec2u scale) {
 		pools = new EntityPoolArray;
-		grid = new Grid(scale, centerScreen());
+		currentGrid = new Grid(scale, centerScreen());
 	}
 
 	void update(float deltaTime) {
 		foreach(EntityPool pool; pools) {
-			pool.update(deltaTime, grid);
+			pool.update(deltaTime);
 		}
 
-		grid.reset();
+		currentGrid.reset();
 	}
 
-	void addEnemyData(Vec2u position, uint poolId) {
-		grid.set(Type.Enemy, position);
-		pools[poolId].push(new Entity(Type.Enemy, position, grid.topLeft));
+	void addEnemyData(Vec2i position, uint poolId) {
+		currentGrid.set(Type.Enemy, position);
+		pools[poolId].push(new Entity(Type.Enemy, position));
 	}
 
-	void addPlayerData(Vec2u position, uint poolId) {
-		grid.set(Type.Player, position);
-		pools[poolId].push(new Entity(Type.Player, position, grid.topLeft));
+	void addPlayerData(Vec2i position, uint poolId) {
+		currentGrid.set(Type.Player, position);
+		pools[poolId].push(new Entity(Type.Player, position));
 	}
 
 	void draw() {
 		foreach(EntityPool entitypool; pools) {
 			entitypool.draw();
 		}
-		grid.draw();
+		currentGrid.draw();
 	}
 }
