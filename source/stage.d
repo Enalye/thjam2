@@ -20,14 +20,18 @@ class Stage {
 		currentGrid.reset();
 	}
 
-	void addEnemyData(Vec2i position, uint poolId) {
+	Entity addEnemyData(Vec2i position, uint poolId) {
 		currentGrid.set(Type.Enemy, position);
-		pools[poolId].push(new Entity(Type.Enemy, position));
+		Entity entity = new Entity(Type.Enemy, position);
+		pools[poolId].push(entity);
+		return entity;
 	}
 
-	void addPlayerData(Vec2i position, uint poolId) {
+	Entity addPlayerData(Vec2i position, uint poolId) {
 		currentGrid.set(Type.Player, position);
-		pools[poolId].push(new Entity(Type.Player, position));
+		Entity entity = new Entity(Type.Enemy, position);
+		pools[poolId].push(entity);
+		return entity;
 	}
 
 	void draw() {

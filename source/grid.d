@@ -42,12 +42,16 @@ class Grid {
 	}
 
 	void set(Type type, Vec2i position) {
-		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
+		if(isPositionValid(position)) {
 			grid[position.x][position.y] = type;
 		} else {
 			writeln("position ", position, " is out of widthAndHeight ", widthAndHeight);
 			throw new Exception("Coordinate out of grid bounds!");
 		}
+	}
+
+	bool isPositionValid(Vec2i position) {
+		return position.x < widthAndHeight.x && position.y < widthAndHeight.y;
 	}
 
 	void reset() {

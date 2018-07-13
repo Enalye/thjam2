@@ -23,9 +23,14 @@ class Entity {
 		life--;
 	}
 
+	Vec2i getUpdatedPosition(Vec2i potentialDirection) {
+		return gridPosition + potentialDirection;
+	}
+
 	void update(float deltaTime) {
 		currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
-		gridPosition += direction;
+		gridPosition = getUpdatedPosition(direction);
+		direction = Vec2i.zero;
 
 		if(isRealInstance(type) && isOpponent(type, currentGrid.at(gridPosition))) {
 			receiveDamage();

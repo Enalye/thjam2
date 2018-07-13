@@ -6,47 +6,50 @@ import grimoire;
 
 import derelict.sdl2.sdl;
 
-class Input{
+enum { NONE, UP, DOWN, LEFT, RIGHT, FIRE_UP, FIRE_DOWN, FIRE_LEFT, FIRE_RIGHT }
 
-	this(){
+class InputManager {
+	this() {
 		init();
 	}
+
 	void init(){
-		bindKey("up",SDL_SCANCODE_UP);
-		bindKey("down",SDL_SCANCODE_DOWN);
-		bindKey("left",SDL_SCANCODE_LEFT);
-		bindKey("right",SDL_SCANCODE_RIGHT);
-		bindKey("fireUp",SDL_SCANCODE_W);
-		bindKey("fireDown",SDL_SCANCODE_S);
-		bindKey("fireLeft",SDL_SCANCODE_A);
-		bindKey("fireRight",SDL_SCANCODE_D);
+		bindKey("up", SDL_SCANCODE_UP);
+		bindKey("down", SDL_SCANCODE_DOWN);
+		bindKey("left", SDL_SCANCODE_LEFT);
+		bindKey("right", SDL_SCANCODE_RIGHT);
+		bindKey("fireUp", SDL_SCANCODE_W);
+		bindKey("fireDown", SDL_SCANCODE_S);
+		bindKey("fireLeft", SDL_SCANCODE_A);
+		bindKey("fireRight", SDL_SCANCODE_D);
 	}
 	
-	string getKeyPressed(){
-		if (getKeyDown("up")){
-			return "up";
+	enum getKeyPressed() {
+		if (getKeyDown("up")) {
+			return UP;
 		}
-		else if (getKeyDown("down")){
-			return "down";
+		else if (getKeyDown("down")) {
+			return DOWN;
 		}
-		else if (getKeyDown("left")){
-			return "left";
+		else if (getKeyDown("left")) {
+			return LEFT;
 		}
-		else if (getKeyDown("right")){
-			return "right";
+		else if (getKeyDown("right")) {
+			return RIGHT;
 		}
-		else if (getKeyDown("fireUp")){
-			return "fireUp";
+		else if (getKeyDown("fireUp")) {
+			return FIRE_UP;
 		}
-		else if (getKeyDown("fireDown")){
-			return "fireDown";
+		else if (getKeyDown("fireDown")) {
+			return FIRE_DOWN;
 		}
-		else if (getKeyDown("fireLeft")){
-			return "fireLeft";
+		else if (getKeyDown("fireLeft")) {
+			return FIRE_LEFT;
 		}
-		else if (getKeyDown("fireRight")){
-			return "fireRight";
+		else if (getKeyDown("fireRight")) {
+			return FIRE_RIGHT;
 		}
-		return null;
+
+		return NONE;
 	}
 }
