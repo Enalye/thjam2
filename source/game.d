@@ -70,8 +70,6 @@ private final class Scene: Widget {
         _playerShots.sweepMarkedData();
         _enemyShots.sweepMarkedData();
 
-    }
-    override void update(float deltaTime) {
         Direction input = _inputManager.getKeyPressed(); //to pass on to player
         bool inputValid = checkDirectionValid(input);
 
