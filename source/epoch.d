@@ -8,18 +8,18 @@ private {
 }
 
 void startEpoch() {
-    _lockTimer.start(.25f);
-    _timeoutTimer.start(3f);
+    _lockTimer.start(.1f);
+    _timeoutTimer.start(1f);
     hasPlayerPlayed = false;
 }
 
 void updateEpoch(float deltaTime) {
-    _lockTimer.update(deltaTime);
-    _timeoutTimer.update(deltaTime);
-
     if(isEpochTimedout()) {
         startEpoch();
     }
+
+    _lockTimer.update(deltaTime);
+    _timeoutTimer.update(deltaTime);
 }
 
 bool canActEpoch() {
@@ -27,7 +27,7 @@ bool canActEpoch() {
 }
 
 bool isEpochTimedout() {
-    return !_timeoutTimer.isRunning || hasPlayerPlayed;
+    return (!_timeoutTimer.isRunning) || hasPlayerPlayed;
 }
 
 void registerPlayerActionOnEpoch() {
