@@ -23,11 +23,8 @@ class Enemy: Entity {
     //Called when the player is acting
     void action() {
         _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.UP, cast(int)Direction.RIGHT));
-        if(!checkDirectionValid(_direction)) {
-            _lastDirection = _direction;
-            return;
-        }
-        if(isMovement(_direction)) {
+
+        if(isMovement(_direction) && checkDirectionValid(_direction)) {
             _lastDirection = _direction;
             currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
 
@@ -35,13 +32,14 @@ class Enemy: Entity {
         }
         _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.FIRE_UP, cast(int)Direction.FIRE_RIGHT));
         if(isFire(_direction)) {
-            _lastDirection = _direction;
             float angle = angleFromFireDirection(_direction);
             createEnemyShot(_position, Color.blue, angle, 5f, 5 * 60f);
         }
     }
 
-    /*override void draw() {
-        _sprite.draw(position);
-    }*/
+    override bool checkDirectionValid(Direction direction) {
+        return (direction != Direction.NONE) && canUseDirection(direction) &&
+            isPositionValid(getUpdatedPosition(direction))
+            && isTileFreeForEnemy(gridPosition + vectorFromMovementDirection(direction));
+    }
 }
