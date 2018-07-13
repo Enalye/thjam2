@@ -67,6 +67,11 @@ class Entity {
 		}
 	}
 
+    bool checkDirectionValid(Direction direction) {
+        return (direction != Direction.NONE) && canUseDirection(direction) &&
+            isPositionValid(getUpdatedPosition(direction));
+    }
+
     abstract void draw();
 }
 

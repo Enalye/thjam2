@@ -24,7 +24,7 @@ class Enemy: Entity {
 
     //Called when the player is acting
     void action() {
-        _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.NONE, cast(int)Direction.FIRE_RIGHT));
+        _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.UP, cast(int)Direction.RIGHT));
         if(!checkDirectionValid(_direction)) {
             _lastDirection = _direction;
             return;
@@ -35,7 +35,8 @@ class Enemy: Entity {
 
             gridPosition = getUpdatedPosition(_direction);
         }
-        else if(isFire(_direction)) {
+        _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.FIRE_UP, cast(int)Direction.FIRE_RIGHT));
+        if(isFire(_direction)) {
             _lastDirection = _direction;
             float angle = angleFromFireDirection(_direction);
             createEnemyShot(_position, Color.blue, angle, 5f, 5 * 60f);

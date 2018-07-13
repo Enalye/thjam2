@@ -87,12 +87,9 @@ private final class Scene: WidgetGroup {
 		}
 
         //Player input handling
-        Direction input = _inputManager.getKeyPressed(); //to pass on to player
-        bool inputValid = checkDirectionValid(input);
-
         if(canActEpoch()) {
             Direction input = _inputManager.getKeyPressed(); //to pass on to player
-            bool inputValid = checkDirectionValid(input);
+            bool inputValid = _player.checkDirectionValid(input);
 
             if(inputValid) {
                 _player.setDirection(input);
@@ -125,11 +122,6 @@ private final class Scene: WidgetGroup {
 
         _camera.update(deltaTime);
         super.update(deltaTime);
-    }
-
-    bool checkDirectionValid(Direction direction) {
-        return (direction != Direction.NONE) && _player.canUseDirection(direction) &&
-            isPositionValid(_player.getUpdatedPosition(direction));
     }
 
     override void draw() {
