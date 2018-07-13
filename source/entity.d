@@ -75,7 +75,8 @@ class Entity {
 
     bool checkDirectionValid(Direction direction) {
         return (direction != Direction.NONE) && canUseDirection(direction) &&
-            isPositionValid(getUpdatedPosition(direction));
+            isPositionValid(getUpdatedPosition(direction))
+            && !isOpponent(_type, currentGrid.at(gridPosition + vectorFromMovementDirection(direction)));
     }
 
     void greyOutSprite(Vec2f position) {
