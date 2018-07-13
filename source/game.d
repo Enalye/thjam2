@@ -101,9 +101,8 @@ private final class Scene: Widget {
             _player.setDirection(input);
             _player.update(deltaTime);
         }
-        _player.update(deltaTime);
-        _player.updateGridState();
 
+        _player.updateGridState();
         _camera.update(deltaTime);
     }
 
