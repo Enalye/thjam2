@@ -34,6 +34,9 @@ private final class Scene: WidgetGroup {
         ShotArray _playerShots, _enemyShots;
         EntityArray _enemies, _items;
         Player _player;
+
+        //Sub widgets
+        Inventory _inventory;
         Arrows _arrows;
     }
 
@@ -92,12 +95,15 @@ private final class Scene: WidgetGroup {
             bool inputValid = _player.checkDirectionValid(input);
 
             if(inputValid) {
-                _player.setDirection(input);
+                _player.direction = input;
                 _player.update(deltaTime);
             }
 
             _player.updateGridState();
         }
+
+        _inventory.update(deltaTime);
+
         //Update enemies shots
         foreach(Entity enemy, uint index; _enemies) {
 			enemy.update(deltaTime);
@@ -134,6 +140,10 @@ private final class Scene: WidgetGroup {
             enemy.draw();
         }
 
+        foreach(Entity item; _items) {
+            item.draw();
+        }
+
         _player.draw();
 
         foreach(Shot shot; _playerShots) {
@@ -152,20 +162,22 @@ private final class Scene: WidgetGroup {
 
     void onStage1() {
         createGrid(Vec2u(15, 10), "plaine");
-        _player = new Player(Vec2i(0, 0));
+        _player = new Player(Vec2i(0, 0), "reimu_omg");
         moveCameraTo(_player.position, 1f);
 
-        auto enemy = new Enemy(Vec2i(0, 5));
+        auto enemy = new Enemy(Vec2i(0, 5), "fairy_default");
         _enemies.push(enemy);
-        enemy = new Enemy(Vec2i(4, 5));
+        enemy = new Enemy(Vec2i(4, 5), "fairy_default");
         _enemies.push(enemy);
 
-        auto item = new Item(_player, Vec2i(12, 5), ItemType.YINYANG);
+        auto item = new Item(Vec2i(1, 1), _player, ItemType.YINYANG);
         _items.push(item);
 
         //UI
         removeChildren();
         _arrows = new Arrows(_player);
         addChild(_arrows);
+        _inventory = new Inventory(_items);
+        addChild(_inventory);
     }
 }
