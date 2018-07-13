@@ -10,13 +10,9 @@ class Stage {
 	EntityPoolArray pools;
 	Grid grid;
 
-	this(Vec2u scale, string tileSetPath) {
+	this(Vec2u scale) {
 		pools = new EntityPoolArray;
-<<<<<<< working copy
-		currentGrid = new Grid(scale, centerScreen(), tileSetPath);
-=======
 		grid = createGrid(scale);
->>>>>>> merge rev
 	}
 
     ~this() {
@@ -27,51 +23,30 @@ class Stage {
 		foreach(EntityPool pool; pools) {
 			pool.update(deltaTime);
 		}
-<<<<<<< working copy
-=======
 
 		grid.reset();
->>>>>>> merge rev
 	}
 
-<<<<<<< working copy
-	Entity addEnemyData(Vec2i position, uint poolId) {
-		currentGrid.set(Type.Enemy, position);
-		Entity entity = new Entity(Type.Enemy, position);
-		pools[poolId].push(entity);
-		return entity;
-=======
-	void addEnemyData(Vec2i position, uint poolId) {
+	Enemy addEnemyData(Vec2i position, uint poolId) {
 		grid.set(Type.Enemy, position);
-        auto enemy = new Enemy;
+        Enemy enemy = new Enemy;
         enemy.gridPosition = position;
 		pools[poolId].push(enemy);
->>>>>>> merge rev
+		return enemy;
 	}
 
-<<<<<<< working copy
-	Entity addPlayerData(Vec2i position, uint poolId) {
-		currentGrid.set(Type.Player, position);
-		Entity entity = new Entity(Type.Player, position);
-		pools[poolId].push(entity);
-		return entity;
-=======
-	void addPlayerData(Vec2i position, uint poolId) {
+	Player addPlayerData(Vec2i position, uint poolId) {
 		grid.set(Type.Player, position);
-        auto player = new Player;
+        Player player = new Player;
         player.gridPosition = position;
 		pools[poolId].push(player);
->>>>>>> merge rev
+		return player;
 	}
 
 	void draw() {
-		currentGrid.draw();
 		foreach(EntityPool entitypool; pools) {
 			entitypool.draw();
 		}
-<<<<<<< working copy
-=======
 		grid.draw();
->>>>>>> merge rev
 	}
 }
