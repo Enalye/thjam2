@@ -6,6 +6,7 @@ import th.entity;
 import th.grid;
 import th.input;
 import th.shot;
+import th.camera;
 
 class Player: Entity {
     private {
@@ -16,7 +17,6 @@ class Player: Entity {
         _type = Type.Player;
 
         _sprite = fetch!Sprite("reimu_omg");
-        _sprite.anchor = Vec2f.zero;
 		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
     }
 
@@ -26,6 +26,7 @@ class Player: Entity {
             currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
 
             gridPosition = getUpdatedPosition(_direction);
+            moveCameraTo(_position, .5f);
 
             if(isRealInstance(_type) && isOpponent(_type, currentGrid.at(gridPosition))) {
                 receiveDamage();
@@ -35,7 +36,7 @@ class Player: Entity {
         if(isFire(_direction)) {
             _lastDirection = _direction;
             float angle = angleFromFireDirection(_direction);
-            createPlayerShot(_position + Vec2f.one * GRID_RATIO / 2, Color.red, angle, 5f, 5 * 60f);
+            createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
         }
     }
 

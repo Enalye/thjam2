@@ -9,7 +9,7 @@ alias IndexedArray!(Entity, 50u) EntityArray;
 
 class Entity {
     protected {
-	    int _life = 100;
+	    int _life = 1;
 
 	    Type _type;
 	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
