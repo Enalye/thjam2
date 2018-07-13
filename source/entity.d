@@ -50,13 +50,9 @@ class Entity {
 
 class EntityPool {
 	EntityArray entities;
-	Sprite sprite;
 
-	this(string spriteFileName) {
+	this() {
 		entities = new EntityArray;
-		sprite = fetch!Sprite(spriteFileName);
-		sprite.anchor = Vec2f.zero;
-		sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 	}
 
 	void update(float deltaTime) {
