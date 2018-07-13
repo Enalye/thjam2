@@ -41,11 +41,37 @@ class Entity {
 		_life--;
 	}
 
-	void update(float deltaTime) {
-
+	Vec2i getUpdatedPosition(Vec2i potentialDirection) {
+		return gridPosition + potentialDirection;
 	}
 
+	void update(float deltaTime) {
+<<<<<<< working copy
+		if(direction != Vec2i.zero) {
+			currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
+			gridPosition = getUpdatedPosition(direction);
+=======
+>>>>>>> merge rev
+
+<<<<<<< working copy
+			if(isRealInstance(type) && isOpponent(type, currentGrid.at(gridPosition))) {
+				receiveDamage();
+			}
+		}
+=======
+>>>>>>> merge rev
+	}
+
+<<<<<<< working copy
+	void updateGridState() {
+		if(direction != Vec2i.zero) {
+			currentGrid.set(type, gridPosition);
+			direction = Vec2i.zero;
+		}
+	}
+=======
     abstract void draw();
+>>>>>>> merge rev
 }
 
 class EntityPool {
@@ -63,7 +89,11 @@ class EntityPool {
 		foreach(Entity entity, uint index; entities) {
 			entity.update(deltaTime);
 
+<<<<<<< working copy
+			if(entity.life <= 0) {
+=======
 			if(!entity.isAlive) {
+>>>>>>> merge rev
 				entities.markInternalForRemoval(index);
 			}
 		}
