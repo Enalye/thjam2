@@ -10,6 +10,7 @@ import th.grid;
 import th.player;
 import th.enemy;
 import th.shot;
+import th.epoch;
 
 private {
     Scene _scene;
@@ -44,6 +45,7 @@ private final class Scene: WidgetGroup {
         _enemyShots = createEnemyShotArray();
         _inputManager = new InputManager;
         _enemies = new EntityArray;
+        startEpoch();
     }
 
     ~this() {
@@ -82,12 +84,26 @@ private final class Scene: WidgetGroup {
             shot.handleCollision(_player);
 		}
 
+        if(canActEpoch()) {
+            Direction input = _inputManager.getKeyPressed(); //to pass on to player
+            bool inputValid = checkDirectionValid(input);
+
+            if(inputValid) {
+                _player.setDirection(input);
+                _player.update(deltaTime);
+            }
+
+            _player.updateGridState();
+        }
         foreach(Entity enemy, uint index; _enemies) {
 			enemy.update(deltaTime);
 			if(!enemy.isAlive) {
 				_enemies.markInternalForRemoval(index);
             }
             else {
+                if(isEpochTimedout()) {
+                    (cast(Enemy)enemy).action();
+                }
 				enemy.updateGridState();
 			}
 		}
@@ -96,15 +112,9 @@ private final class Scene: WidgetGroup {
         _enemyShots.sweepMarkedData();
         _enemies.sweepMarkedData();
 
-        Direction input = _inputManager.getKeyPressed(); //to pass on to player
-        bool inputValid = checkDirectionValid(input);
+        
+        updateEpoch(deltaTime);
 
-        if(inputValid) {
-            _player.setDirection(input);
-            _player.update(deltaTime);
-        }
-
-        _player.updateGridState();
         _camera.update(deltaTime);
         super.update(deltaTime);
     }

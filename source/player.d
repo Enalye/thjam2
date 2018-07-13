@@ -9,11 +9,14 @@ import th.grid;
 import th.input;
 import th.shot;
 import th.camera;
+import th.epoch;
 
 class Player: Entity {
     private {
         Sprite _sprite;
     }
+
+    bool hasPlayed, canPlay;
     
     this() {
         _type = Type.Player;
@@ -33,12 +36,13 @@ class Player: Entity {
             if(isRealInstance(_type) && isOpponent(_type, currentGrid.at(gridPosition))) {
                 receiveDamage();
             }
+            registerPlayerActionOnEpoch();
         }
-
-        if(isFire(_direction)) {
+        else if(isFire(_direction)) {
             _lastDirection = _direction;
             float angle = angleFromFireDirection(_direction);
             createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
+            registerPlayerActionOnEpoch();
         }
     }
 
