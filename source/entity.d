@@ -65,7 +65,7 @@ class Entity {
 	this() {
 	}
 
-	protected void receiveDamage() {
+	void receiveDamage() {
 		_life--;
 	}
 
