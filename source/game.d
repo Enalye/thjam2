@@ -63,7 +63,7 @@ private final class Scene: WidgetGroup {
     }
 
     override void update(float deltaTime) {
-        //Update shots
+        //Update player shots
         foreach(Shot shot, uint index; _playerShots) {
 			shot.update(deltaTime);
 			if(!shot.isAlive)
@@ -74,6 +74,7 @@ private final class Scene: WidgetGroup {
             }
 		}
 
+        //Update enemy shots
         foreach(Shot shot, uint index; _enemyShots) {
 			shot.update(deltaTime);
 			if(!shot.isAlive)
@@ -82,6 +83,7 @@ private final class Scene: WidgetGroup {
             shot.handleCollision(_player);
 		}
 
+        //Update enemies shots
         foreach(Entity enemy, uint index; _enemies) {
 			enemy.update(deltaTime);
 			if(!enemy.isAlive) {
@@ -92,10 +94,12 @@ private final class Scene: WidgetGroup {
 			}
 		}
 
+        //Cleanup data
         _playerShots.sweepMarkedData();
         _enemyShots.sweepMarkedData();
         _enemies.sweepMarkedData();
 
+        //Player input handling
         Direction input = _inputManager.getKeyPressed(); //to pass on to player
         bool inputValid = checkDirectionValid(input);
 
@@ -110,7 +114,7 @@ private final class Scene: WidgetGroup {
     }
 
     bool checkDirectionValid(Direction direction) {
-        return direction != Direction.NONE && _player.canUseDirection(direction) &&
+        return (direction != Direction.NONE) && _player.canUseDirection(direction) &&
             isPositionValid(_player.getUpdatedPosition(direction));
     }
 
