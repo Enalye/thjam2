@@ -6,6 +6,7 @@ import th.arrows;
 import th.camera;
 import th.entity;
 import th.input;
+import th.item;
 import th.grid;
 import th.player;
 import th.enemy;
@@ -26,12 +27,11 @@ private final class Scene: WidgetGroup {
     private {
         //Modules
         Camera _camera;
-        Grid _grid;
         InputManager _inputManager;
 
         //Entities
         ShotArray _playerShots, _enemyShots;
-        EntityArray _enemies;
+        EntityArray _enemies, _items;
         Player _player;
         Arrows _arrows;
     }
@@ -44,6 +44,7 @@ private final class Scene: WidgetGroup {
         _enemyShots = createEnemyShotArray();
         _inputManager = new InputManager;
         _enemies = new EntityArray;
+        _items = new EntityArray;
     }
 
     ~this() {
@@ -88,6 +89,7 @@ private final class Scene: WidgetGroup {
 			enemy.update(deltaTime);
 			if(!enemy.isAlive) {
 				_enemies.markInternalForRemoval(index);
+                enemy.removeFromGrid();
             }
             else {
 				enemy.updateGridState();
@@ -122,7 +124,7 @@ private final class Scene: WidgetGroup {
 		pushView(_camera.view, true);
 		//Render everything in the scene here.
 
-        _grid.draw();
+        currentGrid.draw();
 
         foreach(Entity enemy; _enemies) {
             enemy.draw();
@@ -145,20 +147,17 @@ private final class Scene: WidgetGroup {
 	}
 
     void onStage1() {
-        _grid = createGrid(Vec2u(15, 10), "plaine");
-        _player = new Player;
-        _player.gridPosition = Vec2i(0, 0);
+        createGrid(Vec2u(15, 10), "plaine");
+        _player = new Player(Vec2i(0, 0));
         moveCameraTo(_player.position, 1f);
-        _grid.set(Type.Player, _player.gridPosition);
 
-        auto enemy = new Enemy;
-        enemy.gridPosition = Vec2i(0, 5);
-        _grid.set(Type.Enemy, enemy.gridPosition);
+        auto enemy = new Enemy(Vec2i(0, 5));
         _enemies.push(enemy);
-        enemy = new Enemy;
-        enemy.gridPosition = Vec2i(4, 5);
-        _grid.set(Type.Enemy, enemy.gridPosition);
+        enemy = new Enemy(Vec2i(4, 5));
         _enemies.push(enemy);
+
+        auto item = new Item(_player, Vec2i(12, 5), ItemType.YINYANG);
+        _items.push(item);
 
         //UI
         removeChildren();

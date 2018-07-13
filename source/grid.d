@@ -5,7 +5,7 @@ import std.stdio;
 
 static float GRID_RATIO = 64f;
 
-enum Type { None, OutOfGrid, Player, Enemy, Obstacle };
+enum Type { None, OutOfGrid, Item, Player, Enemy, Obstacle };
 
 Grid currentGrid;
 

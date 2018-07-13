@@ -16,6 +16,7 @@ class Entity {
     	Vec2f _position = Vec2f.zero; //True position in the scene
     	Direction _direction; //Input received current update
     	Direction _lastDirection; //Input received last update
+    	Sprite _sprite;
     }
 
     @property {
@@ -44,11 +45,17 @@ class Entity {
 		}
     }
 
-	this() {
+	this(Vec2i gridPos) {
+		gridPosition = gridPos;
+		currentGrid.set(_type, _gridPosition);
 	}
 
 	void receiveDamage() {
 		_life--;
+	}
+
+	void removeFromGrid() {
+		currentGrid.grid[_gridPosition.x][_gridPosition.y] = Type.None;
 	}
 
 	void update(float deltaTime) {}
