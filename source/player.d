@@ -18,9 +18,9 @@ class Player: Entity {
 
     bool hasPlayed, canPlay;
     
-    this() {
+    this(Vec2i gridPosition) {
         _type = Type.Player;
-
+        super(gridPosition);
         _sprite = fetch!Sprite("reimu_omg");
 		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
     }

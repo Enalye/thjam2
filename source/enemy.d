@@ -11,14 +11,9 @@ import th.shot;
 import th.game;
 
 class Enemy: Entity {
-    private {
-        Sprite _sprite;
-
-    }
-
-    this() {
+    this(Vec2i gridPosition) {
         _type = Type.Enemy;
-
+        super(gridPosition);
         _sprite = fetch!Sprite("fairy_default");
 		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
     }
