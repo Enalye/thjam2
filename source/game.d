@@ -2,6 +2,7 @@ module th.game;
 
 import grimoire;
 
+import th.arrows;
 import th.camera;
 import th.entity;
 import th.input;
@@ -32,6 +33,7 @@ private final class Scene: Widget {
         ShotArray _playerShots, _enemyShots;
         EntityArray _enemies;
         Player _player;
+        Arrows _arrows;
     }
 
     this() {
@@ -95,12 +97,13 @@ private final class Scene: Widget {
 
         if(inputValid) {
             _player.setDirection(input);
+            _player.update(deltaTime);
         }
         _player.updateGridState();
     }
 
     bool checkDirectionValid(Direction direction) {
-        return _player.canUseDirection(direction) &&
+        return direction != Direction.NONE && _player.canUseDirection(direction) &&
             isPositionValid(_player.getUpdatedPosition(direction));
     }
 
@@ -114,7 +117,8 @@ private final class Scene: Widget {
             enemy.draw();
         }
 
-        _player.draw();    
+        _player.draw();
+        _arrows.draw();
 
         foreach(Shot shot; _playerShots) {
             shot.draw();
@@ -130,10 +134,12 @@ private final class Scene: Widget {
 	}
 
     void onStage1() {
-        _grid = createGrid(Vec2u(17, 10), "plaine");
+        _grid = createGrid(Vec2u(15, 10), "plaine");
         _player = new Player;
         _player.gridPosition = Vec2i(0, 0);
         _grid.set(Type.Player, _player.gridPosition);
+        _arrows = new Arrows(_player);
+
         auto enemy = new Enemy;
         enemy.gridPosition = Vec2i(0, 5);
         _grid.set(Type.Enemy, enemy.gridPosition);

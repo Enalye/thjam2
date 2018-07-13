@@ -27,8 +27,7 @@ Vec2f getGridSize() {
 }
 
 Vec2f getGridPosition(Vec2i gridPosition) {
-    auto topLeft = centerScreen - (cast(Vec2f)currentGrid.widthAndHeight) * GRID_RATIO / 2f;
-	return topLeft + (cast(Vec2f)gridPosition) * getTileSize();
+	return currentGrid.topLeft + (cast(Vec2f)gridPosition) * getTileSize();
 }
 
 bool isPositionValid(Vec2i position) {
@@ -36,7 +35,7 @@ bool isPositionValid(Vec2i position) {
 }
 
 Grid createGrid(Vec2u gridSize, string tileSetPath) {
-    return currentGrid = new Grid(gridSize, centerScreen(), tileSetPath);
+    return currentGrid = new Grid(gridSize, centerScreen() - Vec2f(100, 0), tileSetPath);
 }
 
 void destroyGrid() {
