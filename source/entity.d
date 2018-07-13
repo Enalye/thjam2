@@ -36,24 +36,7 @@ class Entity {
         bool isAlive() const { return _life > 0; }
 
         Vec2i getUpdatedPosition(Direction direction) {
-        	Vec2i potentialDirection = Vec2i.zero;
-
-        	if(direction == Direction.UP) {
-                potentialDirection = Vec2i(0, -1);
-            }
-
-            if(direction == Direction.DOWN) {
-                potentialDirection = Vec2i(0, 1);
-            }
-
-            if(direction == Direction.LEFT) {
-                potentialDirection = Vec2i(-1, 0);
-            }
-
-            if(direction == Direction.RIGHT) {
-                potentialDirection = Vec2i(1, 0);
-            }
-
+        	Vec2i potentialDirection = vectorFromMovementDirection(direction);
 			return gridPosition + potentialDirection;
 		}
 

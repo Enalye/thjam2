@@ -88,10 +88,14 @@ class Grid {
 	}
 
 	void draw() {
+		uint cpt = 0;
 		for(uint j = 0; j < widthAndHeight.y; ++j) {
 			for(uint i = 0; i < widthAndHeight.x; ++i) {
-				tileset.draw(i + j * widthAndHeight.y, Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO));
+				tileset.draw(cpt, Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO));
+				cpt++;
 			}
+
+			cpt += 20 - widthAndHeight.x;
 		}
 	}
 

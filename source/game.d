@@ -97,7 +97,7 @@ private final class Scene: Widget {
 	}
 
     void onStage1() {
-        _stage = new Stage(Vec2u(15, 10), "plaine");
+        _stage = new Stage(Vec2u(17, 10), "plaine");
         uint playerPoolId = _stage.pools.push(new EntityPool);
         uint enemyPoolId = _stage.pools.push(new EntityPool);
         _player = _stage.addPlayerData(Vec2i(0, 0), playerPoolId);

@@ -21,7 +21,7 @@ class Player: Entity {
     }
 
     override void update(float deltaTime) {
-        if(_direction != Direction.NONE) {
+        if(isMovement(_direction)) {
             _lastDirection = _direction;
             currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
 
@@ -30,6 +30,10 @@ class Player: Entity {
             if(isRealInstance(_type) && isOpponent(_type, currentGrid.at(gridPosition))) {
                 receiveDamage();
             }
+        }
+
+        if(isFire(_direction)) {
+
         }
     }
 
