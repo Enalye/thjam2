@@ -100,7 +100,15 @@ private final class Scene: Widget {
 		pushView(_camera.view, true);
 		//Render everything in the scene here.
 
-        _stage.draw();        
+        _stage.draw();
+
+        foreach(Shot shot; _playerShots) {
+            shot.draw();
+        }
+
+        foreach(Shot shot; _enemyShots) {
+            shot.draw();
+        }     
 
         //End scene rendering
 		popView();

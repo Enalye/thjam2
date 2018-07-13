@@ -45,26 +45,26 @@ Vec2i vectorFromMovementDirection(Direction direction) {
 }
 
 
-Vec2f vectorFromFireDirection(Direction direction) {
-	Vec2f vector = Vec2f.zero;
+float angleFromFireDirection(Direction direction) {
+	float angle = 0;
 
 	if(direction == Direction.FIRE_UP) {
-		vector = Vec2f(0, -1);
+		angle = -90;
 	}
 
 	if(direction == Direction.FIRE_DOWN) {
-		vector = Vec2f(0, 1);
+		angle = 90;
 	}
 
 	if(direction == Direction.FIRE_LEFT) {
-		vector = Vec2f(-1, 0);
+		angle = 180;
 	}
 
 	if(direction == Direction.FIRE_RIGHT) {
-		vector = Vec2f(1, 0);
+		angle = 0;
 	}
 
-	return vector;
+	return angle;
 }
 
 class InputManager {
