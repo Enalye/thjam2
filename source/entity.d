@@ -8,48 +8,44 @@ alias IndexedArray!(Entity, 50u) EntityArray;
 alias IndexedArray!(EntityPool, 10u) EntityPoolArray;
 
 class Entity {
-	int life;
-	Type type;
-	bool turnBased; //if false, update is delta based
-	Vec2f position; //real world position
-	Vec2u gridPosition; //position inside the grid
-	Vec2f direction; //direction for next frame e.g. (0, 1) is up
+    enum Direction {
+        Up, Right, Down, Left
+    }
 
-	this(Type tileType, Vec2u pos, Vec2f gridOffset) {
-		life = 100;
-		type = tileType;
-		gridPosition = pos;
-		turnBased = true;
-		position = Vec2f(gridPosition.x * GRID_RATIO, gridPosition.y * GRID_RATIO) + gridOffset;
-		writeln("Position x", position.x, " y ", position.y);
+    protected {
+	    int _life = 100;
+
+	    Type _type;
+	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
+    	Vec2f _position = Vec2f.zero; //True position in the scene
+    	Direction _direction; //Where the entity is looking
+    }
+
+    @property {
+        Vec2f position() const { return _position; }
+
+        Vec2i gridPosition() const { return _gridPosition; }
+        Vec2i gridPosition(Vec2i newGridPosition) {
+            _gridPosition = newGridPosition;
+            _position = getGridPosition(_gridPosition);
+            return _gridPosition;
+        }
+
+        bool isAlive() const { return _life > 0; }
+    }
+
+	this() {
 	}
 
 	private void receiveDamage() {
-		life--;
+		_life--;
 	}
 
-	void update(float deltaTime, Grid grid) {
-		computeGridPosition();
-		grid.set(Type.None, gridPosition); //when going away reset grid data to none
+	void update(float deltaTime) {
 
-		if(turnBased) {
-			position += direction;
-		} //todo else
-
-		computeGridPosition();
-
-		if(isRealInstance(type) && isOpponent(type, grid.at(gridPosition))) {
-			receiveDamage();
-		}
 	}
 
-	void updateGridState(Grid grid) {
-		grid.set(type, gridPosition);
-	}
-
-	void computeGridPosition() {
-		gridPosition = Vec2u(cast(int)(position.x / GRID_RATIO), cast(int)(position.y / GRID_RATIO));
-	}
+    abstract void draw();
 }
 
 class EntityPool {
@@ -63,14 +59,12 @@ class EntityPool {
 		sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 	}
 
-	void update(float deltaTime, Grid grid) {
+	void update(float deltaTime) {
 		foreach(Entity entity, uint index; entities) {
-			entity.update(deltaTime, grid);
+			entity.update(deltaTime);
 
-			if(entity.life < 0) {
+			if(!entity.isAlive) {
 				entities.markInternalForRemoval(index);
-			} else {
-				entity.updateGridState(grid);
 			}
 		}
 
@@ -83,7 +77,7 @@ class EntityPool {
 
 	void draw() {
 		foreach(Entity entity; entities) {
-			sprite.draw(entity.position);
+			entity.draw();
 		}
 	}
 }

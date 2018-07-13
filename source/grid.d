@@ -16,6 +16,31 @@ bool isOpponent(Type type1, Type type2) {
 		(type1 == Type.Enemy) && (type2 == Type.Player);
 }
 
+Vec2f getTileSize() {
+    return Vec2f.one * GRID_RATIO;
+}
+
+Vec2f getGridSize() {
+    return Vec2f(5f,7f) * getTileSize();
+}
+
+Vec2f getGridPosition(Vec2i gridPosition) {
+    auto topLeft = centerScreen - (cast(Vec2f)_grid.widthAndHeight) * GRID_RATIO / 2f;
+	return topLeft + (cast(Vec2f)gridPosition) * getTileSize();
+}
+
+private {
+    Grid _grid;
+}
+
+Grid createGrid(Vec2u gridSize) {
+    return _grid = new Grid(gridSize, centerScreen());
+}
+
+void destroyGrid() {
+    _grid = null;
+}
+
 class Grid {
 	Type[][] grid;
 	Vec2u widthAndHeight; //width and height
@@ -39,7 +64,7 @@ class Grid {
 		}
 	}
 
-	void set(Type type, Vec2u position) {
+	void set(Type type, Vec2i position) {
 		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
 			grid[position.x][position.y] = type;
 		} else {
