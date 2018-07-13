@@ -64,7 +64,7 @@ private final class Scene: Widget {
 			if(!shot.isAlive)
 				_enemyShots.markInternalForRemoval(index);
 			//Handle collisions with the player
-            shot.isInside(_player);
+
 		}
 
         _playerShots.sweepMarkedData();
@@ -105,7 +105,7 @@ private final class Scene: Widget {
 	}
 
     void onStage1() {
-        _stage = new Stage(Vec2u(17, 10), "plaine");
+        _stage = new Stage(Vec2u(17, 10), "netherworld");
         uint playerPoolId = _stage.pools.push(new EntityPool);
         uint enemyPoolId = _stage.pools.push(new EntityPool);
         _player = _stage.addPlayerData(Vec2i(0, 0), playerPoolId);
