@@ -5,7 +5,7 @@ import std.stdio;
 
 static float GRID_RATIO = 64f;
 
-enum Type { None, OutOfGrid, Player, Enemy };
+enum Type { None, OutOfGrid, Item, Player, Enemy, Obstacle };
 
 Grid currentGrid;
 
@@ -32,7 +32,11 @@ Vec2f getGridPosition(Vec2i gridPosition) {
 }
 
 bool isPositionValid(Vec2i position) {
-	return position.x < currentGrid.widthAndHeight.x && position.y < currentGrid.widthAndHeight.y;
+	return (position.x < currentGrid.widthAndHeight.x) && (position.y < currentGrid.widthAndHeight.y) && canMoveTo(currentGrid.grid[position.x][position.y]);
+}
+
+bool canMoveTo(Type type) {
+	return type < Type.Enemy;
 }
 
 Grid createGrid(Vec2u gridSize, string tileSetPath) {
