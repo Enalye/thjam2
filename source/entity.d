@@ -1,24 +1,22 @@
 module th.entity;
 
 import grimoire;
-import th.grid;
 import std.stdio;
+import th.grid;
+import th.input;
 
 alias IndexedArray!(Entity, 50u) EntityArray;
 alias IndexedArray!(EntityPool, 10u) EntityPoolArray;
 
 class Entity {
-    enum Direction {
-        Up, Right, Down, Left
-    }
-
     protected {
 	    int _life = 100;
 
 	    Type _type;
 	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
     	Vec2f _position = Vec2f.zero; //True position in the scene
-    	Direction _direction; //Where the entity is looking
+    	Direction _direction; //Input received current update
+    	Direction _lastDirection; //Input received last update
     }
 
     @property {
@@ -31,70 +29,73 @@ class Entity {
             return _gridPosition;
         }
 
+        void setDirection(Direction direction) {
+        	_direction = direction;
+        }
+
         bool isAlive() const { return _life > 0; }
+
+        Vec2i getUpdatedPosition(Direction direction) {
+        	Vec2i potentialDirection = Vec2i.zero;
+
+        	if(direction == Direction.UP) {
+                potentialDirection = Vec2i(0, -1);
+            }
+
+            if(direction == Direction.DOWN) {
+                potentialDirection = Vec2i(0, 1);
+            }
+
+            if(direction == Direction.LEFT) {
+                potentialDirection = Vec2i(-1, 0);
+            }
+
+            if(direction == Direction.RIGHT) {
+                potentialDirection = Vec2i(1, 0);
+            }
+
+			return gridPosition + potentialDirection;
+		}
+
+		bool canUseDirection(Direction direction) {
+			return direction != _lastDirection;
+		}
     }
 
 	this() {
 	}
 
-	private void receiveDamage() {
+	protected void receiveDamage() {
 		_life--;
 	}
 
-	Vec2i getUpdatedPosition(Vec2i potentialDirection) {
-		return gridPosition + potentialDirection;
-	}
+	void update(float deltaTime) {}
 
-	void update(float deltaTime) {
-<<<<<<< working copy
-		if(direction != Vec2i.zero) {
-			currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
-			gridPosition = getUpdatedPosition(direction);
-=======
->>>>>>> merge rev
-
-<<<<<<< working copy
-			if(isRealInstance(type) && isOpponent(type, currentGrid.at(gridPosition))) {
-				receiveDamage();
-			}
-		}
-=======
->>>>>>> merge rev
-	}
-
-<<<<<<< working copy
 	void updateGridState() {
-		if(direction != Vec2i.zero) {
-			currentGrid.set(type, gridPosition);
-			direction = Vec2i.zero;
+		if(_direction != Direction.NONE) {
+			currentGrid.set(_type, gridPosition);
+			_direction = Direction.NONE;
 		}
 	}
-=======
+
     abstract void draw();
->>>>>>> merge rev
 }
 
 class EntityPool {
 	EntityArray entities;
-	Sprite sprite;
 
-	this(string spriteFileName) {
+	this() {
 		entities = new EntityArray;
-		sprite = fetch!Sprite(spriteFileName);
-		sprite.anchor = Vec2f.zero;
-		sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 	}
 
 	void update(float deltaTime) {
 		foreach(Entity entity, uint index; entities) {
 			entity.update(deltaTime);
 
-<<<<<<< working copy
-			if(entity.life <= 0) {
-=======
 			if(!entity.isAlive) {
->>>>>>> merge rev
 				entities.markInternalForRemoval(index);
+			} else {
+				entity.updateGridState();
 			}
 		}
 

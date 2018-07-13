@@ -27,20 +27,20 @@ Vec2f getGridSize() {
 }
 
 Vec2f getGridPosition(Vec2i gridPosition) {
-    auto topLeft = centerScreen - (cast(Vec2f)_grid.widthAndHeight) * GRID_RATIO / 2f;
+    auto topLeft = centerScreen - (cast(Vec2f)currentGrid.widthAndHeight) * GRID_RATIO / 2f;
 	return topLeft + (cast(Vec2f)gridPosition) * getTileSize();
 }
 
-private {
-    Grid _grid;
+bool isPositionValid(Vec2i position) {
+	return position.x < currentGrid.widthAndHeight.x && position.y < currentGrid.widthAndHeight.y;
 }
 
 Grid createGrid(Vec2u gridSize) {
-    return _grid = new Grid(gridSize, centerScreen());
+    return currentGrid = new Grid(gridSize, centerScreen());
 }
 
 void destroyGrid() {
-    _grid = null;
+    currentGrid = null;
 }
 
 class Grid {
@@ -48,22 +48,18 @@ class Grid {
 	Vec2u widthAndHeight; //width and height
 	Vec2f position;
 	Vec2f topLeft;
-	Tileset tileset;
 
-	this(Vec2u dimensions, Vec2f gridPos, string tileSetPath) {
+	this(Vec2u dimensions, Vec2f gridPos) {
 		widthAndHeight = dimensions;
 		grid = new Type[][](widthAndHeight.x, widthAndHeight.y);
 		position = gridPos;
 		
 		topLeft = Vec2f(position.x - (widthAndHeight.x * GRID_RATIO) / 2,
 			position.y - (widthAndHeight.y * GRID_RATIO) / 2);
-
-		tileset = fetch!Tileset(tileSetPath);
-		tileset.anchor = Vec2f.zero;
 	}
 
 	Type at(Vec2i position) {
-		if(isPositionValid(position)) {
+		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
 			return grid[position.x][position.y];
 		} else {
 			return Type.OutOfGrid;
@@ -71,20 +67,12 @@ class Grid {
 	}
 
 	void set(Type type, Vec2i position) {
-		if(isPositionValid(position)) {
+		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
 			grid[position.x][position.y] = type;
 		} else {
 			writeln("position ", position, " is out of widthAndHeight ", widthAndHeight);
 			throw new Exception("Coordinate out of grid bounds!");
 		}
-	}
-
-	bool isPositionValid(Vec2i position) {
-		return position.x < widthAndHeight.x && position.y < widthAndHeight.y;
-	}
-
-	bool alreadyOccupied(Vec2i position) {
-		return grid[position.x][position.y] > Type.OutOfGrid;
 	}
 
 	void reset() {
@@ -96,11 +84,9 @@ class Grid {
 	}
 
 	void draw() {
-		uint cpt;
-		for(uint j = 0; j < widthAndHeight.y; ++j) {
-			for(uint i = 0; i < widthAndHeight.x; ++i) {
-				tileset.draw(i + j * widthAndHeight.y, Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO));
-				writeln("Count ", i + j * widthAndHeight.y);
+		for(uint i = 0; i < widthAndHeight.x; ++i) {
+			for(uint j = 0; j < widthAndHeight.y; ++j) {
+				drawRect(Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO), Vec2f.one * GRID_RATIO, Color.white);
 			}
 		}
 	}

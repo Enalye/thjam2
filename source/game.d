@@ -4,9 +4,10 @@ import grimoire;
 
 import th.camera;
 import th.entity;
-import th.stage;
-import th.grid;
 import th.input;
+import th.grid;
+import th.player;
+import th.stage;
 
 private {
     Scene _scene;
@@ -24,8 +25,7 @@ private final class Scene: Widget {
         Camera _camera;
         Stage _stage;
         InputManager _inputManager;
-        Entity _player;
-        uint lastInput;
+        Player _player;
     }
 
     this() {
@@ -46,42 +46,19 @@ private final class Scene: Widget {
     override void onEvent(Event event) {}
 
     override void update(float deltaTime) {
-        bool inputValid = false;
-        uint input = _inputManager.getKeyPressed(); //to pass on to player
+        Direction input = _inputManager.getKeyPressed(); //to pass on to player
+        bool inputValid = checkDirectionValid(input);
 
-        if(input != lastInput) {
-            if(input == UP) {
-                inputValid = checkDirectionValid(Vec2i(0, -1));
-            }
-
-            if(input == DOWN) {
-                inputValid = checkDirectionValid(Vec2i(0, 1));
-            }
-
-            if(input == LEFT) {
-                inputValid = checkDirectionValid(Vec2i(-1, 0));
-            }
-
-            if(input == RIGHT) {
-                inputValid = checkDirectionValid(Vec2i(1, 0));
-            }
-
-            if(inputValid) {
-                lastInput = input;
-            }
+        if(inputValid) {
+            _player.setDirection(input);
         }
 
         _stage.update(deltaTime);
     }
 
-    bool checkDirectionValid(Vec2i direction) {
-        Vec2i newPosition = _player.getUpdatedPosition(direction);
-        if(currentGrid.isPositionValid(newPosition) && !currentGrid.alreadyOccupied(newPosition)) {
-            _player.direction = direction;
-            return true;
-        } 
-
-        return false;
+    bool checkDirectionValid(Direction direction) {
+        return _player.canUseDirection(direction) &&
+            isPositionValid(_player.getUpdatedPosition(direction));
     }
 
     override void draw() {
@@ -96,9 +73,9 @@ private final class Scene: Widget {
 	}
 
     void onStage1() {
-        _stage = new Stage(Vec2u(18, 10), "plaine");
-        uint playerPoolId = _stage.pools.push(new EntityPool("reimu_omg"));
-        uint enemyPoolId = _stage.pools.push(new EntityPool("fairy_default"));
+        _stage = new Stage(Vec2u(5, 7));
+        uint playerPoolId = _stage.pools.push(new EntityPool);
+        uint enemyPoolId = _stage.pools.push(new EntityPool);
         _player = _stage.addPlayerData(Vec2i(0, 0), playerPoolId);
         _stage.addEnemyData(Vec2i(0, 5), enemyPoolId);
         _stage.addEnemyData(Vec2i(4, 5), enemyPoolId);

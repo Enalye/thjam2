@@ -6,7 +6,7 @@ import grimoire;
 
 import derelict.sdl2.sdl;
 
-enum { NONE, UP, DOWN, LEFT, RIGHT, FIRE_UP, FIRE_DOWN, FIRE_LEFT, FIRE_RIGHT }
+enum Direction { NONE, UP, DOWN, LEFT, RIGHT, FIRE_UP, FIRE_DOWN, FIRE_LEFT, FIRE_RIGHT }
 
 class InputManager {
 	this() {
@@ -26,30 +26,30 @@ class InputManager {
 	
 	enum getKeyPressed() {
 		if (getKeyDown("up")) {
-			return UP;
+			return Direction.UP;
 		}
 		else if (getKeyDown("down")) {
-			return DOWN;
+			return Direction.DOWN;
 		}
 		else if (getKeyDown("left")) {
-			return LEFT;
+			return Direction.LEFT;
 		}
 		else if (getKeyDown("right")) {
-			return RIGHT;
+			return Direction.RIGHT;
 		}
 		else if (getKeyDown("fireUp")) {
-			return FIRE_UP;
+			return Direction.FIRE_UP;
 		}
 		else if (getKeyDown("fireDown")) {
-			return FIRE_DOWN;
+			return Direction.FIRE_DOWN;
 		}
 		else if (getKeyDown("fireLeft")) {
-			return FIRE_LEFT;
+			return Direction.FIRE_LEFT;
 		}
 		else if (getKeyDown("fireRight")) {
-			return FIRE_RIGHT;
+			return Direction.FIRE_RIGHT;
 		}
 
-		return NONE;
+		return Direction.NONE;
 	}
 }
