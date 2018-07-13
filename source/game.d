@@ -23,10 +23,14 @@ void startGame() {
 
 private final class Scene: Widget {
     private {
+        //Modules
         Camera _camera;
         Stage _stage;
-        ShotArray _playerShots, _enemyShots;
         InputManager _inputManager;
+
+        //Entities
+        ShotArray _playerShots, _enemyShots;
+        EntityPoolArray _enemies;
         Player _player;
     }
 
@@ -64,11 +68,18 @@ private final class Scene: Widget {
 			if(!shot.isAlive)
 				_enemyShots.markInternalForRemoval(index);
 			//Handle collisions with the player
-            shot.isInside(_player);
+            shot.handleCollision(_player);
+		}
+
+        foreach(Enemy enemy, uint index; _enemies) {
+			enemy.update(deltaTime);
+			if(!enemy.isAlive)
+				_enemies.markInternalForRemoval(index);
 		}
 
         _playerShots.sweepMarkedData();
         _enemyShots.sweepMarkedData();
+        _enemies.sweepMarkedData();
 
         Direction input = _inputManager.getKeyPressed(); //to pass on to player
         bool inputValid = checkDirectionValid(input);
@@ -98,10 +109,14 @@ private final class Scene: Widget {
 
     void onStage1() {
         _stage = new Stage(Vec2u(17, 10), "plaine");
-        uint playerPoolId = _stage.pools.push(new EntityPool);
         uint enemyPoolId = _stage.pools.push(new EntityPool);
-        _player = _stage.addPlayerData(Vec2i(0, 0), playerPoolId);
-        _stage.addEnemyData(Vec2i(0, 5), enemyPoolId);
-        _stage.addEnemyData(Vec2i(4, 5), enemyPoolId);
+        _player = new Player;
+        _player.gridPosition = Vec2i(0, 0);
+        auto enemy = new Enemy;
+        enemy.gridPosition = Vec2i(0, 5);
+        _enemies.push(enemy);
+        enemy = new Enemy;
+        enemy.gridPosition = Vec2i(4, 5);
+        _enemies.push(enemy);
     }
 }

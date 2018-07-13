@@ -46,7 +46,9 @@ class Shot {
         if(entity.position.distance(_position) < _radius) {
             entity.receiveDamage();
             _isAlive = false;
+            return true;
         }
+        return false;
     }
 }
 
