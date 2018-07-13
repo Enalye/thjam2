@@ -23,8 +23,6 @@ class Stage {
 		foreach(EntityPool pool; pools) {
 			pool.update(deltaTime);
 		}
-
-		grid.reset();
 	}
 
 	Enemy addEnemyData(Vec2i position, uint poolId) {
