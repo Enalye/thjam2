@@ -7,6 +7,8 @@ static float GRID_RATIO = 64f;
 
 enum Type { None, OutOfGrid, Player, Enemy };
 
+Grid currentGrid;
+
 bool isRealInstance(Type type) {
 	return type > Type.OutOfGrid;
 }
@@ -31,7 +33,7 @@ class Grid {
 			position.y - (widthAndHeight.y * GRID_RATIO) / 2);
 	}
 
-	Type at(Vec2u position) {
+	Type at(Vec2i position) {
 		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
 			return grid[position.x][position.y];
 		} else {
@@ -39,11 +41,11 @@ class Grid {
 		}
 	}
 
-	void set(Type type, Vec2u position) {
+	void set(Type type, Vec2i position) {
 		if(position.x < widthAndHeight.x && position.y < widthAndHeight.y) {
 			grid[position.x][position.y] = type;
 		} else {
-			writeln("position ", position.x, ",", position.y, " is out of widthAndHeight ", widthAndHeight.x, ",", widthAndHeight.y);
+			writeln("position ", position, " is out of widthAndHeight ", widthAndHeight);
 			throw new Exception("Coordinate out of grid bounds!");
 		}
 	}
@@ -62,5 +64,9 @@ class Grid {
 				drawRect(Vec2f(topLeft.x + i * GRID_RATIO, topLeft.y + j * GRID_RATIO), Vec2f.one * GRID_RATIO, Color.white);
 			}
 		}
+	}
+
+	Vec2f computeRealPosition(Vec2i gridPosition) {
+		return Vec2f(gridPosition.x * GRID_RATIO, gridPosition.y * GRID_RATIO) + topLeft;
 	}
 }

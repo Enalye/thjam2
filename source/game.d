@@ -56,8 +56,8 @@ private final class Scene: Widget {
         _stage = new Stage(Vec2u(5, 7));
         uint playerPoolId = _stage.pools.push(new EntityPool("fairy_default"));
         uint enemyPoolId = _stage.pools.push(new EntityPool("fairy_default"));
-        _stage.addPlayerData(Vec2u(0, 0), playerPoolId);
-        _stage.addEnemyData(Vec2u(0, 5), enemyPoolId);
-        _stage.addEnemyData(Vec2u(4, 5), enemyPoolId);
+        _stage.addPlayerData(Vec2i(0, 0), playerPoolId);
+        _stage.addEnemyData(Vec2i(0, 5), enemyPoolId);
+        _stage.addEnemyData(Vec2i(4, 5), enemyPoolId);
     }
 }
