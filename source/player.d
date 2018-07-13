@@ -5,6 +5,7 @@ import grimoire;
 import th.entity;
 import th.grid;
 import th.input;
+import th.shot;
 import th.stage;
 
 class Player: Entity {
@@ -33,7 +34,9 @@ class Player: Entity {
         }
 
         if(isFire(_direction)) {
-
+            _lastDirection = _direction;
+            float angle = angleFromFireDirection(_direction);
+            createPlayerShot(_position + Vec2f.one * GRID_RATIO / 2, Color.red, angle, 5f, 5 * 60f);
         }
     }
 
