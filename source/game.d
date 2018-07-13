@@ -75,7 +75,8 @@ private final class Scene: Widget {
     }
 
     bool checkDirectionValid(Vec2i direction) {
-        if(currentGrid.isPositionValid(_player.getUpdatedPosition(direction))) {
+        Vec2i newPosition = _player.getUpdatedPosition(direction);
+        if(currentGrid.isPositionValid(newPosition) && !currentGrid.alreadyOccupied(newPosition)) {
             _player.direction = direction;
             return true;
         } 
@@ -95,7 +96,7 @@ private final class Scene: Widget {
 	}
 
     void onStage1() {
-        _stage = new Stage(Vec2u(5, 7));
+        _stage = new Stage(Vec2u(18, 10), "plaine");
         uint playerPoolId = _stage.pools.push(new EntityPool("reimu_omg"));
         uint enemyPoolId = _stage.pools.push(new EntityPool("fairy_default"));
         _player = _stage.addPlayerData(Vec2i(0, 0), playerPoolId);
