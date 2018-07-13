@@ -8,6 +8,65 @@ import derelict.sdl2.sdl;
 
 enum Direction { NONE, UP, DOWN, LEFT, RIGHT, FIRE_UP, FIRE_DOWN, FIRE_LEFT, FIRE_RIGHT }
 
+bool isMovement(Direction direction) {
+	return direction == Direction.UP ||
+		direction == Direction.DOWN ||
+		direction == Direction.LEFT ||
+		direction == Direction.RIGHT;
+}
+
+bool isFire(Direction direction) {
+	return direction == Direction.FIRE_UP ||
+		direction == Direction.FIRE_DOWN ||
+		direction == Direction.FIRE_LEFT ||
+		direction == Direction.FIRE_RIGHT;
+}
+
+Vec2i vectorFromMovementDirection(Direction direction) {
+	Vec2i vector = Vec2i.zero;
+
+	if(direction == Direction.UP) {
+		vector = Vec2i(0, -1);
+	}
+
+	if(direction == Direction.DOWN) {
+		vector = Vec2i(0, 1);
+	}
+
+	if(direction == Direction.LEFT) {
+		vector = Vec2i(-1, 0);
+	}
+
+	if(direction == Direction.RIGHT) {
+		vector = Vec2i(1, 0);
+	}
+
+	return vector;
+}
+
+
+Vec2f vectorFromFireDirection(Direction direction) {
+	Vec2f vector = Vec2f.zero;
+
+	if(direction == Direction.FIRE_UP) {
+		vector = Vec2f(0, -1);
+	}
+
+	if(direction == Direction.FIRE_DOWN) {
+		vector = Vec2f(0, 1);
+	}
+
+	if(direction == Direction.FIRE_LEFT) {
+		vector = Vec2f(-1, 0);
+	}
+
+	if(direction == Direction.FIRE_RIGHT) {
+		vector = Vec2f(1, 0);
+	}
+
+	return vector;
+}
+
 class InputManager {
 	this() {
 		init();
@@ -24,7 +83,7 @@ class InputManager {
 		bindKey("fireRight", SDL_SCANCODE_D);
 	}
 	
-	enum getKeyPressed() {
+	Direction getKeyPressed() {
 		if (getKeyDown("up")) {
 			return Direction.UP;
 		}

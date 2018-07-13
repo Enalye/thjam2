@@ -11,7 +11,6 @@ private {
 class Shot {
     private {
         Vec2f _position, _velocity;
-        float angle;
         Sprite _sprite;
         float _radius = 25f;
         float _time = 0f, _timeToLive = 1f;
@@ -27,8 +26,9 @@ class Shot {
 
     }
 
-    this() {
+    this(Color color = Color.white) {
         _sprite = fetch!Sprite("shot_0");
+        _sprite.color = color;
     }
 
     void update(float deltaTime) {
@@ -51,16 +51,16 @@ ShotArray createEnemyShotArray() {
     return _enemyShots = new ShotArray;
 }
 
-void createPlayerShot(Vec2f pos, float angle, float speed, float timeToLive) {
-    auto shot = new Shot;
+void createPlayerShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {
+    auto shot = new Shot(color);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;
     shot.timeToLive = timeToLive;
     _playerShots.push(shot);
 }
 
-void createEnemyShot(Vec2f pos, float angle, float speed, float timeToLive) {
-    auto shot = new Shot;
+void createEnemyShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {
+    auto shot = new Shot(color);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;    
     shot.timeToLive = timeToLive;
