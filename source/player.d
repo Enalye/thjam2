@@ -2,6 +2,8 @@ module th.player;
 
 import grimoire;
 
+import std.algorithm.comparison;
+
 import th.entity;
 import th.grid;
 import th.input;
@@ -42,5 +44,9 @@ class Player: Entity {
 
     override void draw() {
         _sprite.draw(position);
+    }
+
+    int arrowIndexFromLastDirection() {
+        return max(-1, min(_lastDirection - 1, 4));
     }
 }
