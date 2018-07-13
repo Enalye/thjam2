@@ -1,7 +1,6 @@
 import std.stdio;
 
 import grimoire;
-import th.entity;
 
 import th.menu;
 
