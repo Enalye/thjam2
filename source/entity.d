@@ -6,7 +6,6 @@ import th.grid;
 import th.input;
 
 alias IndexedArray!(Entity, 50u) EntityArray;
-alias IndexedArray!(EntityPool, 10u) EntityPoolArray;
 
 class Entity {
     protected {

@@ -7,7 +7,7 @@ import th.entity;
 import th.input;
 import th.grid;
 import th.player;
-import th.stage;
+import th.enemy;
 import th.shot;
 
 private {
@@ -25,12 +25,12 @@ private final class Scene: Widget {
     private {
         //Modules
         Camera _camera;
-        Stage _stage;
+        Grid _grid;
         InputManager _inputManager;
 
         //Entities
         ShotArray _playerShots, _enemyShots;
-        EntityPoolArray _enemies;
+        EntityArray _enemies;
         Player _player;
     }
 
@@ -41,6 +41,11 @@ private final class Scene: Widget {
         _playerShots = createPlayerShotArray();
         _enemyShots = createEnemyShotArray();
         _inputManager = new InputManager;
+        _enemies = new EntityArray;
+    }
+
+    ~this() {
+        destroyGrid();
     }
 
     override void onPosition() {
@@ -71,10 +76,14 @@ private final class Scene: Widget {
             shot.handleCollision(_player);
 		}
 
-        foreach(Enemy enemy, uint index; _enemies) {
+        foreach(Entity enemy, uint index; _enemies) {
 			enemy.update(deltaTime);
-			if(!enemy.isAlive)
+			if(!enemy.isAlive) {
 				_enemies.markInternalForRemoval(index);
+            }
+            else {
+				enemy.updateGridState();
+			}
 		}
 
         _playerShots.sweepMarkedData();
@@ -87,8 +96,7 @@ private final class Scene: Widget {
         if(inputValid) {
             _player.setDirection(input);
         }
-
-        _stage.update(deltaTime);
+        _player.updateGridState();
     }
 
     bool checkDirectionValid(Direction direction) {
@@ -100,7 +108,13 @@ private final class Scene: Widget {
 		pushView(_camera.view, true);
 		//Render everything in the scene here.
 
-        _stage.draw();
+        _grid.draw();
+
+        foreach(Entity enemy; _enemies) {
+            enemy.draw();
+        }
+
+        _player.draw();    
 
         foreach(Shot shot; _playerShots) {
             shot.draw();
@@ -108,7 +122,7 @@ private final class Scene: Widget {
 
         foreach(Shot shot; _enemyShots) {
             shot.draw();
-        }     
+        }    
 
         //End scene rendering
 		popView();
@@ -116,15 +130,17 @@ private final class Scene: Widget {
 	}
 
     void onStage1() {
-        _stage = new Stage(Vec2u(17, 10), "plaine");
-        uint enemyPoolId = _stage.pools.push(new EntityPool);
+        _grid = createGrid(Vec2u(17, 10), "plaine");
         _player = new Player;
         _player.gridPosition = Vec2i(0, 0);
+        _grid.set(Type.Player, _player.gridPosition);
         auto enemy = new Enemy;
         enemy.gridPosition = Vec2i(0, 5);
+        _grid.set(Type.Enemy, enemy.gridPosition);
         _enemies.push(enemy);
         enemy = new Enemy;
         enemy.gridPosition = Vec2i(4, 5);
+        _grid.set(Type.Enemy, enemy.gridPosition);
         _enemies.push(enemy);
     }
 }

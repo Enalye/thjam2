@@ -1,6 +1,7 @@
 module th.shot;
 
 import grimoire;
+import th.entity;
 
 alias ShotArray = IndexedArray!(Shot, 2000);
 
