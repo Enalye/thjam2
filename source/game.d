@@ -174,8 +174,11 @@ private final class Scene: WidgetGroup {
         enemy = new Enemy(Vec2i(5, 10), "ghost", Vec2f(0.5f, 1f));
         _enemies.push(enemy);
 
-        auto item = new Item(Vec2i(1, 1), ItemType.POWER);
-        _items.push(item);
+        auto power = new Item(Vec2i(1, 1), ItemType.POWER, Vec2f(0.5f, 0.5f));
+        _items.push(power);
+
+        auto bomb = new Item(Vec2i(4, 10), ItemType.BOMB, Vec2f(0.7f, 0.85f));
+        _items.push(bomb);
 
         auto yinyang = new YinYang(Vec2i(0, 5), Direction.RIGHT);
         _enemies.push(yinyang);

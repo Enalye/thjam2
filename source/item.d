@@ -7,13 +7,16 @@ import th.grid;
 import th.player;
 import th.inventory;
 
-enum ItemType { POWER, SCORE, HAKKERO, GAP, FLIP, STOPWATCH, COUNT }
+enum ItemType { POWER, SCORE, BOMB, HAKKERO, GAP, FLIP, STOPWATCH, COUNT }
 
 private string getItemFilePath(ItemType itemType) {
 	string filePath = null;
 	switch(itemType) {
 		case ItemType.POWER:
 		filePath = "power";
+		break;
+		case ItemType.BOMB:
+		filePath = "unfired_bomb";
 		break;
 		default:
 		filePath = null;
@@ -25,15 +28,17 @@ private string getItemFilePath(ItemType itemType) {
 
 class Item: Entity {
 	private ItemType _itemType;
+	private Vec2f _uncollectedScale;
 
 	@property {
 		int itemType() const { return _itemType; }
 	}
 
-	this(Vec2i gridPosition, ItemType itemType) {
+	this(Vec2i gridPosition, ItemType itemType, Vec2f uncollectedScale) {
 		super(gridPosition, getItemFilePath(itemType));
 		type = Type.Item;
 		_itemType = itemType;
+		_uncollectedScale = uncollectedScale;
 	}
 
 	override void update(float deltaTime) {
@@ -52,7 +57,7 @@ class Item: Entity {
 		}
 
 		if(!collected && !fromWidget) {
-			scale = Vec2f.one * 0.5f;
+			scale = _uncollectedScale;
 			super.draw();
 		}
 	}

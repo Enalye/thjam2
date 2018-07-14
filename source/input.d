@@ -6,7 +6,7 @@ import grimoire;
 
 import derelict.sdl2.sdl;
 
-enum Direction { NONE, UP, DOWN, LEFT, RIGHT, FIRE_UP, FIRE_DOWN, FIRE_LEFT, FIRE_RIGHT }
+enum Direction { NONE, UP, DOWN, LEFT, RIGHT, FIRE_UP, FIRE_DOWN, FIRE_LEFT, FIRE_RIGHT, SPACE }
 
 bool isMovement(Direction direction) {
 	return direction == Direction.UP ||
@@ -117,6 +117,7 @@ class InputManager {
 		bindKey("fireDown", SDL_SCANCODE_S);
 		bindKey("fireLeft", SDL_SCANCODE_A);
 		bindKey("fireRight", SDL_SCANCODE_D);
+		bindKey("space", SDL_SCANCODE_SPACE);
 	}
 	
 	Direction getKeyPressed() {
@@ -143,6 +144,8 @@ class InputManager {
 		}
 		else if (getKeyDown("fireRight")) {
 			return Direction.FIRE_RIGHT;
+		} else if (getKeyDown("space")) {
+			return Direction.SPACE;
 		}
 
 		return Direction.NONE;

@@ -36,12 +36,10 @@ class Shot {
     }
 
     void update(float deltaTime) {
-        if(lockTimerRunning) {
-            _position += _velocity * deltaTime;
-            _time += deltaTime;
-            if(_time > _timeToLive) {
-                _isAlive = false;
-            }
+        _position += _velocity * deltaTime;
+        _time += deltaTime;
+        if(_time > _timeToLive) {
+            _isAlive = false;
         }
     }
 
