@@ -2,12 +2,12 @@ module th.game;
 
 import grimoire;
 
-import th.arrows;
 import th.camera;
 import th.entity;
 import th.input;
 import th.item;
 import th.grid;
+import th.gui;
 import th.player;
 import th.enemy;
 import th.shot;
@@ -37,7 +37,7 @@ private final class Scene: WidgetGroup {
 
         //Sub widgets
         Inventory _inventory;
-        Arrows _arrows;
+        GUI _arrows;
     }
 
     this() {
@@ -175,7 +175,7 @@ private final class Scene: WidgetGroup {
 
         //UI
         removeChildren();
-        _arrows = new Arrows(_player);
+        _arrows = new GUI(_player);
         addChild(_arrows);
         _inventory = new Inventory(_items);
         addChild(_inventory);

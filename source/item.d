@@ -65,7 +65,7 @@ class Inventory: Widget {
 		foreach(Entity _item, uint id; _items) {
 			_item.update(deltaTime);
 			if(_item.collected) {
-				_item.greyOutSprite(Vec2f(50 + id * GRID_RATIO, 50));
+				_item.greyOutSprite(Vec2f(50 + id * GRID_RATIO, 125));
 			}
 		}
 	}

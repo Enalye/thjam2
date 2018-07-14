@@ -24,6 +24,7 @@ class Player: Entity {
         _animation.start(10f, TimeMode.Loop);
         _animation.scale = Vec2f.one * 0.26f;
         super(gridPosition, null);
+        _life = 3;
     }
 
     override void update(float deltaTime) {

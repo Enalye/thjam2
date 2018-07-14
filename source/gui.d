@@ -1,12 +1,14 @@
-module th.arrows;
+module th.gui;
 
+import th.epoch;
 import th.input;
 import th.player;
 import grimoire;
 
-public final class Arrows: Widget {
+public final class GUI: Widget {
 	private {
 		Player _player;
+		Sprite _heart;
         Sprite[4] _arrows;
         Vec2f[4] _positions;
 	}
@@ -15,6 +17,9 @@ public final class Arrows: Widget {
 		_player = player;
         _arrows = new Sprite[4];
         _positions = new Vec2f[4];
+
+        _heart = fetch!Sprite("heart");
+        _heart.scale = Vec2f.one * 2;
 
         _arrows[0] = fetch!Sprite("arrow_up");
         _arrows[1] = fetch!Sprite("arrow_down");
@@ -44,6 +49,13 @@ public final class Arrows: Widget {
 
 			_arrow.draw(_positions[index]);
 			++index;
+		}
+
+		float timerBandHeight = 100 * percentageElapsed();
+		drawFilledRect(Vec2f(1125, 125), Vec2f(timerBandHeight, 10), Color.white);
+
+		for(int i =0; i < _player.life; ++i) {
+			_heart.draw(Vec2f(50 + i * 40, 50));
 		}
 	}
 }

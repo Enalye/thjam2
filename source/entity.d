@@ -20,6 +20,7 @@ class Entity {
     }
 
     @property {
+    	int life() const { return _life; }
         Vec2f position() const { return _position; }
 
         Vec2i gridPosition() const { return _gridPosition; }
