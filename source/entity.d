@@ -8,10 +8,11 @@ import th.input;
 alias IndexedArray!(Entity, 50u) EntityArray;
 
 class Entity {
+	private Type _type;
+
     protected {
 	    int _life = 1;
 
-	    Type _type;
 	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
     	Vec2f _position = Vec2f.zero; //True position in the scene
     	Direction _direction; //Input received current update
@@ -32,6 +33,7 @@ class Entity {
             return _gridPosition;
         }
 
+        Type type() const { return _type; }
         Type type(Type type) {
         	_type = type;
         	currentGrid.set(_type, _gridPosition);
@@ -44,6 +46,11 @@ class Entity {
 
         bool collected() const {
         	return (_type == Type.Collected);
+        }
+
+        bool collected(bool isCollected) {
+        	if(isCollected) { _type = Type.Collected; }
+        	return collected();
         }
 
         bool isAlive() const { return _life > 0; }
@@ -104,7 +111,6 @@ class Entity {
 
     bool checkDirectionValid(Direction direction) {
 		bool canMove = (direction != Direction.NONE) && isPositionValid(getUpdatedPosition(direction)); 
-		if(_debug) { writeln(canMove ? "can move!" : "cannot move !"); }
 		return canMove;
     }
 

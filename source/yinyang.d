@@ -17,7 +17,6 @@ class YinYang: Item {
 
 	override void action() {
 		if(isMovement(_direction) && checkDirectionValid(_direction)) {
-			writeln(_direction);
 			moveOnGrid();
 		} else {
 			_direction = getOppositeDirection(_direction);
