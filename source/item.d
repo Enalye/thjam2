@@ -5,17 +5,21 @@ import grimoire;
 import th.entity;
 import th.grid;
 import th.player;
+import th.inventory;
 
 enum ItemType { POWER, SCORE, HAKKERO, GAP, YINYANG, FLIP, STOPWATCH, COUNT }
 
 private string getItemFilePath(ItemType itemType) {
-	string filePath = "yinyang";
+	string filePath = null;
 	switch(itemType) {
+		case ItemType.POWER:
+		filePath = "power";
+		break;
 		case ItemType.YINYANG:
 		filePath = "yinyang";
 		break;
 		default:
-		filePath = "yinyang";
+		filePath = null;
 		break;
 	}
 
@@ -23,56 +27,37 @@ private string getItemFilePath(ItemType itemType) {
 }
 
 class Item: Entity {
-	private Player _player;
 	private ItemType _itemType;
-	private Sprite _sprite;
+	protected bool _collectible = true;
 
-	this(Vec2i gridPosition, Player player, ItemType itemType) {
-		_player = player;
+	@property {
+		int itemType() const { return _itemType; }
+	}
+
+	this(Vec2i gridPosition, ItemType itemType) {
 		_itemType = itemType;
 		_type = Type.Item;
 		super(gridPosition, getItemFilePath(_itemType));
 	}
 
 	override void update(float deltaTime) {
-		if(!collected && isRealInstance(_type) && (_player.gridPosition == _gridPosition)) {	
+		if(!collected && _collectible && isRealInstance(_type) && (currentGrid.playerPosition == _gridPosition)) {	
 			removeFromGrid();
 			_type = Type.Collected;
 		}
+
+		updateGridState();
 	}
 
 	override void draw(bool fromWidget) {
 		if(collected && fromWidget) {
+			_sprite.scale = Vec2f.one;
 			super.draw();
 		}
 
 		if(!collected && !fromWidget) {
+			_sprite.scale = Vec2f.one * 0.5f;
 			super.draw();
-		}
-	}
-}
-
-class Inventory: Widget {
-	EntityArray _items;
-
-	this(EntityArray items) {
-		_items = items;
-	}
-
-	override void onEvent(Event event) {}
-
-	override void update(float deltaTime) {
-		foreach(Entity _item, uint id; _items) {
-			_item.update(deltaTime);
-			if(_item.collected) {
-				_item.greyOutSprite(Vec2f(50 + id * GRID_RATIO, 125));
-			}
-		}
-	}
-
-	override void draw() {
-		foreach(Entity _item; _items) {
-			_item.draw(true);
 		}
 	}
 }

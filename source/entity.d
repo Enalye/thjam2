@@ -17,6 +17,8 @@ class Entity {
     	Direction _direction; //Input received current update
     	Direction _lastDirection; //Input received last update
     	Sprite _sprite;
+    	bool _debug = false;
+    	bool _resetDirectionAuto = true;
     }
 
     @property {
@@ -30,6 +32,12 @@ class Entity {
             return _gridPosition;
         }
 
+        Type type(Type type) {
+        	_type = type;
+        	currentGrid.set(_type, _gridPosition);
+        	return _type;
+        }
+
         void direction(Direction direction) {
         	_direction = direction;
         }
@@ -41,8 +49,7 @@ class Entity {
         bool isAlive() const { return _life > 0; }
 
         Vec2i getUpdatedPosition(Direction direction) {
-        	Vec2i potentialDirection = vectorFromMovementDirection(direction);
-			return gridPosition + potentialDirection;
+			return gridPosition + vectorFromMovementDirection(direction);
 		}
 
 		bool canUseDirection(Direction direction) {
@@ -52,7 +59,6 @@ class Entity {
 
 	this(Vec2i gridPos, string filePath) {
 		gridPosition = gridPos;
-		currentGrid.set(_type, _gridPosition);
 
 		if(filePath	!= null) {
 			_sprite = fetch!Sprite(filePath);
@@ -60,8 +66,22 @@ class Entity {
 		}
 	}
 
-	void receiveDamage() {
-		_life--;
+	void receiveDamage(int damage = 1) {
+		_life -= damage;
+	}
+
+	protected void moveOnGrid() {
+		if(_debug) {
+	        writeln("Last direction ", _lastDirection, " current direction ", _direction);
+	    }
+
+		_lastDirection = _direction;
+        currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
+        gridPosition = getUpdatedPosition(_direction);
+
+        if(_debug) {
+	        writeln("Moving to ", gridPosition, " on tile with type ", currentGrid.at(gridPosition));
+	    }
 	}
 
 	void removeFromGrid() {
@@ -75,14 +95,17 @@ class Entity {
 	void updateGridState() {
 		if(_direction != Direction.NONE) {
 			currentGrid.set(_type, gridPosition);
-			_direction = Direction.NONE;
+
+			if(_resetDirectionAuto) {
+				_direction = Direction.NONE;
+			}
 		}
 	}
 
     bool checkDirectionValid(Direction direction) {
-        return (direction != Direction.NONE) && canUseDirection(direction) &&
-            isPositionValid(getUpdatedPosition(direction))
-            && !isOpponent(_type, currentGrid.at(gridPosition + vectorFromMovementDirection(direction)));
+		bool canMove = (direction != Direction.NONE) && isPositionValid(getUpdatedPosition(direction)); 
+		if(_debug) { writeln(canMove ? "can move!" : "cannot move !"); }
+		return canMove;
     }
 
     void greyOutSprite(Vec2f position) {
