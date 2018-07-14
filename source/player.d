@@ -4,19 +4,26 @@ import grimoire;
 
 import std.algorithm.comparison;
 
+import th.camera;
 import th.entity;
+import th.epoch;
 import th.grid;
 import th.input;
+import th.inventory;
+import th.item;
 import th.shot;
-import th.camera;
-import th.epoch;
 
 class Player: Entity {
     private {
         Animation _walkUpAnimation, _walkDownAnimation, _walkLeftAnimation, _walkRightAnimation;
+        Inventory _inventory;
     }
 
     bool canPlay;
+
+    @property {
+        void inventory(Inventory inventory) { _inventory = inventory; }
+    }
     
     this(Vec2i gridPosition, string filePath) {
         _type = Type.Player;
@@ -52,7 +59,12 @@ class Player: Entity {
             else if(isFire(_direction)) {
                 _lastDirection = _direction;
                 float angle = angleFromFireDirection(_direction);
-                createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
+
+                bool powerUp = _inventory.hasItem(ItemType.POWER);
+                Vec2f shotScale = powerUp ? Vec2f.one * 1.5f : Vec2f.one;
+                int damage = powerUp ? 2 : 1;
+
+                createPlayerShot(_position, shotScale, damage, Color.red, angle, 5f, 5 * 60f);
                 registerPlayerActionOnEpoch();
             }
         }
