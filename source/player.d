@@ -99,6 +99,6 @@ class Player: Entity {
     }
 
     int arrowIndexFromLastDirection() {
-        return max(-1, min(_lastDirection - 1, 4));
+        return max(-1, min(_lastDirection - 1, 8));
     }
 }
