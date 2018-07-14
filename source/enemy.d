@@ -20,16 +20,15 @@ class Enemy: Entity {
         
     }
 
-    //Called when the player is acting
+    //Called when the enemy is acting
     override void action() {
         _direction = _lastDirection;
         while(_direction == _lastDirection) {
             _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.UP, cast(int)Direction.FIRE_RIGHT));
         }
 
-        if(isMovement(_direction) && checkDirectionValid(_direction)) {
-            currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
-            gridPosition = getUpdatedPosition(_direction);
+        if(isMovement(_direction) && checkDirectionValid(_direction) && canUseDirection(_direction)) {
+            moveOnGrid();
         }
 
         if(isFire(_direction)) {
@@ -44,8 +43,6 @@ class Enemy: Entity {
     }
 
     override bool checkDirectionValid(Direction direction) {
-        return (direction != Direction.NONE) && canUseDirection(direction) &&
-            isPositionValid(getUpdatedPosition(direction))
-            && isTileFreeForEnemy(gridPosition + vectorFromMovementDirection(direction));
+        return (direction != Direction.NONE) && isPositionValid(getUpdatedPosition(direction)) && isTileFreeForEnemy(gridPosition + vectorFromMovementDirection(direction));
     }
 }

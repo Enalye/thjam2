@@ -22,6 +22,42 @@ bool isFire(Direction direction) {
 		direction == Direction.FIRE_RIGHT;
 }
 
+Direction getOppositeDirection(Direction direction) {
+	Direction oppositeDirection;
+	switch(direction) {
+		case Direction.UP:
+		oppositeDirection = Direction.DOWN;
+		break;
+		case Direction.DOWN:
+		oppositeDirection = Direction.UP;
+		break;
+		case Direction.LEFT:
+		oppositeDirection = Direction.RIGHT;
+		break;
+		case Direction.RIGHT:
+		oppositeDirection = Direction.LEFT;
+		break;
+		case Direction.FIRE_UP:
+		oppositeDirection = Direction.FIRE_DOWN;
+		break;
+		case Direction.FIRE_DOWN:
+		oppositeDirection = Direction.FIRE_UP;
+		break;
+		case Direction.FIRE_LEFT:
+		oppositeDirection = Direction.FIRE_RIGHT;
+		break;
+		case Direction.FIRE_RIGHT:
+		oppositeDirection = Direction.FIRE_LEFT;
+		break;
+		default:
+		oppositeDirection = Direction.NONE;
+		break;
+	}
+
+	return oppositeDirection;
+}
+
+
 Vec2i vectorFromMovementDirection(Direction direction) {
 	Vec2i vector = Vec2i.zero;
 
