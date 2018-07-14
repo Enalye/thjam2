@@ -38,8 +38,8 @@ class Entity {
         	return _type;
         }
 
-        void direction(Direction direction) {
-        	_direction = direction;
+        Direction direction(Direction direction) {
+        	return _direction = direction;
         }
 
         bool collected() const {
@@ -47,14 +47,6 @@ class Entity {
         }
 
         bool isAlive() const { return _life > 0; }
-
-        Vec2i getUpdatedPosition(Direction direction) {
-			return gridPosition + vectorFromMovementDirection(direction);
-		}
-
-		bool canUseDirection(Direction direction) {
-			return direction != _lastDirection;
-		}
     }
 
 	this(Vec2i gridPos, string filePath) {
@@ -68,6 +60,14 @@ class Entity {
 
 	void receiveDamage(int damage = 1) {
 		_life -= damage;
+	}
+
+	Vec2i getUpdatedPosition(Direction direction) {
+		return gridPosition + vectorFromMovementDirection(direction);
+	}
+
+	bool canUseDirection(Direction direction) {
+		return direction != _lastDirection;
 	}
 
 	protected void moveOnGrid() {
