@@ -52,8 +52,11 @@ class Entity {
 	this(Vec2i gridPos, string filePath) {
 		gridPosition = gridPos;
 		currentGrid.set(_type, _gridPosition);
-		_sprite = fetch!Sprite(filePath);
-		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+
+		if(filePath	!= null) {
+			_sprite = fetch!Sprite(filePath);
+			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+		}
 	}
 
 	void receiveDamage() {
@@ -65,6 +68,8 @@ class Entity {
 	}
 
 	void update(float deltaTime) {}
+
+	void action() {}
 
 	void updateGridState() {
 		if(_direction != Direction.NONE) {

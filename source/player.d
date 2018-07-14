@@ -13,17 +13,22 @@ import th.epoch;
 
 class Player: Entity {
     private {
-        Sprite _sprite;
+        Animation _animation;
     }
 
     bool hasPlayed, canPlay;
     
     this(Vec2i gridPosition, string filePath) {
         _type = Type.Player;
-        super(gridPosition, filePath);
+        _animation = Animation(filePath, TimeMode.Loop);
+        _animation.start(10f, TimeMode.Loop);
+        _animation.scale = Vec2f.one * 0.26f;
+        super(gridPosition, null);
     }
 
     override void update(float deltaTime) {
+        _animation.update(deltaTime);
+
         if(isMovement(_direction)) {
             _lastDirection = _direction;
             currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
@@ -42,6 +47,10 @@ class Player: Entity {
             createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
             registerPlayerActionOnEpoch();
         }
+    }
+
+    override void draw(bool inhibitDraw = false) {
+        _animation.draw(_position);
     }
 
     int arrowIndexFromLastDirection() {
