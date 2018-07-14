@@ -2,6 +2,7 @@ module th.game;
 
 import grimoire;
 
+import th.bomb;
 import th.camera;
 import th.enemy;
 import th.entity;
@@ -15,15 +16,13 @@ import th.player;
 import th.shot;
 import th.yinyang;
 
-private {
-    Scene _scene;
-}
+Scene currentScene;
 
 void startGame() {
     removeWidgets();
-    _scene = new Scene;
-    addWidget(_scene);
-    _scene.onStage1();
+    currentScene = new Scene;
+    addWidget(currentScene);
+    currentScene.onStage1();
 }
 
 private final class Scene: WidgetGroup {
@@ -31,11 +30,6 @@ private final class Scene: WidgetGroup {
         //Modules
         Camera _camera;
         InputManager _inputManager;
-
-        //Entities
-        ShotArray _playerShots, _enemyShots;
-        EntityArray _enemies, _items;
-        Player _player;
 
         //Sub widgets
         Inventory _inventory;
@@ -46,12 +40,14 @@ private final class Scene: WidgetGroup {
         _position = centerScreen;
 		_size = screenSize;
 		_camera = createCamera(centerScreen, screenSize);
-        _playerShots = createPlayerShotArray();
-        _enemyShots = createEnemyShotArray();
+
+        playerShots = createPlayerShotArray();
+        enemyShots = createEnemyShotArray();
+
         _inputManager = new InputManager;
-        _enemies = new EntityArray;
+        enemies = new EntityArray;
         startEpoch();
-        _items = new EntityArray;
+        items = new EntityArray;
     }
 
     ~this() {
@@ -72,47 +68,47 @@ private final class Scene: WidgetGroup {
 
     override void update(float deltaTime) {
         //Update player shots
-        foreach(Shot shot, uint index; _playerShots) {
+        foreach(Shot shot, uint index; playerShots) {
 			shot.update(deltaTime);
 			if(!shot.isAlive)
-				_playerShots.markInternalForRemoval(index);
+				playerShots.markInternalForRemoval(index);
 			//Handle collisions with enemies
-            foreach(Entity enemy; _enemies) {
+            foreach(Entity enemy; enemies) {
                 shot.handleCollision(enemy);
             }
 		}
 
         //Update enemy shots
-        foreach(Shot shot, uint index; _enemyShots) {
+        foreach(Shot shot, uint index; enemyShots) {
 			shot.update(deltaTime);
 			if(!shot.isAlive)
-				_enemyShots.markInternalForRemoval(index);
+				enemyShots.markInternalForRemoval(index);
 			//Handle collisions with the player
-            shot.handleCollision(_player);
+            shot.handleCollision(player);
 		}
 
         //Player input handling
-        _player.canPlay = false;
+        player.canPlay = false;
         if(canActEpoch()) {
             Direction input = _inputManager.getKeyPressed(); //to pass on to player
-            bool inputValid = _player.checkDirectionValid(input) && _player.canUseDirection(input);
+            bool inputValid = player.checkDirectionValid(input) && player.canUseDirection(input);
 
             if(inputValid) {
-                _player.canPlay = true;
-                _player.direction = input;
+                player.canPlay = true;
+                player.direction = input;
             }
         }
-        _player.update(deltaTime);
+        player.update(deltaTime);
         if(canActEpoch())
-            _player.updateGridState();
+            player.updateGridState();
 
         _inventory.update(deltaTime);
 
         //Update enemies shots
-        foreach(Entity enemy, uint index; _enemies) {
+        foreach(Entity enemy, uint index; enemies) {
 			enemy.update(deltaTime);
 			if(!enemy.isAlive) {
-				_enemies.markInternalForRemoval(index);
+				enemies.markInternalForRemoval(index);
                 enemy.removeFromGrid();
             }
             else {
@@ -124,9 +120,9 @@ private final class Scene: WidgetGroup {
 		}
 
         //Cleanup data
-        _playerShots.sweepMarkedData();
-        _enemyShots.sweepMarkedData();
-        _enemies.sweepMarkedData();
+        playerShots.sweepMarkedData();
+        enemyShots.sweepMarkedData();
+        enemies.sweepMarkedData();
 
         updateEpoch(deltaTime);
 
@@ -140,21 +136,21 @@ private final class Scene: WidgetGroup {
 
         currentGrid.draw();
 
-        foreach(Entity enemy; _enemies) {
+        foreach(Entity enemy; enemies) {
             enemy.draw();
         }
 
-        foreach(Entity item; _items) {
+        foreach(Entity item; items) {
             item.draw();
         }
 
-        _player.draw();
+        player.draw();
 
-        foreach(Shot shot; _playerShots) {
+        foreach(Shot shot; playerShots) {
             shot.draw();
         }
 
-        foreach(Shot shot; _enemyShots) {
+        foreach(Shot shot; enemyShots) {
             shot.draw();
         }    
 
@@ -166,35 +162,35 @@ private final class Scene: WidgetGroup {
 
     void onStage1() {
         createGrid(Vec2u(20, 20), "netherworld");
-        _player = new Player(Vec2i(0, 0), "reimu_idle");
-        moveCameraTo(_player.position, 1f);
+        player = new Player(Vec2i(0, 0), "reimu_idle");
+        moveCameraTo(player.position, 1f);
 
         auto enemy = new Enemy(Vec2i(14, 10), "ghost", Vec2f(0.5f, 1f));
-        _enemies.push(enemy);
+        enemies.push(enemy);
         enemy = new Enemy(Vec2i(5, 10), "ghost", Vec2f(0.5f, 1f));
-        _enemies.push(enemy);
+        enemies.push(enemy);
 
-        auto power = new Item(Vec2i(1, 1), ItemType.POWER, Vec2f(0.5f, 0.5f));
-        _items.push(power);
+       /* auto power = new Item(Vec2i(1, 1), ItemType.POWER, Vec2f(0.5f, 0.5f));
+        _items.push(power);*/
 
-        auto bomb = new Item(Vec2i(4, 10), ItemType.BOMB, Vec2f(0.7f, 0.85f));
-        _items.push(bomb);
+        auto bomb = new Item(Vec2i(1, 1), ItemType.BOMB, Vec2f(0.7f, 0.85f));
+        items.push(bomb);
 
         auto yinyang = new YinYang(Vec2i(0, 5), Direction.RIGHT);
-        _enemies.push(yinyang);
+        enemies.push(yinyang);
 
         //UI
         removeChildren();
-        _arrows = new GUI(_player);
+        _arrows = new GUI(player);
         addChild(_arrows);
-        _inventory = new Inventory(_items);
-        _player.inventory = _inventory;
+        _inventory = new Inventory(items);
+        player.inventory = _inventory;
         addChild(_inventory);
     }
 
     void onStage2() {
         createGrid(Vec2u(20, 20), "plaine");
-        _player = new Player(Vec2i(0, 0), "reimu_omg");
-        moveCameraTo(_player.position, 1f);
+        player = new Player(Vec2i(0, 0), "reimu_omg");
+        moveCameraTo(player.position, 1f);
     }
 }

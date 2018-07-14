@@ -5,6 +5,8 @@ import std.stdio;
 import th.grid;
 import th.input;
 
+EntityArray enemies, items;
+
 alias IndexedArray!(Entity, 50u) EntityArray;
 
 class Entity {
@@ -25,6 +27,7 @@ class Entity {
 
     @property {
     	int life() const { return _life; }
+    	bool dead() { return _life <= 0; }
         Vec2f position() const { return _position; }
 
         Vec2f scale(Vec2f scale) {
@@ -67,7 +70,7 @@ class Entity {
         bool isAlive() const { return _life > 0; }
     }
 
-	this(Vec2i gridPos, string filePath) {
+	this(Vec2i gridPos, string filePath = null) {
 		gridPosition = gridPos;
 
 		if(filePath	!= null) {
