@@ -12,6 +12,8 @@ import th.player;
 import std.algorithm.comparison;
 import std.random;
 
+alias IndexedArray!(Timer, 5000u) TimersArray;
+
 class Bomb: Enemy {
 	Sprite[3] _sprites;
 	int timer;
@@ -52,18 +54,30 @@ class Bomb: Enemy {
 
 class Explosion: Entity {
 	ParticleSource _particleSource;
-	Timer _timer;
+	MixScaleFilterRect _particleFilter;
+	Timer _timer; Vec2f _size;
+
+	bool _debug = false;
 
 	this(Vec2i gridPosition) {
 		super(gridPosition);
 		type = Type.Enemy;
 		scale = Vec2f(4f, 2f);
+		_size = Vec2f(5 * GRID_RATIO, GRID_RATIO);
 
 		_particleSource = new ParticleSource();
 		_particleSource.sprite = fetch!Sprite("starParticle");
 		_particleSource.sprite.blend = Blend.AdditiveBlending;
-		_particleSource.sprite.scale = Vec2f.one * 0.1f;
-		_timer.start(3f);
+
+		_particleFilter = new MixScaleFilterRect();
+		_particleFilter.position = position;
+		_particleFilter.property(0, _size.x);
+		_particleFilter.property(1, _size.y);
+		_particleFilter.property(2, 0);
+		_particleFilter.property(3, 0.04f);
+
+		_timer.start(1f);
+		_debug = true;
 	}
 
 	override void update(float deltaTime) {
@@ -83,25 +97,43 @@ class Explosion: Entity {
 			}
 		}
 
-		Particle particle_left = new Particle;
-		particle_left.position.x = uniform!"[]"(position.x - 0.05, position.x + 0.05);
-		particle_left.position.y = uniform!"[]"(position.y - 5, position.x + 5);
-		particle_left.velocity.x = uniform!"[]"(-3f, -2f);
-		particle_left.velocity.y = 0;
-		particle_left.timeToLive = uniform!"[]"(0.2f, 0.5f);
-		particle_left.scale = uniform!"[]"(3f, 4f);
-		particle_left.color = Color(1f, 1f - _timer.time(), 1f - _timer.time());
+		if(_timer.isRunning()) {
+			Particle particle_left = new Particle;
+			particle_left.position.x = uniform!"[]"(position.x - 0.05, position.x + 0.05);
+			particle_left.position.y = uniform!"[]"(position.y - 5, position.y + 5);
+			particle_left.velocity.x = uniform!"[]"(-6f, -5f);
+			particle_left.velocity.y = 0;
+			particle_left.timeToLive = 2f;
+			particle_left.scale = 0.5f;
+			particle_left.color = Color.white;
 
-		Particle particle_right = particle_left;
-		particle_left.velocity.x = uniform!"[]"(2f, 3f);
+			Particle particle_right = new Particle;
+			particle_right.position.x = uniform!"[]"(position.x - 0.05, position.x + 0.05);
+			particle_right.position.y = uniform!"[]"(position.y - 5, position.y + 5);
+			particle_right.velocity.x = uniform!"[]"(5f, 6f);
+			particle_right.velocity.y = 0;
+			particle_right.timeToLive = 2f;
+			particle_right.scale = 0.5f;
+			particle_right.color = Color.white;
 
-		_particleSource.particles.push(particle_left);
-		_particleSource.particles.push(particle_right);
+			_particleSource.particles.push(particle_left);
+			_particleSource.particles.push(particle_right);
+			_debug = false;
+		}
+
+		foreach(Particle particle; _particleSource.particles) {
+			_particleFilter.apply(particle, deltaTime);
+		}
+
 		_particleSource.update(deltaTime);
 	}
 
 	override void draw(bool inhibitDraw = false) {
 		_particleSource.draw();
+
+		if(_debug) {
+			drawRect(position - _size / 2, _size, Color.white);
+		}
 	}
 
 	override void handleCollision(int damage = 1) { }
