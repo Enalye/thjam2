@@ -25,6 +25,7 @@ class Entity {
     	bool _debug = false;
     	bool _resetDirectionAuto = true;
         Vec2f _newPosition = Vec2f.zero, _lastPosition = Vec2f.zero;
+        bool _init = true;
     }
 
     @property {
@@ -44,6 +45,14 @@ class Entity {
 
         Vec2i gridPosition() const { return _gridPosition; }
         Vec2i gridPosition(Vec2i newGridPosition) {
+            if(_init) {
+                _init = false;
+                _gridPosition = newGridPosition;
+                _position = getRealPosition(_gridPosition);
+                _lastPosition = _position;
+                _newPosition = _position;
+                return _gridPosition;
+            }
             _gridPosition = newGridPosition;
             _lastPosition = _position;
             _newPosition = getRealPosition(_gridPosition);
