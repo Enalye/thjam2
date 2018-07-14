@@ -54,8 +54,14 @@ class Bomb: Enemy {
 
 class Explosion: Entity {
 	ParticleSource _particleSource;
-	MixScaleFilterRect _particleFilter;
+
+	MixScaleFilterRect _scaleDown;
+	SetColorFilterRect _whiteToYellow;
+	SetColorFilterRect _yellowToOrange;
+	SetColorFilterRect _orangeToRed;
+
 	Timer _timer; Vec2f _size;
+	Vec2f _colorSize;
 
 	bool _debug = false;
 
@@ -63,25 +69,56 @@ class Explosion: Entity {
 		super(gridPosition);
 		type = Type.Enemy;
 		scale = Vec2f(4f, 2f);
+
 		_size = Vec2f(5 * GRID_RATIO, GRID_RATIO);
+		_colorSize = Vec2f(0.5 * GRID_RATIO, GRID_RATIO);
 
 		_particleSource = new ParticleSource();
 		_particleSource.sprite = fetch!Sprite("starParticle");
 		_particleSource.sprite.blend = Blend.AdditiveBlending;
         _particleSource.spawnDelay = 9999999f;
 
-		_particleFilter = new MixScaleFilterRect();
-		_particleFilter.position = position;
-		_particleFilter.property(0, _size.x);
-		_particleFilter.property(1, _size.y);
-		_particleFilter.property(2, 0);
-		_particleFilter.property(3, 0.04f);
+		_scaleDown = new MixScaleFilterRect();
+		_scaleDown.position = position;
+		_scaleDown.property(0, _size.x);
+		_scaleDown.property(1, _size.y);
+		_scaleDown.property(2, 0);
+		_scaleDown.property(3, 0.06f);
+
+		_whiteToYellow = new SetColorFilterRect();
+		_whiteToYellow.position = position - Vec2f(0.7 * GRID_RATIO, 0);
+		_whiteToYellow.property(0, _colorSize.x);
+		_whiteToYellow.property(1, _colorSize.y);
+		_whiteToYellow.property(2, 1);
+		_whiteToYellow.property(3, 1);
+		_whiteToYellow.property(4, 0);
+		_whiteToYellow.property(5, 0.75);
+
+		_yellowToOrange = new SetColorFilterRect();
+		_yellowToOrange.position = position - Vec2f(1.4 * GRID_RATIO, 0);
+		_yellowToOrange.property(0, _colorSize.x);
+		_yellowToOrange.property(1, _colorSize.y);
+		_yellowToOrange.property(2, 1);
+		_yellowToOrange.property(3, 0.28);
+		_yellowToOrange.property(4, 0);
+		_yellowToOrange.property(5, 0.50);
+
+		_orangeToRed = new SetColorFilterRect();
+		_orangeToRed.position = position - Vec2f(2.1 * GRID_RATIO, 0);
+		_orangeToRed.property(0, _colorSize.x);
+		_orangeToRed.property(1, _colorSize.y);
+		_orangeToRed.property(2, 1);
+		_orangeToRed.property(3, 0);
+		_orangeToRed.property(4, 0);
+		_orangeToRed.property(5, 0.25);
 
 		_timer.start(1f);
 		_debug = true;
 	}
 
 	override void update(float deltaTime) {
+		_timer.update(deltaTime);
+
 		for(int i = -2; i < 3; ++i) {
 			Vec2i explosionPos = Vec2i(gridPosition.x + i, gridPosition.y);
 
@@ -120,11 +157,13 @@ class Explosion: Entity {
 
 			_particleSource.particles.push(particle_left);
 			_particleSource.particles.push(particle_right);
-			_debug = false;
 		}
 
 		foreach(Particle particle; _particleSource.particles) {
-			_particleFilter.apply(particle, deltaTime);
+			_scaleDown.apply(particle, deltaTime);
+			_whiteToYellow.apply(particle, deltaTime);
+			_yellowToOrange.apply(particle, deltaTime);
+			//_orangeToRed.apply(particle, deltaTime);
 		}
 
 		_particleSource.update(deltaTime);
@@ -135,6 +174,9 @@ class Explosion: Entity {
 
 		if(_debug) {
 			drawRect(position - _size / 2, _size, Color.white);
+			drawRect(_whiteToYellow.position - _colorSize / 2, _colorSize, Color.yellow);
+			drawRect(_yellowToOrange.position - _colorSize / 2, _colorSize, Color(1f, 0.64f, 0));
+			drawRect(_orangeToRed.position - _colorSize / 2, _colorSize, Color.red);
 		}
 	}
 
