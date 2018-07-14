@@ -7,16 +7,13 @@ import th.grid;
 import th.player;
 import th.inventory;
 
-enum ItemType { POWER, SCORE, HAKKERO, GAP, YINYANG, FLIP, STOPWATCH, COUNT }
+enum ItemType { POWER, SCORE, HAKKERO, GAP, FLIP, STOPWATCH, COUNT }
 
 private string getItemFilePath(ItemType itemType) {
 	string filePath = null;
 	switch(itemType) {
 		case ItemType.POWER:
 		filePath = "power";
-		break;
-		case ItemType.YINYANG:
-		filePath = "yinyang";
 		break;
 		default:
 		filePath = null;
@@ -28,7 +25,6 @@ private string getItemFilePath(ItemType itemType) {
 
 class Item: Entity {
 	private ItemType _itemType;
-	protected bool _collectible = true;
 
 	@property {
 		int itemType() const { return _itemType; }
@@ -41,7 +37,7 @@ class Item: Entity {
 	}
 
 	override void update(float deltaTime) {
-		if(!collected && _collectible && isRealInstance(type) && (currentGrid.playerPosition == _gridPosition)) {	
+		if(!collected && isRealInstance(type) && (currentGrid.playerPosition == _gridPosition)) {	
 			removeFromGrid();
 			collected = true;
 		}
@@ -51,12 +47,12 @@ class Item: Entity {
 
 	override void draw(bool fromWidget) {
 		if(collected && fromWidget) {
-			_sprite.scale = Vec2f.one;
+			scale = Vec2f.one;
 			super.draw();
 		}
 
 		if(!collected && !fromWidget) {
-			_sprite.scale = Vec2f.one * 0.5f;
+			scale = Vec2f.one * 0.5f;
 			super.draw();
 		}
 	}

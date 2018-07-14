@@ -26,7 +26,7 @@ Vec2f getGridSize() {
     return Vec2f(5f,7f) * getTileSize();
 }
 
-Vec2f getGridPosition(Vec2i gridPosition) {
+Vec2f getRealPosition(Vec2i gridPosition) {
     auto topLeft = centerScreen - (cast(Vec2f)currentGrid.widthAndHeight) * GRID_RATIO / 2f;
 	return topLeft + (cast(Vec2f)gridPosition) * getTileSize() + getTileSize() / 2f;
 }

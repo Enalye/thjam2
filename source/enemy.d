@@ -13,10 +13,11 @@ import th.game;
 class Enemy: Entity {
     private bool _shootAuthorized = true;
 
-    this(Vec2i gridPosition, string filePath) {
+    this(Vec2i gridPosition, string filePath, Vec2f spriteScale) {
         super(gridPosition, filePath);
+        _debug = true;
         type = Type.Enemy;
-        _shootAuthorized = false;
+        scale = spriteScale;
     }
 
     override void update(float deltaTime) {

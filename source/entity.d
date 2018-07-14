@@ -15,6 +15,7 @@ class Entity {
 
 	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
     	Vec2f _position = Vec2f.zero; //True position in the scene
+    	Vec2f _scale = Vec2f.one;
     	Direction _direction; //Input received current update
     	Direction _lastDirection; //Input received last update
     	Sprite _sprite;
@@ -26,10 +27,20 @@ class Entity {
     	int life() const { return _life; }
         Vec2f position() const { return _position; }
 
+        Vec2f scale(Vec2f scale) {
+        	_scale = _sprite.scale = scale;
+
+        	if(_debug) {
+        		writeln("Setting scale ", _scale);
+        	}
+
+        	return _scale;
+        }
+
         Vec2i gridPosition() const { return _gridPosition; }
         Vec2i gridPosition(Vec2i newGridPosition) {
             _gridPosition = newGridPosition;
-            _position = getGridPosition(_gridPosition);
+            _position = getRealPosition(_gridPosition);
             return _gridPosition;
         }
 
@@ -62,15 +73,25 @@ class Entity {
 		if(filePath	!= null) {
 			_sprite = fetch!Sprite(filePath);
 			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+			scale = Vec2f.one;
 		}
 	}
 
-	void receiveDamage(int damage = 1) {
+	void handleCollision(int damage = 1) {
+ 		receiveDamage(damage);
+	}
+
+	private void receiveDamage(int damage) {
 		_life -= damage;
 	}
 
 	Vec2i getUpdatedPosition(Direction direction) {
 		return gridPosition + vectorFromMovementDirection(direction);
+	}
+
+	Type getNextTileType(Direction direction) {
+		Vec2i nextTilePosition = getUpdatedPosition(direction);
+		return currentGrid.grid[nextTilePosition.x][nextTilePosition.y];
 	}
 
 	bool canUseDirection(Direction direction) {
