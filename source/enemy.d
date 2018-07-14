@@ -11,9 +11,12 @@ import th.shot;
 import th.game;
 
 class Enemy: Entity {
+    private bool _shootAuthorized = true;
+
     this(Vec2i gridPosition, string filePath) {
-        _type = Type.Enemy;
         super(gridPosition, filePath);
+        type = Type.Enemy;
+        _shootAuthorized = false;
     }
 
     override void update(float deltaTime) {
@@ -32,10 +35,13 @@ class Enemy: Entity {
         }
 
         if(isFire(_direction)) {
-            float angle = angleFromFireDirection(_direction);
-            uint n = 5;
-            for(int i = 0; i < 5; ++i) {
-                createEnemyShot(_position, Color.blue, angle + i * 360 / n, 5f, 5 * 60f);
+
+            if(_shootAuthorized) {
+                float angle = angleFromFireDirection(_direction);
+                uint n = 5;
+                for(int i = 0; i < 5; ++i) {
+                    createEnemyShot(_position, Color.blue, angle + i * 360 / n, 5f, 5 * 60f);
+                }
             }
         }
 

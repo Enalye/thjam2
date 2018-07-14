@@ -35,15 +35,15 @@ class Item: Entity {
 	}
 
 	this(Vec2i gridPosition, ItemType itemType) {
+		super(gridPosition, getItemFilePath(itemType));
+		type = Type.Item;
 		_itemType = itemType;
-		_type = Type.Item;
-		super(gridPosition, getItemFilePath(_itemType));
 	}
 
 	override void update(float deltaTime) {
-		if(!collected && _collectible && isRealInstance(_type) && (currentGrid.playerPosition == _gridPosition)) {	
+		if(!collected && _collectible && isRealInstance(type) && (currentGrid.playerPosition == _gridPosition)) {	
 			removeFromGrid();
-			_type = Type.Collected;
+			collected = true;
 		}
 
 		updateGridState();
