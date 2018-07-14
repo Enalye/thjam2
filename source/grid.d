@@ -86,7 +86,8 @@ class Grid {
 			grid[position.x][position.y] = type;
 		} else {
 			writeln("position ", position, " is out of widthAndHeight ", widthAndHeight);
-			throw new Exception("Coordinate out of grid bounds!");
+            assert(false);
+			//throw new Exception("Coordinate out of grid bounds!");
 		}
 	}
 

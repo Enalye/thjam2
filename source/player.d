@@ -65,8 +65,12 @@ class Player: Entity {
                 createPlayerShot(_position, shotScale, damage, Color.red, angle, 15f, 5 * 60f);
                 registerPlayerActionOnEpoch();
             }
-            else if(Direction.SPACE && _inventory.hasItem(ItemType.BOMB)) {
-                enemies.push(new Bomb(getUpdatedPosition(_lastDirection)));
+            else if(Direction.SPACE) {
+                auto pos = getUpdatedPosition(_lastDirection);
+                if(currentGrid.at(pos) != Type.OutOfGrid) {
+                    if(_inventory.hasItem(ItemType.BOMB))
+                        enemies.push(new Bomb(pos));
+                }
             }
         }
 
