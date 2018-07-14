@@ -22,7 +22,7 @@ class Enemy: Entity {
 
     //Called when the player is acting
     override void action() {
-        /*_direction = _lastDirection;
+        _direction = _lastDirection;
         while(_direction == _lastDirection) {
             _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.UP, cast(int)Direction.FIRE_RIGHT));
         }
@@ -40,7 +40,7 @@ class Enemy: Entity {
             }
         }
 
-        _lastDirection = _direction;*/
+        _lastDirection = _direction;
     }
 
     override bool checkDirectionValid(Direction direction) {
