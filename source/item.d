@@ -25,6 +25,7 @@ private string getItemFilePath(ItemType itemType) {
 class Item: Entity {
 	private Player _player;
 	private ItemType _itemType;
+	private Sprite _sprite;
 
 	this(Vec2i gridPosition, Player player, ItemType itemType) {
 		_player = player;
