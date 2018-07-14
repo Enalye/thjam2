@@ -87,7 +87,6 @@ class Entity {
 
 		if(filePath	!= null) {
 			_sprite = fetch!Sprite(filePath);
-			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 			scale = Vec2f.one;
 		}
 	}
