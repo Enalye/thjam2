@@ -13,41 +13,71 @@ import th.epoch;
 
 class Player: Entity {
     private {
-        Sprite _sprite;
+        Animation _walkUpAnimation, _walkDownAnimation, _walkLeftAnimation, _walkRightAnimation;
     }
 
-    bool hasPlayed, canPlay;
+    bool canPlay;
     
     this(Vec2i gridPosition) {
         _type = Type.Player;
         super(gridPosition);
-        _sprite = fetch!Sprite("reimu_omg");
-		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+
+        _walkUpAnimation = Animation("player_walk_up", TimeMode.Loop);
+        _walkDownAnimation = Animation("player_walk_down", TimeMode.Loop);
+        _walkLeftAnimation = Animation("player_walk_left", TimeMode.Loop);
+        _walkRightAnimation = Animation("player_walk_right", TimeMode.Loop);
     }
 
     override void update(float deltaTime) {
-        if(isMovement(_direction)) {
-            _lastDirection = _direction;
-            currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
+        _walkUpAnimation.update(deltaTime);
+        _walkDownAnimation.update(deltaTime);
+        _walkLeftAnimation.update(deltaTime);
+        _walkRightAnimation.update(deltaTime);
+        
+        if(canPlay) {
+            if(isMovement(_direction)) {
+                _lastDirection = _direction;
+                currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
 
-            gridPosition = getUpdatedPosition(_direction);
-            moveCameraTo(_position, .5f);
+                gridPosition = getUpdatedPosition(_direction);
+                moveCameraTo(_position, .5f);
 
-            if(isRealInstance(_type) && isOpponent(_type, currentGrid.at(gridPosition))) {
-                receiveDamage();
+                if(isRealInstance(_type) && isOpponent(_type, currentGrid.at(gridPosition))) {
+                    receiveDamage();
+                }
+                registerPlayerActionOnEpoch();
             }
-            registerPlayerActionOnEpoch();
-        }
-        else if(isFire(_direction)) {
-            _lastDirection = _direction;
-            float angle = angleFromFireDirection(_direction);
-            createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
-            registerPlayerActionOnEpoch();
+            else if(isFire(_direction)) {
+                _lastDirection = _direction;
+                float angle = angleFromFireDirection(_direction);
+                createPlayerShot(_position, Color.red, angle, 5f, 5 * 60f);
+                registerPlayerActionOnEpoch();
+            }
         }
     }
 
     override void draw() {
-        _sprite.draw(position);
+        final switch(_lastDirection) with(Direction) {
+        case NONE:
+            _walkUpAnimation.draw(_position);
+            break;
+        case UP:
+        case FIRE_UP:
+            _walkUpAnimation.draw(_position);
+            break;
+        case DOWN:
+        case FIRE_DOWN:
+            _walkDownAnimation.draw(_position);
+            break;
+        case LEFT:
+        case FIRE_LEFT:
+            _walkLeftAnimation.draw(_position);
+            break;
+        case RIGHT:
+        case FIRE_RIGHT:
+            _walkRightAnimation.draw(_position);
+            break;
+        }
     }
 
     int arrowIndexFromLastDirection() {
