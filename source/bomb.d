@@ -105,18 +105,20 @@ class Explosion: Entity {
 			particle_left.position.y = uniform!"[]"(position.y - 5, position.y + 5);
 			particle_left.velocity.x = uniform!"[]"(-6f, -5f);
 			particle_left.velocity.y = 0;
-			particle_left.timeToLive = 2f;
+			particle_left.timeToLive = 1f * 60f;
 			particle_left.scale = 0.5f;
 			particle_left.color = Color.white;
+            particle_left.time = 0f;
 
 			Particle particle_right = new Particle;
 			particle_right.position.x = uniform!"[]"(position.x - 0.05, position.x + 0.05);
 			particle_right.position.y = uniform!"[]"(position.y - 5, position.y + 5);
 			particle_right.velocity.x = uniform!"[]"(5f, 6f);
 			particle_right.velocity.y = 0;
-			particle_right.timeToLive = 2f;
+			particle_right.timeToLive = 1f * 60f;
 			particle_right.scale = 0.5f;
 			particle_right.color = Color.white;
+            particle_right.time = 0f;
 
 			_particleSource.particles.push(particle_left);
 			_particleSource.particles.push(particle_right);
