@@ -4,6 +4,7 @@ import grimoire;
 import std.stdio;
 import th.grid;
 import th.input;
+import th.epoch;
 
 EntityArray enemies, items;
 
@@ -23,6 +24,7 @@ class Entity {
     	Sprite _sprite;
     	bool _debug = false;
     	bool _resetDirectionAuto = true;
+        Vec2f _newPosition = Vec2f.zero, _lastPosition = Vec2f.zero;
     }
 
     @property {
@@ -43,7 +45,8 @@ class Entity {
         Vec2i gridPosition() const { return _gridPosition; }
         Vec2i gridPosition(Vec2i newGridPosition) {
             _gridPosition = newGridPosition;
-            _position = getRealPosition(_gridPosition);
+            _lastPosition = _position;
+            _newPosition = getRealPosition(_gridPosition);
             return _gridPosition;
         }
 
@@ -119,7 +122,15 @@ class Entity {
 		_type = currentGrid.grid[_gridPosition.x][_gridPosition.y] = Type.OutOfGrid;
 	}
 
-	void update(float deltaTime) {}
+	void update(float deltaTime) {
+        if(transitionTime() >= 1f) {
+            _lastPosition = _newPosition;
+            _position = _newPosition;
+        }
+        else {
+            _position = lerp(_lastPosition, _newPosition, easeInOutSine(transitionTime()));
+        }
+    }
 
 	void action() {}
 

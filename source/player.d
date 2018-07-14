@@ -41,6 +41,7 @@ class Player: Entity {
     }
 
     override void update(float deltaTime) {
+        super.update(deltaTime);
         _walkUpAnimation.update(deltaTime);
         _walkDownAnimation.update(deltaTime);
         _walkLeftAnimation.update(deltaTime);
@@ -49,7 +50,7 @@ class Player: Entity {
         if(canPlay) {
             if(isMovement(_direction)) {
                 moveOnGrid();
-                moveCameraTo(_position, .5f);
+                moveCameraTo(_newPosition, .5f);
                 registerPlayerActionOnEpoch();
             }
             else if(isFire(_direction)) {
