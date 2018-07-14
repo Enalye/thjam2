@@ -68,6 +68,7 @@ class Explosion: Entity {
 		_particleSource = new ParticleSource();
 		_particleSource.sprite = fetch!Sprite("starParticle");
 		_particleSource.sprite.blend = Blend.AdditiveBlending;
+        _particleSource.spawnDelay = 9999999f;
 
 		_particleFilter = new MixScaleFilterRect();
 		_particleFilter.position = position;
@@ -84,7 +85,7 @@ class Explosion: Entity {
 		for(int i = -2; i < 3; ++i) {
 			Vec2i explosionPos = Vec2i(gridPosition.x + i, gridPosition.y);
 
-			if(currentGrid.grid[explosionPos.x][explosionPos.y] != Type.None) {
+			if(currentGrid.at(explosionPos) != Type.None) {
 				foreach(Entity enemy, uint index; enemies) {
 					if(enemy.gridPosition == explosionPos) {
 						enemy.handleCollision();
@@ -97,6 +98,7 @@ class Explosion: Entity {
 			}
 		}
 
+        _timer.update(deltaTime);
 		if(_timer.isRunning()) {
 			Particle particle_left = new Particle;
 			particle_left.position.x = uniform!"[]"(position.x - 0.05, position.x + 0.05);
