@@ -57,8 +57,11 @@ class Player: Entity {
                 Vec2f shotScale = powerUp ? Vec2f.one * 1.5f : Vec2f.one;
                 int damage = powerUp ? 2 : 1;
 
-                createPlayerShot(_position, shotScale, damage, Color.red, angle, 5f, 5 * 60f);
+                createPlayerShot(_position, shotScale, damage, Color.red, angle, 15f, 5 * 60f);
                 registerPlayerActionOnEpoch();
+            }
+            else if(Direction.SPACE && _inventory.hasItem(ItemType.BOMB)) {
+                writeln("BOMB!");
             }
         }
 
@@ -68,7 +71,7 @@ class Player: Entity {
     override void draw(bool inhibitDraw = false) {
         final switch(_lastDirection) with(Direction) {
         case NONE:
-            _walkUpAnimation.draw(_position);
+            _walkDownAnimation.draw(_position);
             break;
         case UP:
         case FIRE_UP:
@@ -86,6 +89,7 @@ class Player: Entity {
         case FIRE_RIGHT:
             _walkRightAnimation.draw(_position);
             break;
+        case SPACE:
         }
     }
 
