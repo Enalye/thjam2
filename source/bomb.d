@@ -7,6 +7,7 @@ import th.enemy;
 import th.item;
 import th.grid;
 import th.input;
+import th.manualParticleSource;
 import th.player;
 
 import std.algorithm.comparison;
@@ -53,7 +54,7 @@ class Bomb: Enemy {
 }
 
 class Explosion: Entity {
-	ParticleSource _particleSource;
+	ManualParticleSource _particleSource;
 
 	MixScaleFilterRect _scaleDown;
 	SetColorFilterRect _whiteToYellowLeft;
@@ -76,10 +77,9 @@ class Explosion: Entity {
 		_size = Vec2f(5 * GRID_RATIO, GRID_RATIO);
 		_colorSize = Vec2f(0.5 * GRID_RATIO, GRID_RATIO);
 
-		_particleSource = new ParticleSource();
+		_particleSource = new ManualParticleSource();
 		_particleSource.sprite = fetch!Sprite("starParticle");
 		_particleSource.sprite.blend = Blend.AdditiveBlending;
-        _particleSource.spawnDelay = 9999999f;
 
 		_scaleDown = new MixScaleFilterRect();
 		_scaleDown.position = position;
@@ -142,9 +142,7 @@ class Explosion: Entity {
 		_orangeToRedRight.property(4, 0);
 		_orangeToRedRight.property(5, 0.25);
 
-
 		_timer.start(1f);
-		_debug = true;
 	}
 
 	override void update(float deltaTime) {
@@ -173,7 +171,7 @@ class Explosion: Entity {
 			particle_left.position.y = uniform!"[]"(position.y - 5, position.y + 5);
 			particle_left.velocity.x = uniform!"[]"(-6f, -5f);
 			particle_left.velocity.y = 0;
-			particle_left.timeToLive = 1f * 60f;
+			particle_left.timeToLive = 0.5f * 60f;
 			particle_left.scale = 0.5f;
 			particle_left.color = Color.white;
             particle_left.time = 0f;
@@ -183,7 +181,7 @@ class Explosion: Entity {
 			particle_right.position.y = uniform!"[]"(position.y - 5, position.y + 5);
 			particle_right.velocity.x = uniform!"[]"(5f, 6f);
 			particle_right.velocity.y = 0;
-			particle_right.timeToLive = 1f * 60f;
+			particle_right.timeToLive = 0.5f * 60f;
 			particle_right.scale = 0.5f;
 			particle_right.color = Color.white;
             particle_right.time = 0f;
