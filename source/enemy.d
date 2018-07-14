@@ -14,6 +14,9 @@ class Enemy: Entity {
     private bool _shootAuthorized = true;
     private int _actionsBeforeShooting = 2;
 
+    bool showLifebar = true;
+    private float _lastBarRatio = 1f, _lifeRatio = 1f;
+
     this(Vec2i gridPosition, string filePath = null, Vec2f spriteScale = Vec2f.one) {
         super(gridPosition, filePath);
         type = Type.Enemy;
@@ -55,5 +58,31 @@ class Enemy: Entity {
 
     override bool checkDirectionValid(Direction direction) {
         return (direction != Direction.NONE) && isPositionValid(getUpdatedPosition(direction)) && isTileFreeForEnemy(gridPosition + vectorFromMovementDirection(direction));
+    }
+
+    override void update(float deltaTime) {
+        super.update(deltaTime);
+        //Lifebar
+        if(showLifebar) {
+            _lifeRatio = cast(float)(_life) / _maxLife;
+            _lastBarRatio = lerp(_lastBarRatio, _lifeRatio, deltaTime * .1f);
+        }
+    }
+
+    override void draw(bool inhibitDraw = false) {
+        super.draw(inhibitDraw);
+
+        //Lifebar
+        if(showLifebar) {
+            Vec2f lbPos = _position - Vec2f(0f, 50f);
+            Vec2f lbSize = Vec2f(35f, 10f);
+            Vec2f lbBorderSize = lbSize + Vec2f(2f, 2f);
+            Vec2f lbLifeSize = Vec2f(lbSize.x * _lifeRatio, lbSize.y);
+            Vec2f lbLifeSize2 = Vec2f(lbSize.x * _lastBarRatio, lbSize.y);
+            drawFilledRect(lbPos - lbBorderSize / 2f, lbBorderSize, Color.white);
+            drawFilledRect(lbPos - lbSize / 2f, lbSize, Color.black);
+            drawFilledRect(lbPos - lbSize / 2f, lbLifeSize2, Color.white);
+            drawFilledRect(lbPos - lbSize / 2f, lbLifeSize, Color.red);
+        }
     }
 }

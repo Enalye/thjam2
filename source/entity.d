@@ -13,7 +13,7 @@ class Entity {
 	private Type _type;
 
     protected {
-	    int _life = 1;
+	    int _life = 5, _maxLife = 5;
 
 	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
     	Vec2f _position = Vec2f.zero; //True position in the scene
