@@ -165,13 +165,13 @@ private final class Scene: WidgetGroup {
 	}
 
     void onStage1() {
-        createGrid(Vec2u(20, 20), "plaine");
+        createGrid(Vec2u(20, 20), "netherworld");
         _player = new Player(Vec2i(0, 0), "reimu_idle");
         moveCameraTo(_player.position, 1f);
 
-        auto enemy = new Enemy(Vec2i(14, 10), "fairy_default");
+        auto enemy = new Enemy(Vec2i(14, 10), "ghost", Vec2f(0.5f, 1f));
         _enemies.push(enemy);
-        enemy = new Enemy(Vec2i(5, 10), "fairy_default");
+        enemy = new Enemy(Vec2i(5, 10), "ghost", Vec2f(0.5f, 1f));
         _enemies.push(enemy);
 
         auto item = new Item(Vec2i(1, 1), ItemType.POWER);
@@ -190,7 +190,7 @@ private final class Scene: WidgetGroup {
     }
 
     void onStage2() {
-        createGrid(Vec2u(20, 20), "netherworld");
+        createGrid(Vec2u(20, 20), "plaine");
         _player = new Player(Vec2i(0, 0), "reimu_omg");
         moveCameraTo(_player.position, 1f);
     }

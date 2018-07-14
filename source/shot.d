@@ -10,7 +10,7 @@ private {
 }
 
 class Shot {
-    private {
+    protected {
         Vec2f _position, _velocity;
         Sprite _sprite;
         float _radius = 25f;
@@ -28,8 +28,8 @@ class Shot {
         int damage(int damage) { return _damage = damage; }
     }
 
-    this(Color color = Color.white, Vec2f scale = Vec2f.one) {
-        _sprite = fetch!Sprite("shot_0");
+    this(string fileName, Color color = Color.white, Vec2f scale = Vec2f.one) {
+        _sprite = fetch!Sprite(fileName);
         _sprite.color = color;
         _sprite.scale = scale;
     }
@@ -47,7 +47,7 @@ class Shot {
 
     bool handleCollision(Entity entity) {
         if(entity.position.distance(_position) < _radius) {
-            entity.receiveDamage(_damage);
+            entity.handleCollision(_damage);
             _isAlive = false;
             return true;
         }
@@ -64,7 +64,7 @@ ShotArray createEnemyShotArray() {
 }
 
 void createPlayerShot(Vec2f pos, Vec2f scale, int damage, Color color, float angle, float speed, float timeToLive) {
-    auto shot = new Shot(color, scale);
+    auto shot = new Shot("shot_0", color, scale);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;
     shot.timeToLive = timeToLive;
@@ -73,7 +73,7 @@ void createPlayerShot(Vec2f pos, Vec2f scale, int damage, Color color, float ang
 }
 
 void createEnemyShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {
-    auto shot = new Shot(color);
+    auto shot = new Shot("shot_0", color);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;    
     shot.timeToLive = timeToLive;

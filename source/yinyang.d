@@ -2,24 +2,36 @@ module th.yinyang;
 
 import grimoire;
 
+import th.enemy;
 import th.grid;
 import th.input;
-import th.item;
 
-class YinYang: Item {
+class YinYang: Enemy {
 	this(Vec2i gridPosition, Direction direction) {
-		super(gridPosition, ItemType.YINYANG);
-		type = Type.Enemy;
+		super(gridPosition, "yinyang", Vec2f.one * 0.5f);
 		_direction = direction;
 		_resetDirectionAuto = false;
-		_collectible = false;
 	}
 
 	override void action() {
 		if(isMovement(_direction) && checkDirectionValid(_direction)) {
-			moveOnGrid();
+			if(isOpponent(type, getNextTileType(_direction))) {
+				bounce();
+				//dmg player here???
+			} else {
+				moveOnGrid();
+			}
 		} else {
-			_direction = getOppositeDirection(_direction);
+			bounce();
 		}
+	}
+
+	override void handleCollision(int damage = 1) {
+		bounce();
+	}
+
+	void bounce() {
+		_direction = getOppositeDirection(_direction);
+		moveOnGrid();
 	}
 }
