@@ -2,6 +2,7 @@ module th.shot;
 
 import grimoire;
 import th.entity;
+import th.epoch;
 
 alias ShotArray = IndexedArray!(Shot, 2000);
 
@@ -35,10 +36,13 @@ class Shot {
     }
 
     void update(float deltaTime) {
-        _position += _velocity * deltaTime;
-        _time += deltaTime;
-        if(_time > _timeToLive)
-            _isAlive = false;
+        if(lockTimerRunning) {
+            _position += _velocity * deltaTime;
+            _time += deltaTime;
+            if(_time > _timeToLive) {
+                _isAlive = false;
+            }
+        }
     }
 
     void draw() {
