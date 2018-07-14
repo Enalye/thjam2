@@ -18,14 +18,16 @@ class Player: Entity {
 
     bool canPlay;
     
-    this(Vec2i gridPosition) {
+    this(Vec2i gridPosition, string filePath) {
         _type = Type.Player;
-        super(gridPosition);
 
         _walkUpAnimation = Animation("player_walk_up", TimeMode.Loop);
         _walkDownAnimation = Animation("player_walk_down", TimeMode.Loop);
         _walkLeftAnimation = Animation("player_walk_left", TimeMode.Loop);
         _walkRightAnimation = Animation("player_walk_right", TimeMode.Loop);
+
+        super(gridPosition, null);
+        _life = 3;
     }
 
     override void update(float deltaTime) {
@@ -56,7 +58,7 @@ class Player: Entity {
         }
     }
 
-    override void draw() {
+    override void draw(bool inhibitDraw = false) {
         final switch(_lastDirection) with(Direction) {
         case NONE:
             _walkUpAnimation.draw(_position);

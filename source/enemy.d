@@ -11,11 +11,9 @@ import th.shot;
 import th.game;
 
 class Enemy: Entity {
-    this(Vec2i gridPosition) {
+    this(Vec2i gridPosition, string filePath) {
         _type = Type.Enemy;
-        super(gridPosition);
-        _sprite = fetch!Sprite("fairy_default");
-		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+        super(gridPosition, filePath);
     }
 
     override void update(float deltaTime) {
@@ -23,24 +21,26 @@ class Enemy: Entity {
     }
 
     //Called when the player is acting
-    void action() {
-        _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.UP, cast(int)Direction.RIGHT));
+    override void action() {
+        _direction = _lastDirection;
+        while(_direction == _lastDirection) {
+            _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.UP, cast(int)Direction.FIRE_RIGHT));
+        }
 
         if(isMovement(_direction) && checkDirectionValid(_direction)) {
-            _lastDirection = _direction;
             currentGrid.set(Type.None, gridPosition); //when going away reset grid data to none
-
             gridPosition = getUpdatedPosition(_direction);
         }
-        _direction = cast(Direction)(uniform!"[]"(cast(int)Direction.FIRE_UP, cast(int)Direction.FIRE_RIGHT));
+
         if(isFire(_direction)) {
             float angle = angleFromFireDirection(_direction);
-            createEnemyShot(_position, Color.blue, angle, 5f, 5 * 60f);
+            uint n = 5;
+            for(int i = 0; i < 5; ++i) {
+                createEnemyShot(_position, Color.blue, angle + i * 360 / n, 5f, 5 * 60f);
+            }
         }
-    }
 
-    override void draw() {
-        _sprite.draw(position);
+        _lastDirection = _direction;
     }
 
     override bool checkDirectionValid(Direction direction) {

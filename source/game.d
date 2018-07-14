@@ -2,12 +2,12 @@ module th.game;
 
 import grimoire;
 
-import th.arrows;
 import th.camera;
 import th.entity;
 import th.input;
 import th.item;
 import th.grid;
+import th.gui;
 import th.player;
 import th.enemy;
 import th.shot;
@@ -34,7 +34,10 @@ private final class Scene: WidgetGroup {
         ShotArray _playerShots, _enemyShots;
         EntityArray _enemies, _items;
         Player _player;
-        Arrows _arrows;
+
+        //Sub widgets
+        Inventory _inventory;
+        GUI _arrows;
     }
 
     this() {
@@ -93,13 +96,15 @@ private final class Scene: WidgetGroup {
             bool inputValid = _player.checkDirectionValid(input);
 
             if(inputValid) {
-                _player.setDirection(input);
                 _player.canPlay = true;
+                _player.direction = input;
             }
         }
         _player.update(deltaTime);
         if(canActEpoch())
             _player.updateGridState();
+
+        _inventory.update(deltaTime);
 
         //Update enemies shots
         foreach(Entity enemy, uint index; _enemies) {
@@ -110,7 +115,7 @@ private final class Scene: WidgetGroup {
             }
             else {
                 if(isEpochTimedout()) {
-                    (cast(Enemy)enemy).action();
+                    enemy.action();
                 }
 				enemy.updateGridState();
 			}
@@ -137,6 +142,10 @@ private final class Scene: WidgetGroup {
             enemy.draw();
         }
 
+        foreach(Entity item; _items) {
+            item.draw();
+        }
+
         _player.draw();
 
         foreach(Shot shot; _playerShots) {
@@ -154,21 +163,29 @@ private final class Scene: WidgetGroup {
 	}
 
     void onStage1() {
-        createGrid(Vec2u(15, 10), "plaine");
-        _player = new Player(Vec2i(0, 0));
+        createGrid(Vec2u(20, 20), "plaine");
+        _player = new Player(Vec2i(0, 0), "reimu_idle");
         moveCameraTo(_player.position, 1f);
 
-        auto enemy = new Enemy(Vec2i(0, 5));
+        auto enemy = new Enemy(Vec2i(14, 10), "fairy_default");
         _enemies.push(enemy);
-        enemy = new Enemy(Vec2i(4, 5));
+        enemy = new Enemy(Vec2i(5, 10), "fairy_default");
         _enemies.push(enemy);
 
-        auto item = new Item(_player, Vec2i(12, 5), ItemType.YINYANG);
+        auto item = new Item(Vec2i(1, 1), _player, ItemType.YINYANG);
         _items.push(item);
 
         //UI
         removeChildren();
-        _arrows = new Arrows(_player);
+        _arrows = new GUI(_player);
         addChild(_arrows);
+        _inventory = new Inventory(_items);
+        addChild(_inventory);
+    }
+
+    void onStage2() {
+        createGrid(Vec2u(20, 20), "netherworld");
+        _player = new Player(Vec2i(0, 0), "reimu_omg");
+        moveCameraTo(_player.position, 1f);
     }
 }
