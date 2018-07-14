@@ -1,0 +1,43 @@
+{
+	"player_walk_down": {
+		"x": 0,
+		"y": 0,
+		"w": 294,
+		"h": 330,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"player_walk_left": {
+		"x": 0,
+		"y": 330,
+		"w": 294,
+		"h": 330,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"player_walk_right": {
+		"x": 0,
+		"y": 330,
+		"w": 294,
+		"h": 330,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2,
+		"fliph": true
+	},
+	"player_walk_up": {
+		"x": 0,
+		"y": 660,
+		"w": 294,
+		"h": 330,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2
+	}
+}

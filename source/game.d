@@ -87,17 +87,20 @@ private final class Scene: WidgetGroup {
 		}
 
         //Player input handling
+        _player.canPlay = false;
         if(canActEpoch()) {
             Direction input = _inputManager.getKeyPressed(); //to pass on to player
             bool inputValid = _player.checkDirectionValid(input);
 
             if(inputValid) {
                 _player.setDirection(input);
-                _player.update(deltaTime);
+                _player.canPlay = true;
             }
-
-            _player.updateGridState();
         }
+        _player.update(deltaTime);
+        if(canActEpoch())
+            _player.updateGridState();
+
         //Update enemies shots
         foreach(Entity enemy, uint index; _enemies) {
 			enemy.update(deltaTime);
