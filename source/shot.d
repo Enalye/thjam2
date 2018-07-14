@@ -10,6 +10,8 @@ private {
     ShotArray _playerShots, _enemyShots;
 }
 
+ShotArray playerShots, enemyShots;
+
 class Shot {
     protected {
         Vec2f _position, _velocity;

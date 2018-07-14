@@ -4,6 +4,7 @@ import grimoire;
 
 import std.algorithm.comparison;
 
+import th.bomb;
 import th.camera;
 import th.entity;
 import th.epoch;
@@ -12,6 +13,8 @@ import th.input;
 import th.inventory;
 import th.item;
 import th.shot;
+
+Player player;
 
 class Player: Entity {
     private {
@@ -61,7 +64,7 @@ class Player: Entity {
                 registerPlayerActionOnEpoch();
             }
             else if(Direction.SPACE && _inventory.hasItem(ItemType.BOMB)) {
-                writeln("BOMB!");
+                enemies.push(new Bomb(getUpdatedPosition(_lastDirection)));
             }
         }
 

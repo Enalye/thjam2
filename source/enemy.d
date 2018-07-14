@@ -14,14 +14,10 @@ class Enemy: Entity {
     private bool _shootAuthorized = true;
     private int _actionsBeforeShooting = 2;
 
-    this(Vec2i gridPosition, string filePath, Vec2f spriteScale) {
+    this(Vec2i gridPosition, string filePath = null, Vec2f spriteScale = Vec2f.one) {
         super(gridPosition, filePath);
         type = Type.Enemy;
         scale = spriteScale;
-    }
-
-    override void update(float deltaTime) {
-        
     }
 
     //Called when the enemy is acting
