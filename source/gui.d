@@ -9,14 +9,14 @@ public final class GUI: Widget {
 	private {
 		Player _player;
 		Sprite _heart;
-        Sprite[4] _arrows;
-        Vec2f[4] _positions;
+        Sprite[8] _arrows;
+        Vec2f[8] _positions;
 	}
 
 	this(Player player) {
 		_player = player;
-        _arrows = new Sprite[4];
-        _positions = new Vec2f[4];
+        _arrows = new Sprite[8];
+        _positions = new Vec2f[8];
 
         _heart = fetch!Sprite("heart");
         _heart.scale = Vec2f.one * 2;
@@ -25,11 +25,19 @@ public final class GUI: Widget {
         _arrows[1] = fetch!Sprite("arrow_down");
         _arrows[2] = fetch!Sprite("arrow_left");
         _arrows[3] = fetch!Sprite("arrow_right");
+        _arrows[4] = fetch!Sprite("arrow_fire_up");
+        _arrows[5] = fetch!Sprite("arrow_fire_down");
+        _arrows[6] = fetch!Sprite("arrow_fire_left");
+        _arrows[7] = fetch!Sprite("arrow_fire_right");
 
         _positions[0] = Vec2f(1176, 50);
         _positions[1] = Vec2f(1176, 88);
         _positions[2] = Vec2f(1138, 88);
         _positions[3] = Vec2f(1214, 88);
+        _positions[4] = Vec2f(976, 50);
+        _positions[5] = Vec2f(976, 88);
+        _positions[6] = Vec2f(938, 88);
+        _positions[7] = Vec2f(1014, 88);
 	}
 
 	override void onEvent(Event event) {}
