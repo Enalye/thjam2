@@ -16,6 +16,7 @@ class Shot {
         float _radius = 25f;
         float _time = 0f, _timeToLive = 1f;
         bool _isAlive = true;
+        int _damage = 1;
     }
 
     @property {
@@ -24,12 +25,13 @@ class Shot {
         Vec2f position(Vec2f newPosition) { return _position = newPosition; }
         Vec2f velocity(Vec2f newVelocity) { return _velocity = newVelocity; }
         float timeToLive(float newTTL) { return _timeToLive = newTTL; }
-
+        int damage(int damage) { return _damage = damage; }
     }
 
-    this(Color color = Color.white) {
+    this(Color color = Color.white, Vec2f scale = Vec2f.one) {
         _sprite = fetch!Sprite("shot_0");
         _sprite.color = color;
+        _sprite.scale = scale;
     }
 
     void update(float deltaTime) {
@@ -45,7 +47,7 @@ class Shot {
 
     bool handleCollision(Entity entity) {
         if(entity.position.distance(_position) < _radius) {
-            entity.receiveDamage();
+            entity.receiveDamage(_damage);
             _isAlive = false;
             return true;
         }
@@ -61,11 +63,12 @@ ShotArray createEnemyShotArray() {
     return _enemyShots = new ShotArray;
 }
 
-void createPlayerShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {
-    auto shot = new Shot(color);
+void createPlayerShot(Vec2f pos, Vec2f scale, int damage, Color color, float angle, float speed, float timeToLive) {
+    auto shot = new Shot(color, scale);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;
     shot.timeToLive = timeToLive;
+    shot.damage = damage;
     _playerShots.push(shot);
 }
 

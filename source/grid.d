@@ -58,6 +58,7 @@ class Grid {
 	Vec2u widthAndHeight; //width and height
 	Vec2f position;
 	Vec2f topLeft;
+	Vec2i playerPosition;
 	Tileset tileset;
 
 	this(Vec2u dimensions, Vec2f gridPos, string tileSetPath) {

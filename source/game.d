@@ -3,15 +3,17 @@ module th.game;
 import grimoire;
 
 import th.camera;
+import th.enemy;
 import th.entity;
+import th.epoch;
 import th.input;
+import th.inventory;
 import th.item;
 import th.grid;
 import th.gui;
 import th.player;
-import th.enemy;
 import th.shot;
-import th.epoch;
+import th.yinyang;
 
 private {
     Scene _scene;
@@ -93,7 +95,7 @@ private final class Scene: WidgetGroup {
         _player.canPlay = false;
         if(canActEpoch()) {
             Direction input = _inputManager.getKeyPressed(); //to pass on to player
-            bool inputValid = _player.checkDirectionValid(input);
+            bool inputValid = _player.checkDirectionValid(input) && _player.canUseDirection(input);
 
             if(inputValid) {
                 _player.canPlay = true;
@@ -172,14 +174,18 @@ private final class Scene: WidgetGroup {
         enemy = new Enemy(Vec2i(5, 10), "fairy_default");
         _enemies.push(enemy);
 
-        auto item = new Item(Vec2i(1, 1), _player, ItemType.YINYANG);
+        auto item = new Item(Vec2i(1, 1), ItemType.POWER);
         _items.push(item);
+
+        auto yinyang = new YinYang(Vec2i(0, 5), Direction.RIGHT);
+        _enemies.push(yinyang);
 
         //UI
         removeChildren();
         _arrows = new GUI(_player);
         addChild(_arrows);
         _inventory = new Inventory(_items);
+        _player.inventory = _inventory;
         addChild(_inventory);
     }
 
