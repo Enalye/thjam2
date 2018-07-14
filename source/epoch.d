@@ -3,13 +3,19 @@ module th.epoch;
 import grimoire;
 
 private {
+    static const float TIMEOUT = 1.5f;
     Timer _timeoutTimer, _lockTimer;
     bool hasPlayerPlayed;
 }
 
+float percentageElapsed() {
+    //writeln(_lockTimer.time);
+    return 1f - _timeoutTimer.time;
+}
+
 void startEpoch() {
     _lockTimer.start(.1f);
-    _timeoutTimer.start(1f);
+    _timeoutTimer.start(TIMEOUT);
     hasPlayerPlayed = false;
 }
 
