@@ -19,6 +19,7 @@ class Enemy: Entity {
 
     this(Vec2i gridPosition, string filePath = null, Vec2f spriteScale = Vec2f.one) {
         super(gridPosition, filePath);
+        _sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
         type = Type.Enemy;
         scale = spriteScale;
     }

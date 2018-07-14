@@ -36,6 +36,7 @@ class Item: Entity {
 
 	this(Vec2i gridPosition, ItemType itemType, Vec2f uncollectedScale) {
 		super(gridPosition, getItemFilePath(itemType));
+		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 		type = Type.Item;
 		_itemType = itemType;
 		_uncollectedScale = uncollectedScale;
