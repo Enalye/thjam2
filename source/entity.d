@@ -4,6 +4,7 @@ import grimoire;
 import std.stdio;
 import th.grid;
 import th.input;
+import th.epoch;
 
 EntityArray enemies, items;
 
@@ -13,7 +14,7 @@ class Entity {
 	private Type _type;
 
     protected {
-	    int _life = 1;
+	    int _life = 5, _maxLife = 5;
 
 	    Vec2i _gridPosition = Vec2i.zero; //Position inside the grid
     	Vec2f _position = Vec2f.zero; //True position in the scene
@@ -23,6 +24,8 @@ class Entity {
     	Sprite _sprite;
     	bool _debug = false;
     	bool _resetDirectionAuto = true;
+        Vec2f _newPosition = Vec2f.zero, _lastPosition = Vec2f.zero;
+        bool _init = true;
     }
 
     @property {
@@ -42,8 +45,17 @@ class Entity {
 
         Vec2i gridPosition() const { return _gridPosition; }
         Vec2i gridPosition(Vec2i newGridPosition) {
+            if(_init) {
+                _init = false;
+                _gridPosition = newGridPosition;
+                _position = getRealPosition(_gridPosition);
+                _lastPosition = _position;
+                _newPosition = _position;
+                return _gridPosition;
+            }
             _gridPosition = newGridPosition;
-            _position = getRealPosition(_gridPosition);
+            _lastPosition = _position;
+            _newPosition = getRealPosition(_gridPosition);
             return _gridPosition;
         }
 
@@ -75,7 +87,6 @@ class Entity {
 
 		if(filePath	!= null) {
 			_sprite = fetch!Sprite(filePath);
-			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 			scale = Vec2f.one;
 		}
 	}
@@ -119,7 +130,15 @@ class Entity {
 		_type = currentGrid.grid[_gridPosition.x][_gridPosition.y] = Type.OutOfGrid;
 	}
 
-	void update(float deltaTime) {}
+	void update(float deltaTime) {
+        if(transitionTime() >= 1f) {
+            _lastPosition = _newPosition;
+            _position = _newPosition;
+        }
+        else {
+            _position = lerp(_lastPosition, _newPosition, easeInOutSine(transitionTime()));
+        }
+    }
 
 	void action() {}
 

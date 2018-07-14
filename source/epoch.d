@@ -14,6 +14,12 @@ float percentageElapsed() {
     return 1f - _timeoutTimer.time;
 }
 
+float transitionTime() {
+    if(!_lockTimer.isRunning)
+        return 1f;
+    return _lockTimer.time;
+}
+
 void startEpoch() {
     _timeoutTimer.start(TIMEOUT);
     _lockTimer.start(TRANSITION);

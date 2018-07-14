@@ -11,6 +11,7 @@ class YinYang: Enemy {
 		super(gridPosition, "yinyang", Vec2f.one * 0.5f);
 		_direction = direction;
 		_resetDirectionAuto = false;
+        showLifebar = false;
 	}
 
 	override void action() {

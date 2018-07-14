@@ -30,6 +30,7 @@ class Player: Entity {
     
     this(Vec2i gridPosition, string filePath) {
         super(gridPosition, null);
+        _sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
         type = Type.Player;
 
         _walkUpAnimation = Animation("player_walk_up", TimeMode.Loop);
@@ -41,6 +42,7 @@ class Player: Entity {
     }
 
     override void update(float deltaTime) {
+        super.update(deltaTime);
         _walkUpAnimation.update(deltaTime);
         _walkDownAnimation.update(deltaTime);
         _walkLeftAnimation.update(deltaTime);
@@ -49,7 +51,7 @@ class Player: Entity {
         if(canPlay) {
             if(isMovement(_direction)) {
                 moveOnGrid();
-                moveCameraTo(_position, .5f);
+                moveCameraTo(_newPosition, .5f);
                 registerPlayerActionOnEpoch();
             }
             else if(isFire(_direction)) {
