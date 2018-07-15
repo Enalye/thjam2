@@ -17,6 +17,7 @@ import th.player;
 import th.shot;
 import th.yinyang;
 import th.sound;
+import th.menu;
 
 Scene currentScene;
 
@@ -209,7 +210,11 @@ private final class Scene: WidgetGroup {
         if(_isVictory) {
             if(!_victoryTimer.isRunning) {
                 _isVictory = false;
-                onNewStage(_level);  
+
+                if(_level == _stages.length)
+                    onVictory();
+                else
+                    onNewStage(_level); 
             }
         }
         else {
@@ -385,10 +390,6 @@ private final class Scene: WidgetGroup {
 
     void onNextLevel() {
         _level ++;
-        if(_level == _stages.length) {
-            writeln("END OF STAGES");
-            return;
-        }
         playSound(SoundType.Clear);
         _victoryTimer.start(2f);
         _isVictory = true;
