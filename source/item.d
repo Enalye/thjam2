@@ -34,12 +34,22 @@ class Item: Entity {
 		int itemType() const { return _itemType; }
 	}
 
-	this(Vec2i gridPosition, ItemType itemType, Vec2f uncollectedScale) {
+	this(Vec2i gridPosition, ItemType itemType) {
 		super(gridPosition, getItemFilePath(itemType));
 		_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 		type = Type.Item;
 		_itemType = itemType;
-		_uncollectedScale = uncollectedScale;
+        switch(_itemType) with(ItemType) {
+        case BOMB:
+            _uncollectedScale = Vec2f(.7f, .85f);
+            break;
+        case POWER:
+            _uncollectedScale = Vec2f(0.5f, 0.5f);
+            break;
+        default:
+            _uncollectedScale = Vec2f.one;
+            break;
+        }
 	}
 
 	override void update(float deltaTime) {
