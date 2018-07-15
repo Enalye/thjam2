@@ -27,7 +27,6 @@ void startGame() {
     addWidget(currentScene);
 
     //Stages
-    _stages ~= &onStage13;
     _stages ~= &onStage00;
     _stages ~= &onStage01;
     _stages ~= &onStage02;
@@ -42,6 +41,7 @@ void startGame() {
     _stages ~= &onStage10;
     _stages ~= &onStage11;
     _stages ~= &onStage12;
+    _stages ~= &onStage13;
 
     //Launch the first one
     currentScene.onNewStage(0);
@@ -63,7 +63,7 @@ void onStage00() {
     createGrid(Vec2u(2, 1), "plaine", Vec2i(0,0), Vec2i(1,0));
     setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the {red}gap{white} to your right !");
     playMusic("stage1");
-    setBackground("plaine");
+    setBackground("title_background_1");
 }
 
 void onStage01() {
@@ -85,7 +85,7 @@ void onStage02() {
 
 void onStage03() {
     createGrid(Vec2u(4, 3), "plaine", Vec2i(0,1), Vec2i(3,1));
-    setText(Vec2f(600f, 250f), "{b}Be wary of {red}enemies{white} !{n}You can try to destroy them by firing at them, but there are other ways too...{n}");
+    setText(Vec2f(600f, 250f), "{b}Be wary of {red}enemies{white} ! Know that you do not take damage on the tori.{n}You can try to destroy them by firing at them, but there are other ways too...{n}");
 
     addEnemy(Vec2i(2, 2), EnemyType.FAIRY_PURPLE, 5);
 }
@@ -246,7 +246,7 @@ void onRespawnStage10() {
 void onStage10() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
     playMusic("stage2");
-    setBackground("netherworld");
+    setBackground("title_background_2");
 
     addEnemy(Vec2i(2, 2), EnemyType.GHOST, 5);
 
@@ -299,8 +299,60 @@ void onStage12() {
     addYinyang(Vec2i(4, 5), Direction.UP);
 }
 
+void onRespawnStage13() {
+    addItem(Vec2i(1, 1), ItemType.BOMB);
+    addItem(Vec2i(3, 11), ItemType.BOMB);
+    addItem(Vec2i(8, 8), ItemType.HEART);
+    addItem(Vec2i(5, 7), ItemType.POWER);
+    addItem(Vec2i(6, 4), ItemType.POWER);
+    addItem(Vec2i(10, 4), ItemType.POWER);
+}
+
 void onStage13() {
-    createGrid(Vec2u(12, 1), "netherworld", Vec2i(0,0), Vec2i(11,0));
+    createGrid(Vec2u(12, 12), "netherworld", Vec2i(0,0), Vec2i(0,11));
+
+    addObstacle(Vec2i(3, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 1), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 3), ObstacleType.WALL);
+    addObstacle(Vec2i(0, 1), ObstacleType.WALL);
+    addObstacle(Vec2i(0, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(0, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 4), ObstacleType.WALL);
+
+    addObstacle(Vec2i(5, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 3), ObstacleType.WALL);
+
+    addObstacle(Vec2i(6, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(7, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(8, 0), ObstacleType.WALL);
+
+    addObstacle(Vec2i(0, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(4, 10), ObstacleType.WALL);
+
+    addObstacle(Vec2i(1, 6), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 7), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 8), ObstacleType.WALL);
+
+    addObstacle(Vec2i(2, 11), ObstacleType.WALL);
+
+    addYinyang(Vec2i(0, 3), Direction.RIGHT);
+    addYinyang(Vec2i(4, 0), Direction.DOWN);
+    addYinyang(Vec2i(11, 11), Direction.LEFT);
+
+    addEnemy(Vec2i(7, 2), EnemyType.GHOST, 5);
+    addEnemy(Vec2i(7, 10), EnemyType.GHOST, 5);
+    addEnemy(Vec2i(10, 10), EnemyType.FAIRY_PURPLE, 10);
+    addEnemy(Vec2i(11, 9), EnemyType.FAIRY_PURPLE, 10);
+
+    _onRespawn = &onRespawnStage13;
 }
 
 void addEnemy(Vec2i pos, EnemyType enemyType, int life) {
@@ -315,10 +367,8 @@ void addObstacle(Vec2i pos, ObstacleType obstacleType, int id = 0) {
 }
 
 void addItem(Vec2i pos, ItemType type) {
-    if(currentGrid.at(pos) == Type.None) {
-        auto bomb = new Item(pos, type);
-        items.push(bomb);
-    }
+    auto item = new Item(pos, type);
+    items.push(item);
 }
 
 void addYinyang(Vec2i pos, Direction dir) {
@@ -365,7 +415,6 @@ private final class Scene: WidgetGroup {
 
         _reimuSmugSprite = fetch!Sprite("reimu_smug");
         _stageClearSprite = fetch!Sprite("stage_clear");
-        _backgroundSprite = fetch!Sprite("title_background");
 
         startEpoch();
     }
