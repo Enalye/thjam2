@@ -95,7 +95,7 @@ void onRespawnStage04() {
 
 void onStage04() {
     createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
-    setText(Vec2f(600f, 250f), "{b}Use the {red}bomb{white} with space to destroy the wall !{n}Be wary, it will be placed in the direction you are facing, and explodes horizontally.{n}");
+    setText(Vec2f(600f, 220f), "{b}Use the {red}bomb{white} with space to destroy the wall !{n}Be wary, it will be placed in the direction you are facing, and explodes horizontally.{n}Hint: You can alwaysreset with {red}\"R\"");
 
     addObstacle(Vec2i(3, 0), ObstacleType.LAMP);
     addObstacle(Vec2i(3, 1), ObstacleType.WALL);
@@ -393,6 +393,9 @@ private final class Scene: WidgetGroup {
                 else
                     onNewStage(_level); 
             }
+        }
+        else if(getKeyDown("reset")) {
+            onNewStage(_level);
         }
         else {
             //Update player shots

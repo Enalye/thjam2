@@ -38,6 +38,7 @@ final private class MainMenu: Widget {
         _reimuSprite = fetch!Sprite("title_reimu");
 
         bindKey("start", SDL_SCANCODE_SPACE);
+        bindKey("reset", SDL_SCANCODE_R);
         _timer.start(1.5f, TimeMode.Loop);
         playMusic("menu");
     }
