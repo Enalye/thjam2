@@ -45,8 +45,8 @@ bool canMoveTo(Type type) {
 	return type < Type.Enemy;
 }
 
-Grid createGrid(Vec2u gridSize, string tileSetPath) {
-    return currentGrid = new Grid(gridSize, centerScreen(), tileSetPath);
+Grid createGrid(Vec2u gridSize, string tileSetPath, Vec2i spawnPos, Vec2i goalPos) {
+    return currentGrid = new Grid(gridSize, centerScreen(), tileSetPath, spawnPos, goalPos);
 }
 
 void destroyGrid() {
@@ -61,7 +61,12 @@ class Grid {
 	Vec2i playerPosition;
 	Tileset tileset;
 
-	this(Vec2u dimensions, Vec2f gridPos, string tileSetPath) {
+    Vec2i spawnPos, goalPos;
+    private {
+        Sprite _gapSprite;
+    }
+
+	this(Vec2u dimensions, Vec2f gridPos, string tileSetPath, Vec2i newSpawnPos, Vec2i newGoalPos) {
 		widthAndHeight = dimensions;
 		grid = new Type[][](widthAndHeight.x, widthAndHeight.y);
 		position = gridPos;
@@ -71,6 +76,11 @@ class Grid {
 
 		tileset = fetch!Tileset(tileSetPath);
 		tileset.anchor = Vec2f.zero;
+
+        _gapSprite = fetch!Sprite("gap");
+
+        spawnPos = newSpawnPos;
+        goalPos = newGoalPos;
 	}
 
 	Type at(Vec2i position) {
@@ -86,8 +96,7 @@ class Grid {
 			grid[position.x][position.y] = type;
 		} else {
 			writeln("position ", position, " is out of widthAndHeight ", widthAndHeight);
-            assert(false);
-			//throw new Exception("Coordinate out of grid bounds!");
+            throw new Exception("Coordinate out of grid bounds!");
 		}
 	}
 
@@ -109,6 +118,9 @@ class Grid {
 
 			cpt += 20 - widthAndHeight.x;
 		}
+
+        _gapSprite.draw(getRealPosition(spawnPos));
+        _gapSprite.draw(getRealPosition(goalPos));
 	}
 
 	Vec2f computeRealPosition(Vec2i gridPosition) {
