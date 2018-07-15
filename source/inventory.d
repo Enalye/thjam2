@@ -46,4 +46,8 @@ class Inventory: Widget {
 		_items.sweepMarkedData();
 		return found;
 	}
+
+    void reset() {
+        _items.reset();
+    }
 }

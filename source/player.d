@@ -108,6 +108,8 @@ class Player: Entity {
         }
         
         //Respawn
+        _inventory.reset();
+
         playSound(SoundType.Hurt);
         isSpawning = true;
         currentGrid.set(Type.None, gridPosition);
