@@ -33,6 +33,7 @@ void startGame() {
     _stages ~= &onStage02;
     _stages ~= &onStage03;
     _stages ~= &onStage04;
+    _stages ~= &onStage04b;
     _stages ~= &onStage05;
     _stages ~= &onStage06; 
     _stages ~= &onStage07; 
@@ -90,18 +91,35 @@ void onStage03() {
 }
 
 void onRespawnStage04() {
-    addItem(Vec2i(2, 1), ItemType.BOMB);
+    addItem(Vec2i(1, 1), ItemType.BOMB);
 }
 
 void onStage04() {
     createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
-    setText(Vec2f(600f, 220f), "{b}Use the {red}bomb{white} with space to destroy the wall !{n}Be wary, it will be placed in the direction you are facing, and explodes horizontally.{n}Hint: You can alwaysreset with {red}\"R\"");
+    setText(Vec2f(600f, 220f), "{b}Use the {red}bomb{white} with space to destroy the wall !{n}Be wary, it will be placed in the direction you are facing, and explodes horizontally.{n}Hint: You can always reset with {red}\"R\"");
 
     addObstacle(Vec2i(3, 0), ObstacleType.LAMP);
     addObstacle(Vec2i(3, 1), ObstacleType.WALL);
     addObstacle(Vec2i(3, 2), ObstacleType.LAMP);
 
     addYinyang(Vec2i(0, 0), Direction.RIGHT);
+
+    _onRespawn = &onRespawnStage04;
+}
+
+void onRespawnStage04b() {
+    addItem(Vec2i(1, 1), ItemType.BOMB);
+}
+
+void onStage04b() {
+    createGrid(Vec2u(6, 3), "plaine", Vec2i(0,0), Vec2i(5,0));
+    setText(Vec2f(600f, 220f), "{b}You can always {red}shoot{white} to face towards that direction,{n}use that to place the bomb correctly{n}Don\'t forget the {red}\"R\"{white} key");
+
+    addObstacle(Vec2i(4, 0), ObstacleType.LAMP);
+    addObstacle(Vec2i(4, 1), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 1), ObstacleType.LAMP);
+    addObstacle(Vec2i(2, 2), ObstacleType.TREE);
+    addObstacle(Vec2i(4, 2), ObstacleType.LAMP);
 
     _onRespawn = &onRespawnStage04;
 }
@@ -574,7 +592,7 @@ private final class Scene: WidgetGroup {
         _stages[level]();
 
         int currentLife = 3;
-        if(player)
+        if(player && level != 0)
             currentLife = player.life;
         player = new Player(currentGrid.spawnPos, "reimu_idle");
         player.setLife(currentLife);
