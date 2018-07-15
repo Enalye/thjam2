@@ -67,10 +67,11 @@ class Explosion: Entity {
 	SetColorFilterRect _yellowToOrangeRight;
 	SetColorFilterRect _orangeToRedRight;
 
-	Timer _timer; Vec2f _size;
+	Timer _timer, _timerBeforeDelete; Vec2f _size;
 	Vec2f _colorSize;
 
 	bool _debug = false;
+	bool _deletionStarted = false;
 
 	this(Vec2i gridPosition) {
 		super(gridPosition);
@@ -156,9 +157,15 @@ class Explosion: Entity {
 				Vec2i explosionPos = Vec2i(gridPosition.x + i, gridPosition.y);
 
 				if(currentGrid.at(explosionPos) != Type.None) {
-					foreach(Entity enemy, uint index; enemies) {
+					foreach(Entity enemy; enemies) {
 						if(enemy.gridPosition == explosionPos) {
 							enemy.receiveDamage();
+						}
+					}
+
+					foreach(Entity obstacle; obstacles) {
+						if(obstacle.gridPosition == explosionPos) {
+							obstacle.receiveDamage();
 						}
 					}
 
@@ -191,9 +198,15 @@ class Explosion: Entity {
 
 			_particleSource.particles.push(particle_left);
 			_particleSource.particles.push(particle_right);
-		} else {
-			_life = 0; //Delete explosion
+		} else if(!_deletionStarted) {
+			_timerBeforeDelete.start(1f);
+			_deletionStarted = true;
 		}
+
+		if(_deletionStarted && !_timerBeforeDelete.isRunning()) {
+			_life = 0;
+		}
+
 
 		foreach(Particle particle; _particleSource.particles) {
 			_scaleDown.apply(particle, deltaTime);
@@ -206,7 +219,7 @@ class Explosion: Entity {
 		}
 
 		_particleSource.update(deltaTime);
-	}
+	} 
 
 	override void draw(bool inhibitDraw = false) {
 		_particleSource.draw();
@@ -222,5 +235,5 @@ class Explosion: Entity {
 		}
 	}
 
-	override void handleCollision(Shot shot) { }
+	override void receiveDamage(int damage) { }
 }

@@ -46,9 +46,9 @@ class Enemy: Entity {
         if(isFire(_direction)) {
             if(_shootAuthorized) {
                 float angle = angleFromFireDirection(_direction);
-                uint n = 5;
-                for(int i = 0; i < 5; ++i) {
-                    createEnemyShot(_position, Color.blue, angle + i * 360 / n, 5f, 5 * 60f);
+                uint n = 3;
+                for(int i = 0; i < n; ++i) {
+                    createEnemyShot(_position, Color(0f, 1f, 1f, 0.5f), angle + i * 360 / n, 2.5f, 5 * 60f);
                 }
                 _shootAuthorized = false;
             }

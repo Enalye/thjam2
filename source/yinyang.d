@@ -3,6 +3,8 @@ module th.yinyang;
 import grimoire;
 
 import th.enemy;
+import th.entity;
+import th.player;
 import th.grid;
 import th.input;
 import th.shot;
@@ -32,6 +34,17 @@ class YinYang: Enemy {
 	}
 
 	void bounce() {
+		Vec2i nextTileGridPosition = getUpdatedPosition(_direction);
+		foreach(Entity enemy; enemies) {
+			if(enemy.gridPosition == nextTileGridPosition) {
+				enemy.receiveDamage();
+			}
+		}
+
+		if(player.gridPosition == nextTileGridPosition) {
+			player.receiveDamage();
+		}
+
 		_direction = getOppositeDirection(_direction);
 		if(checkDirectionValid(_direction)) {
 			moveOnGrid();
