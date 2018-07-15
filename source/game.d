@@ -25,6 +25,7 @@ void startGame() {
     addWidget(currentScene);
 
     //Stages
+    _stages ~= &onStage00;
     _stages ~= &onStage01;
     _stages ~= &onStage02;
     _stages ~= &onStage03;
@@ -46,8 +47,14 @@ void onRespawn() {
     }
 }
 
+void onStage00() {
+    createGrid(Vec2u(2, 1), "plaine", Vec2i(0,0), Vec2i(1,0));
+    setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the next {red}gap{white} to your right !");
+}
+
 void onStage01() {
     createGrid(Vec2u(3, 1), "plaine", Vec2i(0,0), Vec2i(2,0));
+    setText(Vec2f(600f, 250f), "{b}That was fast !{n}{n}Unfortunately, you won't be able to use the same key {red}twice{white}{n}Try to {red}shoot{white} so you can use the {red}right key{white} again !");
 }
 
 void onStage02() {
@@ -286,6 +293,7 @@ private final class Scene: WidgetGroup {
     void onNewStage(int level) {
         removeChildren();
         reset();
+        setText(Vec2f.zero, "");
 
         _stages[level]();
 
