@@ -15,6 +15,7 @@ import th.item;
 import th.shot;
 import th.game;
 import th.sound;
+import th.menu;
 
 Player player;
 
@@ -120,6 +121,10 @@ class Player: Entity {
         onRespawn();
 
         super.receiveDamage(damage);
+
+        if(_life < 0) {
+            onGameOver();
+        }
     }
 
     override void draw(bool inhibitDraw = false) {
