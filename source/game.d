@@ -103,6 +103,7 @@ void onStage04() {
     addObstacle(Vec2i(3, 2), ObstacleType.LAMP);
 
     addYinyang(Vec2i(0, 0), Direction.RIGHT);
+    addItem(Vec2i(0,2), ItemType.HEART);
 
     _onRespawn = &onRespawnStage04;
 }
@@ -347,6 +348,7 @@ private final class Scene: WidgetGroup {
         Timer _victoryTimer;
         bool _isVictory = false;
         Sprite _reimuSmugSprite, _stageClearSprite, _backgroundSprite;
+        int _lifeAtStart = 3;
     }
 
     this() {
@@ -413,6 +415,7 @@ private final class Scene: WidgetGroup {
             }
         }
         else if(getKeyDown("reset")) {
+            player.setLife(_lifeAtStart);            
             onNewStage(_level);
         }
         else {
@@ -596,6 +599,7 @@ private final class Scene: WidgetGroup {
             currentLife = player.life;
         player = new Player(currentGrid.spawnPos, "reimu_idle");
         player.setLife(currentLife);
+        _lifeAtStart = currentLife;
         moveCameraTo(player.position, 1f);
 
         //UI
