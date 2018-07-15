@@ -1,0 +1,12 @@
+{
+	"river_down": {
+		"x": 56,
+		"y": 170,
+		"w": 93,
+		"h": 125,
+		"columns": 1,
+		"lines": 7,
+		"scalex": 0.2,
+		"scaley": 0.2
+	}
+}
