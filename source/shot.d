@@ -88,10 +88,10 @@ void createPlayerShot(Direction direction, Vec2f pos, Vec2f scale, int damage, C
 }
 
 void createEnemyShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {
-    auto shot = new Shot("enemyShot", color);
+    auto shot = new Shot("rice", color);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;    
     shot.timeToLive = timeToLive;
-    shot.spriteAngle = angle + 90;
+    shot.spriteAngle = angle;
     _enemyShots.push(shot);
 }
