@@ -3,6 +3,7 @@ import std.stdio;
 import grimoire;
 
 import th.menu;
+import th.sound;
 
 void main() {
     try {
@@ -23,6 +24,7 @@ void main() {
         setTextItalicFont(new FontCache(fetch!Font("VeraMoIt")));
         setTextBoldFont(new FontCache(fetch!Font("VeraMoBd")));
         setTextItalicBoldFont(new FontCache(fetch!Font("VeraMoBI")));
+        initializeSound();
 
         onMainMenu();
         runApplication();

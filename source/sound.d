@@ -3,7 +3,7 @@ module th.sound;
 import grimoire;
 
 enum SoundType {
-    Nope, Drop, Bounce, Clear, Clear2, Explosion, Kill, Heart, Hurt, Item, Powerup, Shot, Step,
+    Start, Nope, Drop, Bounce, Clear, Clear2, Explosion, Kill, Heart, Hurt, Item, Powerup, Shot, Step,
     Max
 }
 
@@ -18,6 +18,7 @@ void initializeSound() {
 
     uint i;
     foreach(snd; [
+        "start",
         "nope",
         "drop",
         "bounce",
