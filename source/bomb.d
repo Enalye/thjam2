@@ -80,7 +80,7 @@ class Explosion: Entity {
 
 	this(Vec2i gridPosition) {
 		super(gridPosition);
-		type = Type.Enemy;
+		type = Type.None;
 		scale = Vec2f(4f, 2f);
 
 		_size = Vec2f(5 * GRID_RATIO, GRID_RATIO);

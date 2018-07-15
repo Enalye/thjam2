@@ -35,14 +35,13 @@ class YinYang: Enemy {
 	}
 
 	void bounce() {
-		Vec2i nextTileGridPosition = getUpdatedPosition(_direction);
 		foreach(Entity enemy; enemies) {
-			if(enemy.gridPosition == nextTileGridPosition) {
+			if(enemy.gridPosition == nextGridPos) {
 				enemy.receiveDamage();
 			}
 		}
 
-		if(player.gridPosition == nextTileGridPosition) {
+		if((player.gridPosition == nextGridPos) && (currentGrid.spawnPos != nextGridPos)) {
 			player.receiveDamage();
 		}
 
@@ -52,4 +51,6 @@ class YinYang: Enemy {
             playSound(SoundType.Bounce);
 		}
 	}
+
+	override void receiveDamage(int damage = 1) {}
 }
