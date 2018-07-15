@@ -27,7 +27,6 @@ void startGame() {
     addWidget(currentScene);
 
     //Stages
-    _stages ~= &onStage13;
     _stages ~= &onStage00;
     _stages ~= &onStage01;
     _stages ~= &onStage02;
@@ -41,6 +40,7 @@ void startGame() {
     _stages ~= &onStage10;
     _stages ~= &onStage11;
     _stages ~= &onStage12;
+    _stages ~= &onStage13;
 
     //Launch the first one
     currentScene.onNewStage(0);
@@ -279,8 +279,60 @@ void onStage12() {
     addYinyang(Vec2i(4, 5), Direction.UP);
 }
 
+void onRespawnStage13() {
+    addItem(Vec2i(1, 1), ItemType.BOMB);
+    addItem(Vec2i(3, 11), ItemType.BOMB);
+    addItem(Vec2i(8, 8), ItemType.HEART);
+    addItem(Vec2i(5, 7), ItemType.POWER);
+    addItem(Vec2i(6, 4), ItemType.POWER);
+    addItem(Vec2i(10, 4), ItemType.POWER);
+}
+
 void onStage13() {
-    createGrid(Vec2u(12, 1), "netherworld", Vec2i(0,0), Vec2i(11,0));
+    createGrid(Vec2u(12, 12), "netherworld", Vec2i(0,0), Vec2i(0,11));
+
+    addObstacle(Vec2i(3, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 1), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 3), ObstacleType.WALL);
+    addObstacle(Vec2i(0, 1), ObstacleType.WALL);
+    addObstacle(Vec2i(0, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(0, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 4), ObstacleType.WALL);
+
+    addObstacle(Vec2i(5, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 3), ObstacleType.WALL);
+
+    addObstacle(Vec2i(6, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(7, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(8, 0), ObstacleType.WALL);
+
+    addObstacle(Vec2i(0, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 10), ObstacleType.WALL);
+    addObstacle(Vec2i(4, 10), ObstacleType.WALL);
+
+    addObstacle(Vec2i(1, 6), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 7), ObstacleType.WALL);
+    addObstacle(Vec2i(1, 8), ObstacleType.WALL);
+
+    addObstacle(Vec2i(2, 11), ObstacleType.WALL);
+
+    addYinyang(Vec2i(0, 3), Direction.RIGHT);
+    addYinyang(Vec2i(4, 0), Direction.DOWN);
+    addYinyang(Vec2i(11, 11), Direction.LEFT);
+
+    addEnemy(Vec2i(7, 2), EnemyType.GHOST, 5);
+    addEnemy(Vec2i(7, 10), EnemyType.GHOST, 5);
+    addEnemy(Vec2i(10, 10), EnemyType.FAIRY_PURPLE, 10);
+    addEnemy(Vec2i(11, 9), EnemyType.FAIRY_PURPLE, 10);
+
+    _onRespawn = &onRespawnStage13;
 }
 
 void addEnemy(Vec2i pos, EnemyType enemyType, int life) {
@@ -295,10 +347,8 @@ void addObstacle(Vec2i pos, ObstacleType obstacleType, int id = 0) {
 }
 
 void addItem(Vec2i pos, ItemType type) {
-    if(currentGrid.at(pos) == Type.None) {
-        auto bomb = new Item(pos, type);
-        items.push(bomb);
-    }
+    auto item = new Item(pos, type);
+    items.push(item);
 }
 
 void addYinyang(Vec2i pos, Direction dir) {
