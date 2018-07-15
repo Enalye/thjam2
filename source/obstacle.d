@@ -17,6 +17,7 @@ class Obstacle: Entity {
 		const string tombPath = "tomb";
 		
 		ObstacleType _obstacleType;
+		bool _tall = false;
 	}
 
 	this(Vec2i gridPosition, ObstacleType obstacleType) {
@@ -30,6 +31,7 @@ class Obstacle: Entity {
 			case ObstacleType.TREE:
 				filePath = treePath;
 				anchor = lowAnchor;
+				_tall = true;
 				break;
 			case ObstacleType.WALL:
 				filePath = wallPath;
@@ -64,7 +66,7 @@ class Obstacle: Entity {
 
 	override void draw(bool inhibitDraw = false) {
 		Type behindType = currentGrid.at(gridPosition - Vec2i(0, 1));
-		if(isRealInstance(behindType) && behindType != Type.Obstacle) {
+		if(_tall && isRealInstance(behindType) && behindType != Type.Obstacle) {
 			_sprite.color.a = 0.5f;
 		} else {
 			_sprite.color.a = 1f;

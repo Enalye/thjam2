@@ -83,7 +83,7 @@ class Player: Entity {
                 registerPlayerActionOnEpoch();
             }
             else if(Direction.SPACE) {
-                auto pos = getUpdatedPosition(_lastDirection);
+                auto pos = getUpdatedPosition(moveFromFireDirection(_lastDirection));
                 if(isPositionValid(pos)) {
                     if(_inventory.hasItem(ItemType.BOMB))
                         enemies.push(new Bomb(pos));

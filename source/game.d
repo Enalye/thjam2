@@ -92,6 +92,7 @@ void onStage05() {
     addObstacle(Vec2i(5, 4), ObstacleType.WALL);
 
     addYinyang(Vec2i(0, 5), Direction.RIGHT);
+    addItem(Vec2i(2, 5), ItemType.HEART);
 
     _onRespawn = &onRespawnStage05;
 }
@@ -108,8 +109,10 @@ void addObstacle(Vec2i pos, ObstacleType obstacleType) {
 }
 
 void addItem(Vec2i pos, ItemType type) {
-    auto bomb = new Item(pos, type);
-    items.push(bomb);
+    if(currentGrid.at(pos) == Type.None) {
+        auto bomb = new Item(pos, type);
+        items.push(bomb);
+    }
 }
 
 void addYinyang(Vec2i pos, Direction dir) {

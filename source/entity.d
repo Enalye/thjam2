@@ -100,6 +100,10 @@ class Entity {
 		}
 	}
 
+    ~this() {
+        type = Type.None;
+    }
+
 	void handleCollision(Shot shot) {
  		receiveDamage(shot.damage);
 	}
@@ -107,6 +111,10 @@ class Entity {
 	void receiveDamage(int damage = 1) {
 		_life -= damage;
 	}
+
+    void healUp(int healFactor) {
+        _life += healFactor;
+    }
 
 	Vec2i getUpdatedPosition(Direction direction) {
 		return gridPosition + vectorFromMovementDirection(direction);

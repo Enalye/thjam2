@@ -151,6 +151,7 @@ class Explosion: Entity {
 
 	override void update(float deltaTime) {
 		_timer.update(deltaTime);
+		_timerBeforeDelete.update(deltaTime);
 
 		if(_timer.isRunning()) {
 			for(int i = -2; i < 3; ++i) {
