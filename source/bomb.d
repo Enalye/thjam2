@@ -19,7 +19,8 @@ alias IndexedArray!(Timer, 5000u) TimersArray;
 class Bomb: Enemy {
 	private {
 		Sprite[3] _sprites;
-		int _timer;
+		Timer _timer;
+		int _count;
 	}
 
 	this(Vec2i gridPosition) {
@@ -29,27 +30,29 @@ class Bomb: Enemy {
 		super(gridPosition);
 		_sprite = _sprites[2];
 		scale = Vec2f.one;
-		_timer = 2;
-		_debug = true;
+		_timer.start(0.5f);
+		_count = 2;
 	}
 
 	override void update(float deltaTime) {
-		if(dead) {  
-			enemies.push(new Explosion(_gridPosition));
+		_timer.update(deltaTime);
+
+		if(isAlive && !_timer.isRunning) {
+			_count = max(-1, _count - 1);
+			_timer.start(0.5f);
 		}
-	}
 
-	override void action() {
-		_timer = min(0, _timer - 1);
-
-		if(_timer <= 0) {
+		if(_count < 0) {
 			_life = 0;
+			effects.push(new Explosion(_gridPosition));
 		}
 	}
+
+	override void action() {}
 
 	override void draw(bool inhibitDraw = false) {
 		if(isAlive) {
-			_sprite = _sprites[_timer];
+			_sprite = _sprites[_count];
 		}
 
 		super.draw();

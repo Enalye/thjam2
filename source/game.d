@@ -155,6 +155,7 @@ private final class Scene: WidgetGroup {
         enemies = new EntityArray;
         items = new EntityArray;
         obstacles = new EntityArray;
+        effects = new EntityArray;
         startEpoch();
     }
 
@@ -245,11 +246,20 @@ private final class Scene: WidgetGroup {
             }
         }
 
+        foreach(Entity effect, uint index; effects) {
+            effect.update(deltaTime);
+            if(!effect.isAlive) {
+                effects.markInternalForRemoval(index);
+                effect.removeFromGrid();
+            }
+        }
+
         //Cleanup data
         playerShots.sweepMarkedData();
         enemyShots.sweepMarkedData();
         enemies.sweepMarkedData();
         obstacles.sweepMarkedData();
+        effects.sweepMarkedData();
 
         updateEpoch(deltaTime);
 
@@ -283,6 +293,10 @@ private final class Scene: WidgetGroup {
 
         foreach(Entity obstacle; obstacles) {
             obstacle.draw();
+        }
+
+        foreach(Entity effect; effects) {
+            effect.draw();
         }
 
         //End scene rendering

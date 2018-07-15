@@ -8,7 +8,7 @@ import th.input;
 import th.epoch;
 import th.shot;
 
-EntityArray enemies, items, obstacles;
+EntityArray enemies, items, obstacles, effects;
 
 alias IndexedArray!(Entity, 50u) EntityArray;
 
