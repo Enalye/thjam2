@@ -153,6 +153,9 @@ private final class Scene: WidgetGroup {
         Inventory _inventory;
         GUI _arrows;
         int _level = 0;
+        Timer _victoryTimer;
+        bool _isVictory = false;
+        Sprite _reimuSmugSprite, _stageClearSprite;
     }
 
     this() {
@@ -168,6 +171,10 @@ private final class Scene: WidgetGroup {
         items = new EntityArray;
         obstacles = new EntityArray;
         effects = new EntityArray;
+
+        _reimuSmugSprite = fetch!Sprite("reimu_smug");
+        _stageClearSprite = fetch!Sprite("stage_clear");
+
         startEpoch();
     }
 
@@ -197,87 +204,95 @@ private final class Scene: WidgetGroup {
     }
 
     override void update(float deltaTime) {
-        //Update player shots
-        foreach(Shot shot, uint index; playerShots) {
-			shot.update(deltaTime);
-			if(!shot.isAlive)
-				playerShots.markInternalForRemoval(index);
-			//Handle collisions with enemies
-            foreach(Entity enemy; enemies) {
-                shot.handleCollision(enemy);
-            }
-		}
-
-        //Update enemy shots
-        foreach(Shot shot, uint index; enemyShots) {
-			shot.update(deltaTime);
-			if(!shot.isAlive)
-				enemyShots.markInternalForRemoval(index);
-			//Handle collisions with the player
-            shot.handleCollision(player);
-		}
-
-        //Player input handling
-        player.canPlay = false;
-        if(canActEpoch()) {
-            Direction input = _inputManager.getKeyPressed(); //to pass on to player
-            bool inputValid = player.checkDirectionValid(input) && player.canUseDirection(input);
-
-            if(inputValid) {
-                player.canPlay = true;
-                player.direction = input;
-            }
-            else if(!player.canUseDirection(input) && input != Direction.NONE && player.isAlive) {
-                playSound(SoundType.Nope);
+        _victoryTimer.update(deltaTime);
+        if(_isVictory) {
+            if(!_victoryTimer.isRunning) {
+                _isVictory = false;
+                onNewStage(_level);  
             }
         }
-        player.update(deltaTime);
-        if(canActEpoch())
-            player.updateGridState();
-
-        _inventory.update(deltaTime);
-
-        //Update enemies
-        foreach(Entity enemy, uint index; enemies) {
-			enemy.update(deltaTime);
-			if(!enemy.isAlive) {
-				enemies.markInternalForRemoval(index);
-                enemy.removeFromGrid();
-            }
-            else {
-                if(isEpochTimedout()) {
-                    enemy.action();
+        else {
+            //Update player shots
+            foreach(Shot shot, uint index; playerShots) {
+                shot.update(deltaTime);
+                if(!shot.isAlive)
+                    playerShots.markInternalForRemoval(index);
+                //Handle collisions with enemies
+                foreach(Entity enemy; enemies) {
+                    shot.handleCollision(enemy);
                 }
-				enemy.updateGridState();
-			}
-		}
-
-        //Update obstacles
-        foreach(Entity obstacle, uint index; obstacles) {
-            obstacle.update(deltaTime);
-            if(!obstacle.isAlive) {
-                obstacles.markInternalForRemoval(index);
-                obstacle.removeFromGrid();
             }
-        }
 
-        foreach(Entity effect, uint index; effects) {
-            effect.update(deltaTime);
-            if(!effect.isAlive) {
-                effects.markInternalForRemoval(index);
-                effect.removeFromGrid();
+            //Update enemy shots
+            foreach(Shot shot, uint index; enemyShots) {
+                shot.update(deltaTime);
+                if(!shot.isAlive)
+                    enemyShots.markInternalForRemoval(index);
+                //Handle collisions with the player
+                shot.handleCollision(player);
             }
+
+            //Player input handling
+            player.canPlay = false;
+            if(canActEpoch()) {
+                Direction input = _inputManager.getKeyPressed(); //to pass on to player
+                bool inputValid = player.checkDirectionValid(input) && player.canUseDirection(input);
+
+                if(inputValid) {
+                    player.canPlay = true;
+                    player.direction = input;
+                }
+                else if(!player.canUseDirection(input) && input != Direction.NONE && player.isAlive) {
+                    playSound(SoundType.Nope);
+                }
+            }
+            player.update(deltaTime);
+            if(canActEpoch())
+                player.updateGridState();
+
+            _inventory.update(deltaTime);
+
+            //Update enemies
+            foreach(Entity enemy, uint index; enemies) {
+                enemy.update(deltaTime);
+                if(!enemy.isAlive) {
+                    enemies.markInternalForRemoval(index);
+                    enemy.removeFromGrid();
+                }
+                else {
+                    if(isEpochTimedout()) {
+                        enemy.action();
+                    }
+                    enemy.updateGridState();
+                }
+            }
+
+            //Update obstacles
+            foreach(Entity obstacle, uint index; obstacles) {
+                obstacle.update(deltaTime);
+                if(!obstacle.isAlive) {
+                    obstacles.markInternalForRemoval(index);
+                    obstacle.removeFromGrid();
+                }
+            }
+
+            foreach(Entity effect, uint index; effects) {
+                effect.update(deltaTime);
+                if(!effect.isAlive) {
+                    effects.markInternalForRemoval(index);
+                    effect.removeFromGrid();
+                }
+            }
+
+            //Cleanup data
+            playerShots.sweepMarkedData();
+            enemyShots.sweepMarkedData();
+            enemies.sweepMarkedData();
+            obstacles.sweepMarkedData();
+            effects.sweepMarkedData();
+
+            updateEpoch(deltaTime);
         }
-
-        //Cleanup data
-        playerShots.sweepMarkedData();
-        enemyShots.sweepMarkedData();
-        enemies.sweepMarkedData();
-        obstacles.sweepMarkedData();
-        effects.sweepMarkedData();
-
-        updateEpoch(deltaTime);
-
         _camera.update(deltaTime);
         super.update(deltaTime);
     }
@@ -320,6 +335,32 @@ private final class Scene: WidgetGroup {
 		popView();
 		_camera.draw();
         super.draw();
+
+        if(_isVictory) {
+
+            Vec2f orig = centerScreen + Vec2f(200f, 0f);
+            Vec2f dest = centerScreen - Vec2f(200f, 0f);
+            Vec2f clearPos, smugPos;
+            if(_victoryTimer.time < .5f) {
+                float t = _victoryTimer.time * 2f;
+                clearPos = orig.lerp(centerScreen, easeOutSine(t));
+                _stageClearSprite.size = Vec2f(_stageClearSprite.size.x, _stageClearSprite.clip.w * easeOutQuad(t));
+               // _reimuSmugSprite.size = Vec2f(_reimuSmugSprite.size.x, _reimuSmugSprite.clip.w * easeOutQuad(t));
+                _stageClearSprite.color = Color.white;
+                _reimuSmugSprite.color = Color.white; 
+                smugPos = dest.lerp(centerScreen, easeInSine(t)) + Vec2f(0f, _stageClearSprite.clip.w);
+                _reimuSmugSprite.color = lerp(Color.white, Color.clear, 1f - easeOutSine(t));
+            }
+            else {
+                float t = (_victoryTimer.time - .5f) * 2f;
+                clearPos = dest.lerp(centerScreen, 1f - easeInSine(t));
+                _stageClearSprite.color = lerp(Color.white, Color.clear, easeInSine(t));
+                _reimuSmugSprite.color = lerp(Color.white, Color.clear, easeInSine(t));
+                smugPos = orig.lerp(centerScreen, 1f - easeOutSine(t)) + Vec2f(0f, _stageClearSprite.clip.w);
+            }
+            _reimuSmugSprite.draw(smugPos);
+            _stageClearSprite.draw(clearPos);
+        }
 	}
 
     void onNewStage(int level) {
@@ -347,7 +388,8 @@ private final class Scene: WidgetGroup {
             return;
         }
         playSound(SoundType.Clear);
-        onNewStage(_level);
+        _victoryTimer.start(2f);
+        _isVictory = true;
     }
 }
 
