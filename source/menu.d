@@ -33,7 +33,7 @@ final private class MainMenu: Widget {
         _size = screenSize;
 
         _titleSprite = fetch!Sprite("title");
-        _backgroundSprite = fetch!Sprite("title_background");
+        _backgroundSprite = fetch!Sprite("title_background_2");
         _pressSprite = fetch!Sprite("title_press");
         _reimuSprite = fetch!Sprite("title_reimu");
 
