@@ -60,8 +60,9 @@ void onRespawn() {
 
 void onStage00() {
     createGrid(Vec2u(2, 1), "plaine", Vec2i(0,0), Vec2i(1,0));
-    setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the next {red}gap{white} to your right !");
+    setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the {red}gap{white} to your right !");
     playMusic("stage1");
+    setBackground("plaine");
 }
 
 void onStage01() {
@@ -227,6 +228,7 @@ void onRespawnStage10() {
 void onStage10() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
     playMusic("stage2");
+    setBackground("netherworld");
 
     addEnemy(Vec2i(2, 2), EnemyType.GHOST, 5);
 
@@ -360,6 +362,10 @@ void onNextLevel() {
     currentScene.onNextLevel();
 }
 
+void setBackground(string name) {
+    currentScene.setBackground(name);
+}
+
 private final class Scene: WidgetGroup {
     private {
         //Modules
@@ -398,6 +404,10 @@ private final class Scene: WidgetGroup {
 
     ~this() {
         destroyGrid();
+    }
+
+    void setBackground(string name) {
+        _backgroundSprite = fetch!Sprite(name);
     }
 
     void reset() {
@@ -610,7 +620,11 @@ private final class Scene: WidgetGroup {
 
         _stages[level]();
 
+        int currentLife = 3;
+        if(player)
+            currentLife = player.life;
         player = new Player(currentGrid.spawnPos, "reimu_idle");
+        player.setLife(currentLife);
         moveCameraTo(player.position, 1f);
 
         //UI
