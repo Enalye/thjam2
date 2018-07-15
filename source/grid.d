@@ -74,6 +74,7 @@ class Grid {
     Vec2i spawnPos, goalPos;
     private {
         Sprite _gapSprite;
+        Sprite _toriSprite;
     }
 
 	this(Vec2u dimensions, Vec2f gridPos, string tileSetPath, Vec2i newSpawnPos, Vec2i newGoalPos) {
@@ -88,6 +89,7 @@ class Grid {
 		tileset.anchor = Vec2f.zero;
 
         _gapSprite = fetch!Sprite("gap");
+        _toriSprite = fetch!Sprite("tori");
 
         spawnPos = newSpawnPos;
         goalPos = newGoalPos;
@@ -129,7 +131,7 @@ class Grid {
 			cpt += 20 - widthAndHeight.x;
 		}
 
-        _gapSprite.draw(getRealPosition(spawnPos));
+        _toriSprite.draw(getRealPosition(spawnPos));
         _gapSprite.draw(getRealPosition(goalPos));
 	}
 

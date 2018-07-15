@@ -27,7 +27,7 @@ void startGame() {
     addWidget(currentScene);
 
     //Stages
-    _stages ~= &onStage11;
+    _stages ~= &onStage13;
     _stages ~= &onStage00;
     _stages ~= &onStage01;
     _stages ~= &onStage02;
@@ -39,6 +39,8 @@ void startGame() {
     _stages ~= &onStage08;
     _stages ~= &onStage09;
     _stages ~= &onStage10;
+    _stages ~= &onStage11;
+    _stages ~= &onStage12;
 
     //Launch the first one
     currentScene.onNewStage(0);
@@ -266,6 +268,19 @@ void onStage11() {
     addYinyang(Vec2i(0, 5), Direction.RIGHT);
 
     _onRespawn = &onRespawnStage11;
+}
+
+void onStage12() {
+    createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
+
+    addYinyang(Vec2i(1, 0), Direction.DOWN);
+    addYinyang(Vec2i(2, 5), Direction.UP);
+    addYinyang(Vec2i(3, 0), Direction.DOWN);
+    addYinyang(Vec2i(4, 5), Direction.UP);
+}
+
+void onStage13() {
+    createGrid(Vec2u(12, 1), "netherworld", Vec2i(0,0), Vec2i(11,0));
 }
 
 void addEnemy(Vec2i pos, EnemyType enemyType, int life) {
