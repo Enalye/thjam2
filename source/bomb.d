@@ -42,7 +42,7 @@ class Bomb: Enemy {
 	override void action() {
 		_timer = min(0, _timer - 1);
 
-		if(_timer < 0) {
+		if(_timer <= 0) {
 			_life = 0;
 		}
 	}
@@ -200,14 +200,13 @@ class Explosion: Entity {
 			_particleSource.particles.push(particle_left);
 			_particleSource.particles.push(particle_right);
 		} else if(!_deletionStarted) {
-			_timerBeforeDelete.start(1f);
+			_timerBeforeDelete.start(0.1f);
 			_deletionStarted = true;
 		}
 
 		if(_deletionStarted && !_timerBeforeDelete.isRunning()) {
 			_life = 0;
 		}
-
 
 		foreach(Particle particle; _particleSource.particles) {
 			_scaleDown.apply(particle, deltaTime);
