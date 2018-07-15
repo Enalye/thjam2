@@ -47,6 +47,10 @@ void playSound(SoundType type) {
 }
 
 void playMusic(string name) {
+    if(_music !is null) {
+        _music.stop();
+    }
+
     _music = fetch!Music(name);
     _music.volume = .6f;
     _music.play();   

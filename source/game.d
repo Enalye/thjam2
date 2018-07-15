@@ -26,12 +26,18 @@ void startGame() {
     addWidget(currentScene);
 
     //Stages
+    _stages ~= &onStage11;
     _stages ~= &onStage00;
     _stages ~= &onStage01;
     _stages ~= &onStage02;
     _stages ~= &onStage03;
     _stages ~= &onStage04;
     _stages ~= &onStage05;
+    _stages ~= &onStage06; 
+    _stages ~= &onStage07; 
+    _stages ~= &onStage08;
+    _stages ~= &onStage09;
+    _stages ~= &onStage10;
 
     //Launch the first one
     currentScene.onNewStage(0);
@@ -52,7 +58,7 @@ void onRespawn() {
 void onStage00() {
     createGrid(Vec2u(2, 1), "plaine", Vec2i(0,0), Vec2i(1,0));
     setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the next {red}gap{white} to your right !");
-    playMusic("stage");
+    playMusic("stage1");
 }
 
 void onStage01() {
@@ -91,16 +97,133 @@ void onStage04() {
     addObstacle(Vec2i(3, 1), ObstacleType.WALL);
     addObstacle(Vec2i(3, 2), ObstacleType.LAMP);
 
+    addYinyang(Vec2i(0, 0), Direction.RIGHT);
+
     _onRespawn = &onRespawnStage04;
 }
 
-void onRespawnStage05() {
+void onStage05() {
+    createGrid(Vec2u(7, 3), "plaine", Vec2i(0,1), Vec2i(6,1));
+
+    addObstacle(Vec2i(3, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 1), ObstacleType.WALL);
+    addEnemy(Vec2i(4, 1), EnemyType.FAIRY_GREEN, 5);
+    addObstacle(Vec2i(3, 2), ObstacleType.WALL);
+
+    addYinyang(Vec2i(1, 1), Direction.DOWN);
+}
+
+void onStage06() {
+    createGrid(Vec2u(7, 5), "plaine", Vec2i(0,0), Vec2i(6, 4));
+    addObstacle(Vec2i(6, 3), ObstacleType.LAMP);
+    addObstacle(Vec2i(5, 3), ObstacleType.TREE);
+    addObstacle(Vec2i(4, 3), ObstacleType.LAMP);
+    addObstacle(Vec2i(3, 3), ObstacleType.TREE);
+    addObstacle(Vec2i(2, 3), ObstacleType.LAMP);
+    addObstacle(Vec2i(1, 3), ObstacleType.TREE);
+
+    addEnemy(Vec2i(3, 1), EnemyType.FAIRY_YELLOW, 5);
+
+    addYinyang(Vec2i(0, 4), Direction.RIGHT);
+}
+
+void onStage07() {
+    createGrid(Vec2u(7, 7), "plaine", Vec2i(0,0), Vec2i(6, 6));
+
+    addObstacle(Vec2i(1, 0), ObstacleType.TREE);
+    addObstacle(Vec2i(1, 1), ObstacleType.TOMB);
+    addObstacle(Vec2i(1, 2), ObstacleType.LAMP);
+    addObstacle(Vec2i(1, 3), ObstacleType.TREE);
+    addObstacle(Vec2i(1, 4), ObstacleType.TOMB);
+    addObstacle(Vec2i(1, 5), ObstacleType.LAMP);
+
+    addEnemy(Vec2i(3, 2), EnemyType.FAIRY_GREEN, 4);
+    addEnemy(Vec2i(3, 3), EnemyType.FAIRY_PURPLE, 4);
+    addEnemy(Vec2i(3, 4), EnemyType.FAIRY_YELLOW, 4);
+}
+
+void onRespawnStage08() {
+    addItem(Vec2i(1, 0), ItemType.BOMB);
+    addItem(Vec2i(1, 2), ItemType.BOMB);
+}
+
+void onStage08() {
+    createGrid(Vec2u(7, 3), "plaine", Vec2i(0,0), Vec2i(6, 2));
+
+    addObstacle(Vec2i(1, 1), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(2, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(3, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(4, 0), ObstacleType.WALL);
+    addObstacle(Vec2i(4, 2), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 1), ObstacleType.WALL);
+
+    addYinyang(Vec2i(3, 1), Direction.RIGHT);
+
+    _onRespawn = &onRespawnStage08;
+}
+
+void onStage09() {
+    createGrid(Vec2u(10, 8), "plaine", Vec2i(0,0), Vec2i(9, 7));
+
+    addObstacle(Vec2i(1, 0), ObstacleType.RIVER, 0);
+    addObstacle(Vec2i(1, 1), ObstacleType.RIVER, 1);
+    addObstacle(Vec2i(1, 2), ObstacleType.RIVER, 2);
+    addObstacle(Vec2i(1, 3), ObstacleType.RIVER, 3);
+    addObstacle(Vec2i(1, 4), ObstacleType.RIVER, 4);
+    addObstacle(Vec2i(1, 5), ObstacleType.RIVER, 5);
+    addObstacle(Vec2i(1, 6), ObstacleType.RIVER, 6);
+
+    addEnemy(Vec2i(2, 3), EnemyType.FAIRY_GREEN, 4);
+
+    addObstacle(Vec2i(3, 1), ObstacleType.BAMBOO);
+    addObstacle(Vec2i(3, 2), ObstacleType.TOMB);
+    addObstacle(Vec2i(3, 3), ObstacleType.BAMBOO);
+    addObstacle(Vec2i(3, 4), ObstacleType.TOMB);
+    addObstacle(Vec2i(3, 5), ObstacleType.BAMBOO);
+    addObstacle(Vec2i(3, 6), ObstacleType.TOMB);
+    addObstacle(Vec2i(3, 7), ObstacleType.BAMBOO);
+
+    addEnemy(Vec2i(4, 3), EnemyType.FAIRY_PURPLE, 4);
+
+    addObstacle(Vec2i(5, 0), ObstacleType.RIVER, 0);
+    addObstacle(Vec2i(5, 1), ObstacleType.RIVER, 1);
+    addObstacle(Vec2i(5, 2), ObstacleType.RIVER, 2);
+    addObstacle(Vec2i(5, 3), ObstacleType.RIVER, 3);
+    addObstacle(Vec2i(5, 4), ObstacleType.RIVER, 4);
+    addObstacle(Vec2i(5, 5), ObstacleType.RIVER, 5);
+    addObstacle(Vec2i(5, 6), ObstacleType.RIVER, 6);
+
+    addEnemy(Vec2i(6, 3), EnemyType.FAIRY_YELLOW, 4);
+
+    addObstacle(Vec2i(7, 1), ObstacleType.BAMBOO);
+    addObstacle(Vec2i(7, 2), ObstacleType.TOMB);
+    addObstacle(Vec2i(7, 3), ObstacleType.BAMBOO);
+    addObstacle(Vec2i(7, 4), ObstacleType.TOMB);
+    addObstacle(Vec2i(7, 5), ObstacleType.BAMBOO);
+    addObstacle(Vec2i(7, 6), ObstacleType.TOMB);
+    addObstacle(Vec2i(7, 7), ObstacleType.BAMBOO);
+
+    addObstacle(Vec2i(9, 0), ObstacleType.RIVER, 0);
+    addObstacle(Vec2i(9, 1), ObstacleType.RIVER, 1);
+    addObstacle(Vec2i(9, 2), ObstacleType.RIVER, 2);
+    addObstacle(Vec2i(9, 3), ObstacleType.RIVER, 3);
+    addObstacle(Vec2i(9, 4), ObstacleType.RIVER, 4);
+    addObstacle(Vec2i(9, 5), ObstacleType.RIVER, 5);
+    addObstacle(Vec2i(9, 6), ObstacleType.RIVER, 6);
+
+    addItem(Vec2i(8, 4), ItemType.HEART);
+}
+
+void onRespawnStage10() {
     addItem(Vec2i(1, 1), ItemType.BOMB);
     addItem(Vec2i(2, 3), ItemType.POWER);
 }
 
-void onStage05() {
+void onStage10() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
+    playMusic("stage2");
 
     addEnemy(Vec2i(2, 2), EnemyType.GHOST, 5);
 
@@ -113,7 +236,35 @@ void onStage05() {
     addYinyang(Vec2i(0, 5), Direction.RIGHT);
     addItem(Vec2i(2, 5), ItemType.HEART);
 
-    _onRespawn = &onRespawnStage05;
+    _onRespawn = &onRespawnStage10;
+}
+
+void onRespawnStage11() {
+    addItem(Vec2i(5, 2), ItemType.BOMB);
+    addItem(Vec2i(5, 3), ItemType.POWER);
+}
+
+void onStage11() {
+    createGrid(Vec2u(12, 6), "netherworld", Vec2i(0,0), Vec2i(11,5));
+
+    addObstacle(Vec2i(9, 3), ObstacleType.WALL);
+    addObstacle(Vec2i(9, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(9, 5), ObstacleType.WALL);
+    addObstacle(Vec2i(10, 3), ObstacleType.WALL);
+    addObstacle(Vec2i(11, 3), ObstacleType.WALL);
+
+    addObstacle(Vec2i(4, 1), ObstacleType.TREE);
+    addObstacle(Vec2i(4, 4), ObstacleType.TREE);
+    addObstacle(Vec2i(6, 1), ObstacleType.TREE);
+    addObstacle(Vec2i(6, 4), ObstacleType.TREE);
+
+    addEnemy(Vec2i(10, 4), EnemyType.GHOST, 5);
+    addEnemy(Vec2i(10, 5), EnemyType.GHOST, 5);
+    addEnemy(Vec2i(11, 4), EnemyType.GHOST, 5);
+
+    addYinyang(Vec2i(0, 5), Direction.RIGHT);
+
+    _onRespawn = &onRespawnStage11;
 }
 
 void addEnemy(Vec2i pos, EnemyType enemyType, int life) {
@@ -122,8 +273,8 @@ void addEnemy(Vec2i pos, EnemyType enemyType, int life) {
     enemies.push(enemy);
 }
 
-void addObstacle(Vec2i pos, ObstacleType obstacleType) {
-    auto obstacle = new Obstacle(pos, obstacleType);
+void addObstacle(Vec2i pos, ObstacleType obstacleType, int id = 0) {
+    auto obstacle = new Obstacle(pos, obstacleType, id);
     obstacles.push(obstacle);
 }
 
@@ -188,6 +339,7 @@ private final class Scene: WidgetGroup {
         obstacles.reset();
         enemyShots.reset();
         playerShots.reset();
+        _onRespawn = null;
         startEpoch();
     }
 
@@ -221,6 +373,11 @@ private final class Scene: WidgetGroup {
                 foreach(Entity enemy; enemies) {
                     shot.handleCollision(enemy);
                 }
+
+            //Handle collisions with obstacles
+            foreach(Entity obstacle, uint index; obstacles) {
+                shot.handleCollision(obstacle);
+            }
             }
 
             //Update enemy shots
@@ -230,6 +387,11 @@ private final class Scene: WidgetGroup {
                     enemyShots.markInternalForRemoval(index);
                 //Handle collisions with the player
                 shot.handleCollision(player);
+
+            //Handle collisions with obstacles
+            foreach(Entity obstacle, uint index; obstacles) {
+                shot.handleCollision(obstacle);
+            }
             }
 
             //Player input handling
@@ -327,6 +489,12 @@ private final class Scene: WidgetGroup {
 
         foreach(Entity effect; effects) {
             effect.draw();
+        }
+
+
+        foreach(Entity entity; enemies) {
+            Enemy enemy = cast(Enemy)entity;
+            enemy.drawLifeBar();
         }
 
         currentGrid.drawText();

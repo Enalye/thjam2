@@ -50,6 +50,8 @@ class Entity {
         	return _scale;
         }
 
+        Vec2i nextGridPos() { return getUpdatedPosition(_direction); }
+
         Vec2i gridPosition() const { return _gridPosition; }
         Vec2i gridPosition(Vec2i newGridPosition) {
             if(_init) {
@@ -100,10 +102,6 @@ class Entity {
 		}
 	}
 
-    ~this() {
-        type = Type.None;
-    }
-
 	void handleCollision(Shot shot) {
  		receiveDamage(shot.damage);
 	}
@@ -139,12 +137,12 @@ class Entity {
         gridPosition = getUpdatedPosition(_direction);
 
         if(_debug) {
-	        writeln("Moving to ", gridPosition, " on tile with type ", currentGrid.at(gridPosition));
+	        writeln("Moving to ", gridPosition, " on tile with type ", currentGrid.at(nextGridPos));
 	    }
 	}
 
 	void removeFromGrid() {
-		_type = currentGrid.grid[_gridPosition.x][_gridPosition.y] = Type.OutOfGrid;
+		type = Type.None;
 	}
 
 	void update(float deltaTime) {
