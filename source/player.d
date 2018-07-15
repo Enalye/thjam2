@@ -14,6 +14,7 @@ import th.inventory;
 import th.item;
 import th.shot;
 import th.game;
+import th.sound;
 
 Player player;
 
@@ -64,6 +65,7 @@ class Player: Entity {
                 moveOnGrid();
                 moveCameraTo(_newPosition, .5f);
                 registerPlayerActionOnEpoch();
+                playSound(SoundType.Step);
                 if(_gridPosition == currentGrid.goalPos) {
                     writeln("Stage Clear");
                     isSpawning = true;
@@ -85,8 +87,10 @@ class Player: Entity {
             else if(Direction.SPACE) {
                 auto pos = getUpdatedPosition(moveFromFireDirection(_lastDirection));
                 if(isPositionValid(pos)) {
-                    if(_inventory.hasItem(ItemType.BOMB))
+                    if(_inventory.hasItem(ItemType.BOMB)) {
                         enemies.push(new Bomb(pos));
+                        playSound(SoundType.Drop);
+                    }
                 }
             }
         }
@@ -102,8 +106,9 @@ class Player: Entity {
         if(isSpawning) {
             return;
         }
-
+        
         //Respawn
+        playSound(SoundType.Hurt);
         isSpawning = true;
         currentGrid.set(Type.None, gridPosition);
         gridPosition = currentGrid.spawnPos;

@@ -3,8 +3,10 @@ module th.menu;
 import grimoire;
 
 import th.game;
+import th.sound;
 
 void onMainMenu() {
+    initializeSound();
     removeWidgets();
 
     addWidget(new MainMenu);

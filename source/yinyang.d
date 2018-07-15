@@ -8,6 +8,7 @@ import th.player;
 import th.grid;
 import th.input;
 import th.shot;
+import th.sound;
 
 class YinYang: Enemy {
 	this(Vec2i gridPosition, Direction direction) {
@@ -48,6 +49,7 @@ class YinYang: Enemy {
 		_direction = getOppositeDirection(_direction);
 		if(checkDirectionValid(_direction)) {
 			moveOnGrid();
+            playSound(SoundType.Bounce);
 		}
 	}
 }

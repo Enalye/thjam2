@@ -10,6 +10,7 @@ import th.input;
 import th.manualParticleSource;
 import th.player;
 import th.shot;
+import th.sound;
 
 import std.algorithm.comparison;
 import std.random;
@@ -45,6 +46,7 @@ class Bomb: Enemy {
 		if(_count < 0) {
 			_life = 0;
 			effects.push(new Explosion(_gridPosition));
+            playSound(SoundType.Explosion);
 		}
 	}
 
