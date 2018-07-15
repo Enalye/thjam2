@@ -16,6 +16,7 @@ import th.obstacle;
 import th.player;
 import th.shot;
 import th.yinyang;
+import th.sound;
 
 Scene currentScene;
 
@@ -51,6 +52,7 @@ void onRespawn() {
 void onStage00() {
     createGrid(Vec2u(2, 1), "plaine", Vec2i(0,0), Vec2i(1,0));
     setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the next {red}gap{white} to your right !");
+    playMusic("stage");
 }
 
 void onStage01() {
@@ -341,6 +343,7 @@ private final class Scene: WidgetGroup {
             writeln("END OF STAGES");
             return;
         }
+        playSound(SoundType.Clear);
         onNewStage(_level);
     }
 }
