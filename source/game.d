@@ -161,7 +161,7 @@ private final class Scene: WidgetGroup {
 	}
 
     void onStage1() {
-        createGrid(Vec2u(20, 20), "netherworld");
+        createGrid(Vec2u(20, 20), "netherworld", Vec2i(0,0), Vec2i(3,3));
         player = new Player(Vec2i(0, 0), "reimu_idle");
         moveCameraTo(player.position, 1f);
 
@@ -189,7 +189,7 @@ private final class Scene: WidgetGroup {
     }
 
     void onStage2() {
-        createGrid(Vec2u(20, 20), "plaine");
+        createGrid(Vec2u(20, 20), "plaine", Vec2i(0,0), Vec2i(3,3));
         player = new Player(Vec2i(0, 0), "reimu_omg");
         moveCameraTo(player.position, 1f);
     }
