@@ -84,7 +84,7 @@ void onStage02() {
 
 void onStage03() {
     createGrid(Vec2u(4, 3), "plaine", Vec2i(0,1), Vec2i(3,1));
-    setText(Vec2f(600f, 250f), "{b}Be wary of {red}enemies{white} !{n}You can try to destroy them by firing at them, but there are other ways too...{n}");
+    setText(Vec2f(600f, 250f), "{b}Be wary of {red}enemies{white} ! Know that you do not take damage on the tori.{n}You can try to destroy them by firing at them, but there are other ways too...{n}");
 
     addEnemy(Vec2i(2, 2), EnemyType.FAIRY_PURPLE, 5);
 }
@@ -228,7 +228,7 @@ void onRespawnStage10() {
 void onStage10() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
     playMusic("stage2");
-    setBackground("tile_background_2");
+    setBackground("title_background_2");
 
     addEnemy(Vec2i(2, 2), EnemyType.GHOST, 5);
 
