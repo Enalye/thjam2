@@ -31,7 +31,7 @@ class Player: Entity {
     }
     
     this(Vec2i gridPosition, string filePath) {
-        super(gridPosition, null);
+        super(gridPosition);
         _sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
         type = Type.Player;
 

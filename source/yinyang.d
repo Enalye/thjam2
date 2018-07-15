@@ -11,7 +11,7 @@ import th.shot;
 
 class YinYang: Enemy {
 	this(Vec2i gridPosition, Direction direction) {
-		super(gridPosition, "yinyang", Vec2f.one * 0.5f);
+		super(gridPosition, EnemyType.YINYANG, Vec2f.one * 0.5f);
 		_direction = direction;
 		_resetDirectionAuto = false;
         showLifebar = false;

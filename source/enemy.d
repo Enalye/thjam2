@@ -10,17 +10,63 @@ import th.input;
 import th.shot;
 import th.game;
 
+enum EnemyType { FAIRY_PURPLE, FAIRY_GREEN, FAIRY_YELLOW, GHOST, YINYANG, NONE }
+
 class Enemy: Entity {
-    private bool _shootAuthorized = true;
-    private int _actionsBeforeShooting = 2;
+    private {
+        EnemyType _enemyType;
+        Animation _walkUpAnimation, _walkDownAnimation, _walkLeftAnimation, _walkRightAnimation;
+
+        int _actionsBeforeShooting = 2;
+        bool _shootAuthorized = true;
+        float _lastBarRatio = 1f, _lifeRatio = 1f;
+        bool _inhibitDraw = false;
+    }
 
     bool showLifebar = true;
-    private float _lastBarRatio = 1f, _lifeRatio = 1f;
 
-    this(Vec2i gridPosition, string filePath = null, Vec2f spriteScale = Vec2f.one) {
-        super(gridPosition, filePath);
-        _sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
+    private void getAntimationFromEnemyType() {
+        final switch(_enemyType) {
+            case EnemyType.FAIRY_PURPLE:
+                _walkUpAnimation = Animation("fairyPurple_walk_up", TimeMode.Loop);
+                _walkDownAnimation = Animation("fairyPurple_walk_down", TimeMode.Loop);
+                _walkLeftAnimation = Animation("fairyPurple_walk_left", TimeMode.Loop);
+                _walkRightAnimation = Animation("fairyPurple_walk_right", TimeMode.Loop);
+                _inhibitDraw = true;
+                break;
+            case EnemyType.FAIRY_GREEN:
+                _walkUpAnimation = Animation("fairyGreen_walk_up", TimeMode.Loop);
+                _walkDownAnimation = Animation("fairyGreen_walk_down", TimeMode.Loop);
+                _walkLeftAnimation = Animation("fairyGreen_walk_left", TimeMode.Loop);
+                _walkRightAnimation = Animation("fairyGreen_walk_right", TimeMode.Loop);
+                _inhibitDraw = true;
+                break;
+            case EnemyType.FAIRY_YELLOW:
+                _walkUpAnimation = Animation("fairyYellow_walk_up", TimeMode.Loop);
+                _walkDownAnimation = Animation("fairyYellow_walk_down", TimeMode.Loop);
+                _walkLeftAnimation = Animation("fairyYellow_walk_left", TimeMode.Loop);
+                _walkRightAnimation = Animation("fairyYellow_walk_right", TimeMode.Loop);
+                _inhibitDraw = true;
+                break;
+            case EnemyType.GHOST:
+                _sprite = fetch!Sprite("bakebake");
+                break;
+            case EnemyType.YINYANG:
+                _sprite = fetch!Sprite("yinyang");
+                break;
+            case EnemyType.NONE:
+                break;
+        }
+    }
+
+    this(Vec2i gridPosition, EnemyType enemyType = EnemyType.NONE, Vec2f spriteScale = Vec2f.one) {
+        super(gridPosition);
+
         type = Type.Enemy;
+        _enemyType = enemyType;
+
+        getAntimationFromEnemyType();
+        _sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
         scale = spriteScale;
     }
 
@@ -71,7 +117,30 @@ class Enemy: Entity {
     }
 
     override void draw(bool inhibitDraw = false) {
-        super.draw(inhibitDraw);
+        super.draw(_inhibitDraw);
+
+        final switch(_lastDirection) with(Direction) {
+        case NONE:
+            _walkDownAnimation.draw(_position);
+            break;
+        case UP:
+        case FIRE_UP:
+            _walkUpAnimation.draw(_position);
+            break;
+        case DOWN:
+        case FIRE_DOWN:
+            _walkDownAnimation.draw(_position);
+            break;
+        case LEFT:
+        case FIRE_LEFT:
+            _walkLeftAnimation.draw(_position);
+            break;
+        case RIGHT:
+        case FIRE_RIGHT:
+            _walkRightAnimation.draw(_position);
+            break;
+        case SPACE:
+        }
 
         //Lifebar
         if(showLifebar) {

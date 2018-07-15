@@ -29,6 +29,7 @@ void startGame() {
     _stages ~= &onStage01;
     _stages ~= &onStage02;
     _stages ~= &onStage03;
+    _stages ~= &onStage04;
     _stages ~= &onStage05;
 
     //Launch the first one
@@ -59,6 +60,7 @@ void onStage01() {
 
 void onStage02() {
     createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
+    setText(Vec2f(600f, 250f), "{b}{red}Yin yang orbs{white} will damage you !{n}Fire at them to change the direction in which they bounce.{n}");
 
     addObstacle(Vec2i(0, 0), ObstacleType.TREE);
     addObstacle(Vec2i(0, 2), ObstacleType.TREE);
@@ -68,18 +70,26 @@ void onStage02() {
     addYinyang(Vec2i(2, 0), Direction.DOWN);
 }
 
-void onRespawnStage03() {
+void onStage03() {
+    createGrid(Vec2u(4, 3), "plaine", Vec2i(0,1), Vec2i(3,1));
+    setText(Vec2f(600f, 250f), "{b}Be wary of {red}enemies{white} !{n}You can try to destroy them by firing at them, but there are other ways too...{n}");
+
+    addEnemy(Vec2i(2, 2), EnemyType.FAIRY_PURPLE, 5);
+}
+
+void onRespawnStage04() {
     addItem(Vec2i(2, 1), ItemType.BOMB);
 }
 
-void onStage03() {
+void onStage04() {
     createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
+    setText(Vec2f(600f, 250f), "{b}Use the {red}bomb{white} with space to destroy the wall !{n}Be wary, it will be placed in the direction you are facing, and explodes horizontally.{n}");
 
     addObstacle(Vec2i(3, 0), ObstacleType.LAMP);
     addObstacle(Vec2i(3, 1), ObstacleType.WALL);
     addObstacle(Vec2i(3, 2), ObstacleType.LAMP);
 
-    _onRespawn = &onRespawnStage03;
+    _onRespawn = &onRespawnStage04;
 }
 
 void onRespawnStage05() {
@@ -90,7 +100,7 @@ void onRespawnStage05() {
 void onStage05() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
 
-    addEnemy(Vec2i(2, 2), "bakebake", 5);
+    addEnemy(Vec2i(2, 2), EnemyType.GHOST, 5);
 
     addObstacle(Vec2i(1, 5), ObstacleType.TREE);
 
@@ -104,8 +114,8 @@ void onStage05() {
     _onRespawn = &onRespawnStage05;
 }
 
-void addEnemy(Vec2i pos, string name, int life) {
-    auto enemy = new Enemy(pos, name);
+void addEnemy(Vec2i pos, EnemyType enemyType, int life) {
+    auto enemy = new Enemy(pos, enemyType);
     enemy.setLife(life);
     enemies.push(enemy);
 }
@@ -298,6 +308,8 @@ private final class Scene: WidgetGroup {
         foreach(Entity effect; effects) {
             effect.draw();
         }
+
+        currentGrid.drawText();
 
         //End scene rendering
 		popView();

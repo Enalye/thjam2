@@ -1,0 +1,43 @@
+{
+	"fairyPurple_walk_down": {
+		"x": 0,
+		"y": 0,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyPurple_walk_left": {
+		"x": 0,
+		"y": 0,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyPurple_walk_right": {
+		"x": 0,
+		"y": 750,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2,
+		"fliph": true
+	},
+	"fairyPurple_walk_up": {
+		"x": 0,
+		"y": 1476,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	}
+}
