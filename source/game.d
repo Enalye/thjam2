@@ -62,7 +62,7 @@ void onStage00() {
     createGrid(Vec2u(2, 1), "plaine", Vec2i(0,0), Vec2i(1,0));
     setText(Vec2f(600f, 250f), "{b}Welcome to the first stage !{n}To win, you just have to move to the {red}gap{white} to your right !");
     playMusic("stage1");
-    setBackground("plaine");
+    setBackground("title_background_1");
 }
 
 void onStage01() {
@@ -228,7 +228,7 @@ void onRespawnStage10() {
 void onStage10() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
     playMusic("stage2");
-    setBackground("netherworld");
+    setBackground("tile_background_2");
 
     addEnemy(Vec2i(2, 2), EnemyType.GHOST, 5);
 
@@ -397,7 +397,6 @@ private final class Scene: WidgetGroup {
 
         _reimuSmugSprite = fetch!Sprite("reimu_smug");
         _stageClearSprite = fetch!Sprite("stage_clear");
-        _backgroundSprite = fetch!Sprite("title_background");
 
         startEpoch();
     }
