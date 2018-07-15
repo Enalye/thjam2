@@ -1,0 +1,86 @@
+{
+	"player_walk_down": {
+		"x": 0,
+		"y": 0,
+		"w": 320,
+		"h": 378,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"player_walk_left": {
+		"x": 0,
+		"y": 378,
+		"w": 320,
+		"h": 378,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"player_walk_right": {
+		"x": 0,
+		"y": 378,
+		"w": 320,
+		"h": 378,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2,
+		"fliph": true
+	},
+	"player_walk_up": {
+		"x": 0,
+		"y": 719,
+		"w": 320,
+		"h": 378,
+		"columns": 3,
+		"lines": 1,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"reimu_idle": {
+		"x": 0,
+		"y": 0,
+		"w": 320,
+		"h": 378
+	},
+	"reimu_idle": {
+		"x": 320,
+		"y": 0,
+		"w": 320,
+		"h": 378
+	},
+	"reimu_idle": {
+		"x": 640,
+		"y": 0,
+		"w": 320,
+		"h": 378
+	},
+	"reimu_hurt_down": {
+		"x": 960,
+		"y": 0,
+		"w": 320,
+		"h": 378
+	},
+	"reimu_hurt_left": {
+		"x": 960,
+		"y": 378,
+		"w": 320,
+		"h": 378,
+		"fliph": true
+	},
+	"reimu_hurt_right": {
+		"x": 960,
+		"y": 378,
+		"w": 320,
+		"h": 378
+	},
+	"reimu_hurt_up": {
+		"x": 960,
+		"y": 719,
+		"w": 320,
+		"h": 378
+	}
+}

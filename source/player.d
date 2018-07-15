@@ -41,6 +41,7 @@ class Player: Entity {
         _walkRightAnimation = Animation("player_walk_right", TimeMode.Loop);
 
         _life = 3;
+        onRespawn();
     }
 
     override void update(float deltaTime) {
@@ -83,7 +84,7 @@ class Player: Entity {
             }
             else if(Direction.SPACE) {
                 auto pos = getUpdatedPosition(_lastDirection);
-                if(currentGrid.at(pos) != Type.OutOfGrid) {
+                if(isPositionValid(pos)) {
                     if(_inventory.hasItem(ItemType.BOMB))
                         enemies.push(new Bomb(pos));
                 }
@@ -102,12 +103,14 @@ class Player: Entity {
             return;
         }
 
-         //Respawn
+        //Respawn
         isSpawning = true;
         currentGrid.set(Type.None, gridPosition);
         gridPosition = currentGrid.spawnPos;
         _spawnTimer.start(2f);
         shakeCamera(Vec2f.one * 25f, 1.5f);
+        _lastDirection = Direction.RIGHT;
+        onRespawn();
 
         super.receiveDamage(damage);
     }
@@ -118,7 +121,7 @@ class Player: Entity {
 
         final switch(_lastDirection) with(Direction) {
         case NONE:
-            _walkDownAnimation.draw(_position);
+            _walkRightAnimation.draw(_position);
             break;
         case UP:
         case FIRE_UP:
