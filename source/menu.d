@@ -39,6 +39,7 @@ final private class MainMenu: Widget {
 
         bindKey("start", SDL_SCANCODE_SPACE);
         _timer.start(1.5f, TimeMode.Loop);
+        playMusic("menu");
     }
 
     override void onEvent(Event event) {
@@ -94,6 +95,7 @@ final private class GameOverScreen: Widget {
         _gameOverSprite = fetch!Sprite("title_game_over");
 
         _timer.start(1.5f, TimeMode.Loop);
+        playMusic("menu");
     }
 
     override void onEvent(Event event) {
@@ -140,6 +142,7 @@ final private class VictoryScreen: Widget {
         _victorySprite = fetch!Sprite("title_victory");
 
         _timer.start(1.5f, TimeMode.Loop);
+        playMusic("menu");
     }
 
     override void onEvent(Event event) {
