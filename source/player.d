@@ -20,9 +20,10 @@ class Player: Entity {
     private {
         Animation _walkUpAnimation, _walkDownAnimation, _walkLeftAnimation, _walkRightAnimation;
         Inventory _inventory;
+        Timer _spawnTimer;
     }
 
-    bool canPlay;
+    bool canPlay, isSpawning;
 
     @property {
         void inventory(Inventory inventory) { _inventory = inventory; }
@@ -43,16 +44,27 @@ class Player: Entity {
 
     override void update(float deltaTime) {
         super.update(deltaTime);
+        _spawnTimer.update(deltaTime);
         _walkUpAnimation.update(deltaTime);
         _walkDownAnimation.update(deltaTime);
         _walkLeftAnimation.update(deltaTime);
         _walkRightAnimation.update(deltaTime);
+
+        if(!_spawnTimer.isRunning && isSpawning) {
+            moveCameraTo(_newPosition, 1f);
+            isSpawning = false;
+        }
         
-        if(canPlay) {
+        if(canPlay && !isSpawning) {
             if(isMovement(_direction)) {
                 moveOnGrid();
                 moveCameraTo(_newPosition, .5f);
                 registerPlayerActionOnEpoch();
+                if(_gridPosition == currentGrid.goalPos) {
+                    writeln("Stage Clear");
+                    isSpawning = true;
+                    _spawnTimer.start(2f);
+                }
             }
             else if(isFire(_direction)) {
                 _lastDirection = _direction;
@@ -77,7 +89,21 @@ class Player: Entity {
         currentGrid.playerPosition = _gridPosition;
     }
 
+    override void handleCollision(int damage = 1) {
+        if(isSpawning)
+            return;
+        super.handleCollision(damage);
+        //Respawn
+        isSpawning = true;
+        gridPosition = currentGrid.spawnPos;
+        _spawnTimer.start(2f);
+        shakeCamera(Vec2f.one * 25f, 1.5f);
+    }
+
     override void draw(bool inhibitDraw = false) {
+        if(isSpawning)
+            return;
+
         final switch(_lastDirection) with(Direction) {
         case NONE:
             _walkDownAnimation.draw(_position);
