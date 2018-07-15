@@ -9,6 +9,7 @@ import th.grid;
 import th.input;
 import th.manualParticleSource;
 import th.player;
+import th.shot;
 
 import std.algorithm.comparison;
 import std.random;
@@ -16,8 +17,10 @@ import std.random;
 alias IndexedArray!(Timer, 5000u) TimersArray;
 
 class Bomb: Enemy {
-	Sprite[3] _sprites;
-	int timer;
+	private {
+		Sprite[3] _sprites;
+		int _timer;
+	}
 
 	this(Vec2i gridPosition) {
 		_sprites[0] = fetch!Sprite("bomb_1");
@@ -26,27 +29,27 @@ class Bomb: Enemy {
 		super(gridPosition);
 		_sprite = _sprites[2];
 		scale = Vec2f.one;
-		timer = 2;
+		_timer = 2;
 		_debug = true;
 	}
 
 	override void update(float deltaTime) {
-		if(dead) {
+		if(dead) {  
 			enemies.push(new Explosion(_gridPosition));
 		}
 	}
 
 	override void action() {
-		timer = min(0, timer - 1);
+		_timer = min(0, _timer - 1);
 
-		if(timer < 0) {
+		if(_timer < 0) {
 			_life = 0;
 		}
 	}
 
 	override void draw(bool inhibitDraw = false) {
 		if(isAlive) {
-			_sprite = _sprites[timer];
+			_sprite = _sprites[_timer];
 		}
 
 		super.draw();
@@ -148,24 +151,24 @@ class Explosion: Entity {
 	override void update(float deltaTime) {
 		_timer.update(deltaTime);
 
-		for(int i = -2; i < 3; ++i) {
-			Vec2i explosionPos = Vec2i(gridPosition.x + i, gridPosition.y);
+		if(_timer.isRunning()) {
+			for(int i = -2; i < 3; ++i) {
+				Vec2i explosionPos = Vec2i(gridPosition.x + i, gridPosition.y);
 
-			if(currentGrid.at(explosionPos) != Type.None) {
-				foreach(Entity enemy, uint index; enemies) {
-					if(enemy.gridPosition == explosionPos) {
-						enemy.handleCollision();
+				if(currentGrid.at(explosionPos) != Type.None) {
+					foreach(Entity enemy, uint index; enemies) {
+						if(enemy.gridPosition == explosionPos) {
+							enemy.receiveDamage();
+						}
+					}
+
+					if(player.gridPosition == explosionPos) {
+						player.receiveDamage();
 					}
 				}
-
-				if(player.gridPosition == explosionPos) {
-					player.handleCollision();
-				}
 			}
-		}
 
-        _timer.update(deltaTime);
-		if(_timer.isRunning()) {
+        	_timer.update(deltaTime);
 			Particle particle_left = new Particle;
 			particle_left.position.x = uniform!"[]"(position.x - 0.05, position.x + 0.05);
 			particle_left.position.y = uniform!"[]"(position.y - 5, position.y + 5);
@@ -188,6 +191,8 @@ class Explosion: Entity {
 
 			_particleSource.particles.push(particle_left);
 			_particleSource.particles.push(particle_right);
+		} else {
+			_life = 0; //Delete explosion
 		}
 
 		foreach(Particle particle; _particleSource.particles) {
@@ -217,5 +222,5 @@ class Explosion: Entity {
 		}
 	}
 
-	override void handleCollision(int damage = 1) { }
+	override void handleCollision(Shot shot) { }
 }

@@ -74,7 +74,7 @@ class Player: Entity {
                 Vec2f shotScale = powerUp ? Vec2f.one * 1.5f : Vec2f.one;
                 int damage = powerUp ? 2 : 1;
 
-                createPlayerShot(_position, shotScale, damage, Color.red, angle, 15f, 5 * 60f);
+                createPlayerShot(_direction, _position, shotScale, damage, Color.red, angle, 15f, 5 * 60f);
                 registerPlayerActionOnEpoch();
             }
             else if(Direction.SPACE) {
@@ -89,10 +89,11 @@ class Player: Entity {
         currentGrid.playerPosition = _gridPosition;
     }
 
-    override void handleCollision(int damage = 1) {
-        if(isSpawning)
+    override void handleCollision(Shot shot) {
+        if(isSpawning) 
             return;
-        super.handleCollision(damage);
+
+        super.handleCollision(shot);
         //Respawn
         isSpawning = true;
         gridPosition = currentGrid.spawnPos;

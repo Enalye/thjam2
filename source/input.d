@@ -24,6 +24,7 @@ bool isFire(Direction direction) {
 
 Direction getOppositeDirection(Direction direction) {
 	Direction oppositeDirection;
+
 	switch(direction) {
 		case Direction.UP:
 		oppositeDirection = Direction.DOWN;
@@ -55,6 +56,30 @@ Direction getOppositeDirection(Direction direction) {
 	}
 
 	return oppositeDirection;
+}
+
+Direction moveFromFireDirection(Direction direction) {
+	Direction moveDirection;
+
+	switch(direction) {
+		case Direction.FIRE_UP:
+		moveDirection = Direction.UP;
+		break;
+		case Direction.FIRE_DOWN:
+		moveDirection = Direction.DOWN;
+		break;
+		case Direction.FIRE_LEFT:
+		moveDirection = Direction.LEFT;
+		break;
+		case Direction.FIRE_RIGHT:
+		moveDirection = Direction.RIGHT;
+		break;
+		default:
+		moveDirection = Direction.NONE;
+		break;
+	}
+
+	return moveDirection;
 }
 
 

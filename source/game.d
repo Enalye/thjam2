@@ -12,6 +12,7 @@ import th.inventory;
 import th.item;
 import th.grid;
 import th.gui;
+import th.obstacle;
 import th.player;
 import th.shot;
 import th.yinyang;
@@ -46,8 +47,9 @@ private final class Scene: WidgetGroup {
 
         _inputManager = new InputManager;
         enemies = new EntityArray;
-        startEpoch();
         items = new EntityArray;
+        obstacles = new EntityArray;
+        startEpoch();
     }
 
     ~this() {
@@ -119,10 +121,20 @@ private final class Scene: WidgetGroup {
 			}
 		}
 
+        //Update obstacles
+        foreach(Entity obstacle, uint index; obstacles) {
+            obstacle.update(deltaTime);
+            if(!obstacle.isAlive) {
+                obstacles.markInternalForRemoval(index);
+                obstacle.removeFromGrid();
+            }
+        }
+
         //Cleanup data
         playerShots.sweepMarkedData();
         enemyShots.sweepMarkedData();
         enemies.sweepMarkedData();
+        obstacles.sweepMarkedData();
 
         updateEpoch(deltaTime);
 
@@ -144,6 +156,7 @@ private final class Scene: WidgetGroup {
             item.draw();
         }
 
+
         player.draw();
 
         foreach(Shot shot; playerShots) {
@@ -152,7 +165,11 @@ private final class Scene: WidgetGroup {
 
         foreach(Shot shot; enemyShots) {
             shot.draw();
-        }    
+        }   
+
+        foreach(Entity obstacle; obstacles) {
+            obstacle.draw();
+        }
 
         //End scene rendering
 		popView();
@@ -161,7 +178,7 @@ private final class Scene: WidgetGroup {
 	}
 
     void onStage1() {
-        createGrid(Vec2u(20, 20), "netherworld", Vec2i(0,0), Vec2i(3,3));
+        createGrid(Vec2u(20, 20), "netherworld", Vec2i(0,0), Vec2i(19,19));
         player = new Player(Vec2i(0, 0), "reimu_idle");
         moveCameraTo(player.position, 1f);
 
@@ -178,6 +195,9 @@ private final class Scene: WidgetGroup {
 
         auto yinyang = new YinYang(Vec2i(0, 5), Direction.RIGHT);
         enemies.push(yinyang);
+
+        auto tree1 = new Obstacle(Vec2i(1, 5), ObstacleType.TREE);
+        obstacles.push(tree1);
 
         //UI
         removeChildren();

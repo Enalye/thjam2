@@ -2,11 +2,13 @@ module th.entity;
 
 import grimoire;
 import std.stdio;
+
 import th.grid;
 import th.input;
 import th.epoch;
+import th.shot;
 
-EntityArray enemies, items;
+EntityArray enemies, items, obstacles;
 
 alias IndexedArray!(Entity, 50u) EntityArray;
 
@@ -91,11 +93,11 @@ class Entity {
 		}
 	}
 
-	void handleCollision(int damage = 1) {
- 		receiveDamage(damage);
+	void handleCollision(Shot shot) {
+ 		receiveDamage(shot.damage);
 	}
 
-	private void receiveDamage(int damage) {
+	void receiveDamage(int damage = 1) {
 		_life -= damage;
 	}
 

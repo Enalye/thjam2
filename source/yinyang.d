@@ -5,6 +5,7 @@ import grimoire;
 import th.enemy;
 import th.grid;
 import th.input;
+import th.shot;
 
 class YinYang: Enemy {
 	this(Vec2i gridPosition, Direction direction) {
@@ -26,12 +27,14 @@ class YinYang: Enemy {
 		}
 	}
 
-	override void handleCollision(int damage = 1) {
-		bounce();
+	override void handleCollision(Shot shot) {
+		_direction = moveFromFireDirection(shot.direction);
 	}
 
 	void bounce() {
 		_direction = getOppositeDirection(_direction);
-		moveOnGrid();
+		if(checkDirectionValid(_direction)) {
+			moveOnGrid();
+		}
 	}
 }
