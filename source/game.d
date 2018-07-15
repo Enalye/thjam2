@@ -69,7 +69,7 @@ void onStage03() {
     createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
 
     addObstacle(Vec2i(3, 0), ObstacleType.LAMP);
-    addObstacle(Vec2i(3, 1), ObstacleType.TOMB);
+    addObstacle(Vec2i(3, 1), ObstacleType.WALL);
     addObstacle(Vec2i(3, 2), ObstacleType.LAMP);
 
     _onRespawn = &onRespawnStage03;
@@ -231,6 +231,7 @@ private final class Scene: WidgetGroup {
 
         //Update obstacles
         foreach(Entity obstacle, uint index; obstacles) {
+            obstacle.update(deltaTime);
             if(!obstacle.isAlive) {
                 obstacles.markInternalForRemoval(index);
                 obstacle.removeFromGrid();
