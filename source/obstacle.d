@@ -3,8 +3,9 @@ module th.obstacle;
 import grimoire;
 import th.entity;
 import th.grid;
+import th.shot;
 
-enum ObstacleType { TREE, WALL, LAMP, TOMB }
+enum ObstacleType { TREE, WALL, LAMP, TOMB, BAMBOO, RIVER }
 
 class Obstacle: Entity {
 	private {
@@ -16,6 +17,8 @@ class Obstacle: Entity {
 		const string destroyedWallPath = "destroyedWall";
 		const string lampPath = "lamp";
 		const string tombPath = "tomb";
+		const string bambooPath = "bamboo";
+		const string riverPath = "river_down";
 		
 		ObstacleType _obstacleType;
 		Timer _destructionTimer;
@@ -23,7 +26,7 @@ class Obstacle: Entity {
 		bool _tall = false;
 	}
 
-	this(Vec2i gridPosition, ObstacleType obstacleType) {
+	this(Vec2i gridPosition, ObstacleType obstacleType, int id = 0) {
 		super(gridPosition);
 		_obstacleType = obstacleType;
 
@@ -42,28 +45,49 @@ class Obstacle: Entity {
 				break;
 			case ObstacleType.LAMP:
 				filePath = lampPath;
-				anchor = defaultAnchor;
+				anchor = lowAnchor;
+				_tall = true;
 				break;
 			case ObstacleType.TOMB:
 				filePath = tombPath;
 				anchor = defaultAnchor;
 				break;
+			case ObstacleType.BAMBOO:
+				filePath = bambooPath;
+				anchor = defaultAnchor;
+				break;
+			case ObstacleType.RIVER:
+				filePath = riverPath;
+				anchor = defaultAnchor;
+				break;
 		}
 
 		type = Type.Obstacle;
-		changeSprite(filePath, anchor);
 
-		if(_obstacleType != ObstacleType.TREE) {
+		if(_obstacleType != ObstacleType.RIVER) {
+			chargeSprite(filePath, anchor);
+		} else {
+			chargeSprite(filePath, anchor, id);
+		}
+
+		if(!_tall) {
 			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 		}
 
 		scale = Vec2f.one;
 	}
 
-	void changeSprite(string filePath, Vec2f anchor) {
+	void chargeSprite(string filePath, Vec2f anchor) {
 		_sprite = fetch!Sprite(filePath);
 		_sprite.anchor = anchor;
 	}
+
+	void chargeSprite(string filePath, Vec2f anchor, int id) {
+		Tileset tileset = fetch!Tileset(filePath);
+		_sprite = tileset.asSprites()[id];
+	}
+
+	override void handleCollision(Shot shot) { }
 
 	override void update(float deltaTime) {
 		_destructionTimer.update(deltaTime);
@@ -77,7 +101,7 @@ class Obstacle: Entity {
 
 	override void receiveDamage(int damage = 1) {
 		if(_obstacleType == ObstacleType.WALL) {
-			changeSprite(destroyedWallPath, defaultAnchor);
+			chargeSprite(destroyedWallPath, defaultAnchor);
 			_destructionTimer.start(0.2f);
 			_destructionStarted = true;
 		}

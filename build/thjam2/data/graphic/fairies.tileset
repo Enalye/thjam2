@@ -39,5 +39,87 @@
 		"lines": 2,
 		"scalex": 0.2,
 		"scaley": 0.2
+	},
+	"fairyGreen_walk_down": {
+		"x": 320,
+		"y": 0,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyGreen_walk_left": {
+		"x": 320,
+		"y": 0,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyGreen_walk_right": {
+		"x": 320,
+		"y": 750,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2,
+		"fliph": true
+	},
+	"fairyGreen_walk_up": {
+		"x": 320,
+		"y": 1476,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyYellow_walk_down": {
+		"x": 640,
+		"y": 0,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyYellow_walk_left": {
+		"x": 640,
+		"y": 0,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
+	},
+	"fairyYellow_walk_right": {
+		"x": 640,
+		"y": 750,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2,
+		"fliph": true
+	},
+	"fairyYellow_walk_up": {
+		"x": 640,
+		"y": 1476,
+		"w": 342,
+		"h": 363,
+		"columns": 1,
+		"lines": 2,
+		"scalex": 0.2,
+		"scaley": 0.2
 	}
 }

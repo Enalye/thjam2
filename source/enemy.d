@@ -17,6 +17,7 @@ class Enemy: Entity {
     private {
         EnemyType _enemyType;
         Animation _walkUpAnimation, _walkDownAnimation, _walkLeftAnimation, _walkRightAnimation;
+        Color _shotColor;
 
         int _actionsBeforeShooting = 2;
         bool _shootAuthorized = true;
@@ -34,6 +35,7 @@ class Enemy: Entity {
                 _walkLeftAnimation = Animation("fairyPurple_walk_left", TimeMode.Loop);
                 _walkRightAnimation = Animation("fairyPurple_walk_right", TimeMode.Loop);
                 _inhibitDraw = true;
+                _shotColor = Color(0.54, 0.17, 0.89, 0.5);
                 break;
             case EnemyType.FAIRY_GREEN:
                 _walkUpAnimation = Animation("fairyGreen_walk_up", TimeMode.Loop);
@@ -41,6 +43,7 @@ class Enemy: Entity {
                 _walkLeftAnimation = Animation("fairyGreen_walk_left", TimeMode.Loop);
                 _walkRightAnimation = Animation("fairyGreen_walk_right", TimeMode.Loop);
                 _inhibitDraw = true;
+                _shotColor = Color(0.20, 0.80, 0.20, 0.5);
                 break;
             case EnemyType.FAIRY_YELLOW:
                 _walkUpAnimation = Animation("fairyYellow_walk_up", TimeMode.Loop);
@@ -48,9 +51,11 @@ class Enemy: Entity {
                 _walkLeftAnimation = Animation("fairyYellow_walk_left", TimeMode.Loop);
                 _walkRightAnimation = Animation("fairyYellow_walk_right", TimeMode.Loop);
                 _inhibitDraw = true;
+                _shotColor = Color(1, 1, 0.20, 0.5);
                 break;
             case EnemyType.GHOST:
                 _sprite = fetch!Sprite("bakebake");
+                _shotColor = Color.white;
                 break;
             case EnemyType.YINYANG:
                 _sprite = fetch!Sprite("yinyang");
@@ -95,7 +100,7 @@ class Enemy: Entity {
                 float angle = angleFromFireDirection(_direction);
                 uint n = 3;
                 for(int i = 0; i < n; ++i) {
-                    createEnemyShot(_position, Color(0f, 1f, 1f, 0.5f), angle + i * 360 / n, 2.5f, 5 * 60f);
+                    createEnemyShot(_position, _shotColor, angle + i * 360 / n, 2.5f, 5 * 60f);
                 }
                 _shootAuthorized = false;
             }
@@ -105,7 +110,7 @@ class Enemy: Entity {
     }
 
     override bool checkDirectionValid(Direction direction) {
-        return (direction != Direction.NONE) && isPositionValid(getUpdatedPosition(direction)) && isTileFreeForEnemy(gridPosition + vectorFromMovementDirection(direction));
+        return (direction != Direction.NONE) && isPositionValid(getUpdatedPosition(direction)) && isTileFreeForEnemy(nextGridPos);
     }
 
     override void update(float deltaTime) {
@@ -148,7 +153,9 @@ class Enemy: Entity {
             break;
         case SPACE:
         }
+    }
 
+    void drawLifeBar() {
         //Lifebar
         if(showLifebar) {
             Vec2f lbPos = _position - Vec2f(0f, 50f);
