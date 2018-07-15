@@ -18,6 +18,12 @@ void main() {
         //Initialization
         createApplication(Vec2u(1280, 720), "Touhou Jam 2");
 
+        //Font
+        setTextStandardFont(new FontCache(fetch!Font("VeraMono")));
+        setTextItalicFont(new FontCache(fetch!Font("VeraMoIt")));
+        setTextBoldFont(new FontCache(fetch!Font("VeraMoBd")));
+        setTextItalicBoldFont(new FontCache(fetch!Font("VeraMoBI")));
+
         onMainMenu();
         runApplication();
     }
