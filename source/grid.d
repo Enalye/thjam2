@@ -49,6 +49,16 @@ Grid createGrid(Vec2u gridSize, string tileSetPath, Vec2i spawnPos, Vec2i goalPo
     return currentGrid = new Grid(gridSize, centerScreen(), tileSetPath, spawnPos, goalPos);
 }
 
+private {
+    Text _gridText;
+}
+
+void setText(Vec2f pos, string text) {
+    _gridText = new Text;
+    _gridText.position = pos;
+    _gridText.text = text;
+}
+
 void destroyGrid() {
     currentGrid = null;
 }
@@ -121,6 +131,9 @@ class Grid {
 
         _gapSprite.draw(getRealPosition(spawnPos));
         _gapSprite.draw(getRealPosition(goalPos));
+
+        if(_gridText)
+            _gridText.draw();
 	}
 
 	Vec2f computeRealPosition(Vec2i gridPosition) {
