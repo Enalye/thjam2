@@ -17,7 +17,7 @@ void main() {
         setResourceSubFolder!Music("music");
         
         //Initialization
-        createApplication(Vec2u(1280, 720), "Touhou Jam 2");
+        createApplication(Vec2u(1280, 720), "Shrine of the Miko Dancer");
 
         //Font
         setTextStandardFont(new FontCache(fetch!Font("VeraMono")));
