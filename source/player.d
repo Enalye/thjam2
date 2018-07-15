@@ -68,7 +68,6 @@ class Player: Entity {
                 registerPlayerActionOnEpoch();
                 playSound(SoundType.Step);
                 if(_gridPosition == currentGrid.goalPos) {
-                    writeln("Stage Clear");
                     isSpawning = true;
                     _spawnTimer.start(2f);
                     onNextLevel();
