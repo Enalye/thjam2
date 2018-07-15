@@ -17,6 +17,7 @@ class Shot {
     protected {
         Vec2f _position, _velocity;
         Sprite _sprite;
+        float _spriteAngle;
         float _radius = 25f;
         float _time = 0f, _timeToLive = 1f;
         bool _isAlive = true;
@@ -33,6 +34,7 @@ class Shot {
         Vec2f velocity(Vec2f newVelocity) { return _velocity = newVelocity; }
         float timeToLive(float newTTL) { return _timeToLive = newTTL; }
         int damage(int damage) { return _damage = damage; }
+        float spriteAngle(float spriteAngle) { return _spriteAngle = spriteAngle; }
     }
 
     this(string fileName, Color color = Color.white, Vec2f scale = Vec2f.one, Direction direction = Direction.NONE) {
@@ -51,6 +53,7 @@ class Shot {
     }
 
     void draw() {
+        _sprite.angle = _spriteAngle;
         _sprite.draw(_position);
     }
 
@@ -73,18 +76,20 @@ ShotArray createEnemyShotArray() {
 }
 
 void createPlayerShot(Direction direction, Vec2f pos, Vec2f scale, int damage, Color color, float angle, float speed, float timeToLive) {
-    auto shot = new Shot("shot_0", color, scale, direction);
+    auto shot = new Shot("amulet", color, scale, direction);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;
     shot.timeToLive = timeToLive;
     shot.damage = damage;
+    shot.spriteAngle = angle + 90;
     _playerShots.push(shot);
 }
 
 void createEnemyShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {
-    auto shot = new Shot("shot_0", color);
+    auto shot = new Shot("enemyShot", color);
     shot.position = pos;
     shot.velocity = Vec2f.angled(angle) * speed;    
     shot.timeToLive = timeToLive;
+    shot.spriteAngle = angle + 90;
     _enemyShots.push(shot);
 }

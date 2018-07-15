@@ -45,6 +45,8 @@ class Player: Entity {
 
     override void update(float deltaTime) {
         super.update(deltaTime);
+        type = Type.Player; // set type of current tile to player at each frame
+
         _spawnTimer.update(deltaTime);
         _walkUpAnimation.update(deltaTime);
         _walkDownAnimation.update(deltaTime);
@@ -74,7 +76,7 @@ class Player: Entity {
 
                 bool powerUp = _inventory.hasItem(ItemType.POWER);
                 Vec2f shotScale = powerUp ? Vec2f.one * 1.5f : Vec2f.one;
-                int damage = powerUp ? 2 : 1;
+                int damage = powerUp ? 3 : 1;
 
                 createPlayerShot(_direction, _position, shotScale, damage, Color.red, angle, 15f, 5 * 60f);
                 registerPlayerActionOnEpoch();
@@ -92,15 +94,22 @@ class Player: Entity {
     }
 
     override void handleCollision(Shot shot) {
-        if(isSpawning) 
-            return;
+        super.handleCollision(shot);     
+    }
 
-        super.handleCollision(shot);
-        //Respawn
+    override void receiveDamage(int damage = 1) {
+        if(isSpawning) {
+            return;
+        }
+
+         //Respawn
         isSpawning = true;
+        currentGrid.set(Type.None, gridPosition);
         gridPosition = currentGrid.spawnPos;
         _spawnTimer.start(2f);
         shakeCamera(Vec2f.one * 25f, 1.5f);
+
+        super.receiveDamage(damage);
     }
 
     override void draw(bool inhibitDraw = false) {

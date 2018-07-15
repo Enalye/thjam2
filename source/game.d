@@ -12,6 +12,7 @@ import th.inventory;
 import th.item;
 import th.grid;
 import th.gui;
+import th.obstacle;
 import th.player;
 import th.shot;
 import th.yinyang;
@@ -24,8 +25,9 @@ void startGame() {
     addWidget(currentScene);
 
     //Stages
-    _stages ~= &onStage00;
     _stages ~= &onStage01;
+    _stages ~= &onStage02;
+    _stages ~= &onStage05;
 
     //Launch the first one
     currentScene.onNewStage(0);
@@ -36,24 +38,46 @@ private {
     StageCallback[] _stages;
 }
 
-void onStage00() {
-    createGrid(Vec2u(20, 20), "netherworld", Vec2i(0,0), Vec2i(3,3));
-
-    addEnemy(Vec2i(14, 10), "ghost", 5);
-    addEnemy(Vec2i(5, 10), "ghost", 5);
-
-    addItem(Vec2i(1, 1), ItemType.BOMB);
-    addYinyang(Vec2i(0, 5), Direction.RIGHT);
-}
-
 void onStage01() {
     createGrid(Vec2u(3, 1), "plaine", Vec2i(0,0), Vec2i(2,0));
+}
+
+void onStage02() {
+    createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
+
+    addObstacle(Vec2i(0, 0), ObstacleType.TREE);
+    addObstacle(Vec2i(0, 2), ObstacleType.TREE);
+    addObstacle(Vec2i(4, 0), ObstacleType.TREE);
+    addObstacle(Vec2i(4, 2), ObstacleType.TREE);
+
+    addYinyang(Vec2i(2, 0), Direction.DOWN);
+}
+
+void onStage05() {
+    createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
+
+    addEnemy(Vec2i(2, 2), "ghost", 5);
+
+    addObstacle(Vec2i(1, 5), ObstacleType.TREE);
+
+    addObstacle(Vec2i(4, 4), ObstacleType.WALL);
+    addObstacle(Vec2i(4, 5), ObstacleType.WALL);
+    addObstacle(Vec2i(5, 4), ObstacleType.WALL);
+
+    addItem(Vec2i(1, 1), ItemType.BOMB);
+    addItem(Vec2i(2, 3), ItemType.POWER);
+    addYinyang(Vec2i(0, 5), Direction.RIGHT);
 }
 
 void addEnemy(Vec2i pos, string name, int life) {
     auto enemy = new Enemy(pos, name);
     enemy.setLife(life);
     enemies.push(enemy);
+}
+
+void addObstacle(Vec2i pos, ObstacleType obstacleType) {
+    auto obstacle = new Obstacle(pos, obstacleType);
+    obstacles.push(obstacle);
 }
 
 void addItem(Vec2i pos, ItemType type) {
@@ -93,6 +117,7 @@ private final class Scene: WidgetGroup {
         _inputManager = new InputManager;
         enemies = new EntityArray;
         items = new EntityArray;
+        obstacles = new EntityArray;
         startEpoch();
     }
 
@@ -103,6 +128,7 @@ private final class Scene: WidgetGroup {
     void reset() {
         items.reset();
         enemies.reset();
+        obstacles.reset();
         enemyShots.reset();
         playerShots.reset();
         startEpoch();
@@ -173,10 +199,19 @@ private final class Scene: WidgetGroup {
 			}
 		}
 
+        //Update obstacles
+        foreach(Entity obstacle, uint index; obstacles) {
+            if(!obstacle.isAlive) {
+                obstacles.markInternalForRemoval(index);
+                obstacle.removeFromGrid();
+            }
+        }
+
         //Cleanup data
         playerShots.sweepMarkedData();
         enemyShots.sweepMarkedData();
         enemies.sweepMarkedData();
+        obstacles.sweepMarkedData();
 
         updateEpoch(deltaTime);
 
@@ -190,15 +225,19 @@ private final class Scene: WidgetGroup {
 
         currentGrid.draw();
 
+        player.draw();
+
         foreach(Entity enemy; enemies) {
             enemy.draw();
+        }
+
+        foreach(Entity obstacle; obstacles) {
+            obstacle.draw();
         }
 
         foreach(Entity item; items) {
             item.draw();
         }
-
-        player.draw();
 
         foreach(Shot shot; playerShots) {
             shot.draw();
