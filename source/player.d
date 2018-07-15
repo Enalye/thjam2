@@ -13,6 +13,7 @@ import th.input;
 import th.inventory;
 import th.item;
 import th.shot;
+import th.game;
 
 Player player;
 
@@ -64,6 +65,7 @@ class Player: Entity {
                     writeln("Stage Clear");
                     isSpawning = true;
                     _spawnTimer.start(2f);
+                    onNextLevel();
                 }
             }
             else if(isFire(_direction)) {
