@@ -13,10 +13,13 @@ class Obstacle: Entity {
 		
 		const string treePath = "cherryTree";
 		const string wallPath = "wall";
+		const string destroyedWallPath = "destroyedWall";
 		const string lampPath = "lamp";
 		const string tombPath = "tomb";
 		
 		ObstacleType _obstacleType;
+		Timer _destructionTimer;
+		bool _destructionStarted = false;
 		bool _tall = false;
 	}
 
@@ -48,8 +51,7 @@ class Obstacle: Entity {
 		}
 
 		type = Type.Obstacle;
-		_sprite = fetch!Sprite(filePath);
-		_sprite.anchor = anchor;
+		changeSprite(filePath, anchor);
 
 		if(_obstacleType != ObstacleType.TREE) {
 			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
@@ -58,9 +60,26 @@ class Obstacle: Entity {
 		scale = Vec2f.one;
 	}
 
-	override void receiveDamage(int damage = 1) {
-		if(_obstacleType != ObstacleType.TREE) {
+	void changeSprite(string filePath, Vec2f anchor) {
+		_sprite = fetch!Sprite(filePath);
+		_sprite.anchor = anchor;
+	}
+
+	override void update(float deltaTime) {
+		_destructionTimer.update(deltaTime);
+
+		if(_destructionStarted && !_destructionTimer.isRunning()) {
 			_life = 0;
+		}
+
+		super.update(deltaTime);
+	}
+
+	override void receiveDamage(int damage = 1) {
+		if(_obstacleType == ObstacleType.WALL) {
+			changeSprite(destroyedWallPath, defaultAnchor);
+			_destructionTimer.start(0.2f);
+			_destructionStarted = true;
 		}
 	}
 
