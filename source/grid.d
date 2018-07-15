@@ -131,7 +131,9 @@ class Grid {
 
         _gapSprite.draw(getRealPosition(spawnPos));
         _gapSprite.draw(getRealPosition(goalPos));
+	}
 
+	void drawText() {
         if(_gridText)
             _gridText.draw();
 	}
