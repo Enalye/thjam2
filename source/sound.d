@@ -53,6 +53,7 @@ void playMusic(string name) {
     }
 
     _music = fetch!Music(name);
+    _music.isLooped = true;
     _music.volume = .6f;
     _music.play();   
 }
