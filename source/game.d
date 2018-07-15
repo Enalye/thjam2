@@ -155,7 +155,7 @@ private final class Scene: WidgetGroup {
         int _level = 0;
         Timer _victoryTimer;
         bool _isVictory = false;
-        Sprite _reimuSmugSprite, _stageClearSprite;
+        Sprite _reimuSmugSprite, _stageClearSprite, _backgroundSprite;
     }
 
     this() {
@@ -174,6 +174,7 @@ private final class Scene: WidgetGroup {
 
         _reimuSmugSprite = fetch!Sprite("reimu_smug");
         _stageClearSprite = fetch!Sprite("stage_clear");
+        _backgroundSprite = fetch!Sprite("title_background");
 
         startEpoch();
     }
@@ -300,6 +301,7 @@ private final class Scene: WidgetGroup {
     override void draw() {
 		pushView(_camera.view, true);
 		//Render everything in the scene here.
+        _backgroundSprite.draw(_camera.viewPosition);
 
         currentGrid.draw();
 
