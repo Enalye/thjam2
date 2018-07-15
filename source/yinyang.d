@@ -21,7 +21,7 @@ class YinYang: Enemy {
 		if(isMovement(_direction) && checkDirectionValid(_direction)) {
 			if(isOpponent(type, getNextTileType(_direction))) {
 				bounce();
-			} else {
+			} else if(checkDirectionValid(_direction)) {
 				moveOnGrid();
 			}
 		} else {

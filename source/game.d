@@ -27,6 +27,7 @@ void startGame() {
     //Stages
     _stages ~= &onStage01;
     _stages ~= &onStage02;
+    _stages ~= &onStage03;
     _stages ~= &onStage05;
 
     //Launch the first one
@@ -36,6 +37,13 @@ void startGame() {
 private {
     alias StageCallback = void function();
     StageCallback[] _stages;
+    StageCallback _onRespawn;
+}
+
+void onRespawn() {
+    if(_onRespawn !is null) {
+        _onRespawn();
+    }
 }
 
 void onStage01() {
@@ -53,10 +61,29 @@ void onStage02() {
     addYinyang(Vec2i(2, 0), Direction.DOWN);
 }
 
+void onRespawnStage03() {
+    addItem(Vec2i(2, 1), ItemType.BOMB);
+}
+
+void onStage03() {
+    createGrid(Vec2u(5, 3), "plaine", Vec2i(0,1), Vec2i(4,1));
+
+    addObstacle(Vec2i(3, 0), ObstacleType.LAMP);
+    addObstacle(Vec2i(3, 1), ObstacleType.TOMB);
+    addObstacle(Vec2i(3, 2), ObstacleType.LAMP);
+
+    _onRespawn = &onRespawnStage03;
+}
+
+void onRespawnStage05() {
+    addItem(Vec2i(1, 1), ItemType.BOMB);
+    addItem(Vec2i(2, 3), ItemType.POWER);
+}
+
 void onStage05() {
     createGrid(Vec2u(6, 6), "netherworld", Vec2i(0,0), Vec2i(5,5));
 
-    addEnemy(Vec2i(2, 2), "ghost", 5);
+    addEnemy(Vec2i(2, 2), "bakebake", 5);
 
     addObstacle(Vec2i(1, 5), ObstacleType.TREE);
 
@@ -64,9 +91,9 @@ void onStage05() {
     addObstacle(Vec2i(4, 5), ObstacleType.WALL);
     addObstacle(Vec2i(5, 4), ObstacleType.WALL);
 
-    addItem(Vec2i(1, 1), ItemType.BOMB);
-    addItem(Vec2i(2, 3), ItemType.POWER);
     addYinyang(Vec2i(0, 5), Direction.RIGHT);
+
+    _onRespawn = &onRespawnStage05;
 }
 
 void addEnemy(Vec2i pos, string name, int life) {
@@ -184,7 +211,7 @@ private final class Scene: WidgetGroup {
 
         _inventory.update(deltaTime);
 
-        //Update enemies shots
+        //Update enemies
         foreach(Entity enemy, uint index; enemies) {
 			enemy.update(deltaTime);
 			if(!enemy.isAlive) {
@@ -231,10 +258,6 @@ private final class Scene: WidgetGroup {
             enemy.draw();
         }
 
-        foreach(Entity obstacle; obstacles) {
-            obstacle.draw();
-        }
-
         foreach(Entity item; items) {
             item.draw();
         }
@@ -246,6 +269,10 @@ private final class Scene: WidgetGroup {
         foreach(Shot shot; enemyShots) {
             shot.draw();
         }    
+
+        foreach(Entity obstacle; obstacles) {
+            obstacle.draw();
+        }
 
         //End scene rendering
 		popView();

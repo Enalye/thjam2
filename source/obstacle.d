@@ -8,11 +8,13 @@ enum ObstacleType { TREE, WALL, LAMP, TOMB }
 
 class Obstacle: Entity {
 	private {
-		const Vec2f treeAnchor = Vec2f(0.5f, 0.8f);
+		const Vec2f defaultAnchor = Vec2f(0.5f, 0.5f);
+		const Vec2f lowAnchor = Vec2f(0.5f, 0.8f);
+		
 		const string treePath = "cherryTree";
-
-		const Vec2f wallAnchor = Vec2f(0.5f, 0.5f);
 		const string wallPath = "wall";
+		const string lampPath = "lamp";
+		const string tombPath = "tomb";
 		
 		ObstacleType _obstacleType;
 	}
@@ -27,19 +29,19 @@ class Obstacle: Entity {
 		final switch(_obstacleType) {
 			case ObstacleType.TREE:
 				filePath = treePath;
-				anchor = treeAnchor;
+				anchor = lowAnchor;
 				break;
 			case ObstacleType.WALL:
 				filePath = wallPath;
-				anchor = wallAnchor;
+				anchor = defaultAnchor;
 				break;
 			case ObstacleType.LAMP:
-				filePath = treePath;
-				anchor = treeAnchor;
+				filePath = lampPath;
+				anchor = defaultAnchor;
 				break;
 			case ObstacleType.TOMB:
-				filePath = treePath;
-				anchor = treeAnchor;
+				filePath = tombPath;
+				anchor = defaultAnchor;
 				break;
 		}
 
@@ -47,7 +49,7 @@ class Obstacle: Entity {
 		_sprite = fetch!Sprite(filePath);
 		_sprite.anchor = anchor;
 
-		if(_obstacleType == ObstacleType.WALL) {
+		if(_obstacleType != ObstacleType.TREE) {
 			_sprite.fit(Vec2f(GRID_RATIO, GRID_RATIO));
 		}
 
@@ -61,7 +63,8 @@ class Obstacle: Entity {
 	}
 
 	override void draw(bool inhibitDraw = false) {
-		if(isRealInstance(currentGrid.at(gridPosition - Vec2i(0, 1)))) {
+		Type behindType = currentGrid.at(gridPosition - Vec2i(0, 1));
+		if(isRealInstance(behindType) && behindType != Type.Obstacle) {
 			_sprite.color.a = 0.5f;
 		} else {
 			_sprite.color.a = 1f;

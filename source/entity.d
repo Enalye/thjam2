@@ -55,12 +55,14 @@ class Entity {
             if(_init) {
                 _init = false;
                 _gridPosition = newGridPosition;
+                currentGrid.set(_type, _gridPosition);
                 _position = getRealPosition(_gridPosition);
                 _lastPosition = _position;
                 _newPosition = _position;
                 return _gridPosition;
             }
             _gridPosition = newGridPosition;
+            currentGrid.set(_type, _gridPosition);
             _lastPosition = _position;
             _newPosition = getRealPosition(_gridPosition);
             return _gridPosition;
