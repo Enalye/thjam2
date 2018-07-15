@@ -227,6 +227,9 @@ private final class Scene: WidgetGroup {
                 player.canPlay = true;
                 player.direction = input;
             }
+            else if(!player.canUseDirection(input) && input != Direction.NONE && player.isAlive) {
+                playSound(SoundType.Nope);
+            }
         }
         player.update(deltaTime);
         if(canActEpoch())
