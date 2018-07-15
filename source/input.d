@@ -75,7 +75,7 @@ Direction moveFromFireDirection(Direction direction) {
 		moveDirection = Direction.RIGHT;
 		break;
 		default:
-		moveDirection = Direction.NONE;
+		moveDirection = direction;
 		break;
 	}
 
