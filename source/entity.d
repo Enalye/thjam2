@@ -30,6 +30,11 @@ class Entity {
         bool _init = true;
     }
 
+    void setLife(int l) {
+        _maxLife = l;
+        _life = l;
+    }
+
     @property {
     	int life() const { return _life; }
     	bool dead() { return _life <= 0; }
