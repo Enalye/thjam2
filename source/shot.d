@@ -4,6 +4,7 @@ import grimoire;
 import th.entity;
 import th.epoch;
 import th.input;
+import th.sound;
 
 alias ShotArray = IndexedArray!(Shot, 2000);
 
@@ -83,6 +84,7 @@ void createPlayerShot(Direction direction, Vec2f pos, Vec2f scale, int damage, C
     shot.damage = damage;
     shot.spriteAngle = angle + 90;
     _playerShots.push(shot);
+    playSound(SoundType.Shot);
 }
 
 void createEnemyShot(Vec2f pos, Color color, float angle, float speed, float timeToLive) {

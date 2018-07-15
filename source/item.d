@@ -6,6 +6,7 @@ import th.entity;
 import th.grid;
 import th.player;
 import th.inventory;
+import th.sound;
 
 enum ItemType { POWER, BOMB, HEART, COUNT }
 
@@ -74,6 +75,21 @@ class Item: Entity {
 			if(_collectCallback !is null) {
 				_collectCallback();
 			}
+
+            switch(_itemType) with(ItemType) {
+            case BOMB:
+                playSound(SoundType.Item);
+                break;
+            case POWER:
+                playSound(SoundType.Powerup);
+                break;
+            case HEART:
+                playSound(SoundType.Heart);
+                break;
+            default:
+                playSound(SoundType.Item);
+                break;
+            }
 		}
 
 		updateGridState();

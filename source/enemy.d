@@ -9,6 +9,7 @@ import th.entity;
 import th.input;
 import th.shot;
 import th.game;
+import th.sound;
 
 class Enemy: Entity {
     private bool _shootAuthorized = true;
@@ -68,6 +69,12 @@ class Enemy: Entity {
             _lifeRatio = cast(float)(_life) / _maxLife;
             _lastBarRatio = lerp(_lastBarRatio, _lifeRatio, deltaTime * .1f);
         }
+    }
+
+    override void receiveDamage(int damage = 1) {
+        super.receiveDamage(damage);
+        if(_life <= 0)
+            playSound(SoundType.Kill);
     }
 
     override void draw(bool inhibitDraw = false) {

@@ -10,6 +10,7 @@ import th.input;
 import th.manualParticleSource;
 import th.player;
 import th.shot;
+import th.sound;
 
 import std.algorithm.comparison;
 import std.random;
@@ -35,6 +36,7 @@ class Bomb: Enemy {
 
 	override void update(float deltaTime) {
 		if(dead) {  
+            playSound(SoundType.Explosion);
 			enemies.push(new Explosion(_gridPosition));
 		}
 	}
