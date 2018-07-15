@@ -12,7 +12,6 @@ import th.inventory;
 import th.item;
 import th.grid;
 import th.gui;
-import th.obstacle;
 import th.player;
 import th.shot;
 import th.yinyang;
@@ -23,7 +22,52 @@ void startGame() {
     removeWidgets();
     currentScene = new Scene;
     addWidget(currentScene);
-    currentScene.onStage1();
+
+    //Stages
+    _stages ~= &onStage00;
+    _stages ~= &onStage01;
+
+    //Launch the first one
+    currentScene.onNewStage(0);
+}
+
+private {
+    alias StageCallback = void function();
+    StageCallback[] _stages;
+}
+
+void onStage00() {
+    createGrid(Vec2u(20, 20), "netherworld", Vec2i(0,0), Vec2i(3,3));
+
+    addEnemy(Vec2i(14, 10), "ghost", 5);
+    addEnemy(Vec2i(5, 10), "ghost", 5);
+
+    addItem(Vec2i(1, 1), ItemType.BOMB);
+    addYinyang(Vec2i(0, 5), Direction.RIGHT);
+}
+
+void onStage01() {
+    createGrid(Vec2u(3, 1), "plaine", Vec2i(0,0), Vec2i(2,0));
+}
+
+void addEnemy(Vec2i pos, string name, int life) {
+    auto enemy = new Enemy(pos, name);
+    enemy.setLife(life);
+    enemies.push(enemy);
+}
+
+void addItem(Vec2i pos, ItemType type) {
+    auto bomb = new Item(pos, type);
+    items.push(bomb);
+}
+
+void addYinyang(Vec2i pos, Direction dir) {
+    auto yinyang = new YinYang(pos, dir);
+    enemies.push(yinyang);
+}
+
+void onNextLevel() {
+    currentScene.onNextLevel();
 }
 
 private final class Scene: WidgetGroup {
@@ -35,6 +79,7 @@ private final class Scene: WidgetGroup {
         //Sub widgets
         Inventory _inventory;
         GUI _arrows;
+        int _level = 0;
     }
 
     this() {
@@ -48,12 +93,19 @@ private final class Scene: WidgetGroup {
         _inputManager = new InputManager;
         enemies = new EntityArray;
         items = new EntityArray;
-        obstacles = new EntityArray;
         startEpoch();
     }
 
     ~this() {
         destroyGrid();
+    }
+
+    void reset() {
+        items.reset();
+        enemies.reset();
+        enemyShots.reset();
+        playerShots.reset();
+        startEpoch();
     }
 
     override void onPosition() {
@@ -121,20 +173,10 @@ private final class Scene: WidgetGroup {
 			}
 		}
 
-        //Update obstacles
-        foreach(Entity obstacle, uint index; obstacles) {
-            obstacle.update(deltaTime);
-            if(!obstacle.isAlive) {
-                obstacles.markInternalForRemoval(index);
-                obstacle.removeFromGrid();
-            }
-        }
-
         //Cleanup data
         playerShots.sweepMarkedData();
         enemyShots.sweepMarkedData();
         enemies.sweepMarkedData();
-        obstacles.sweepMarkedData();
 
         updateEpoch(deltaTime);
 
@@ -156,7 +198,6 @@ private final class Scene: WidgetGroup {
             item.draw();
         }
 
-
         player.draw();
 
         foreach(Shot shot; playerShots) {
@@ -165,11 +206,7 @@ private final class Scene: WidgetGroup {
 
         foreach(Shot shot; enemyShots) {
             shot.draw();
-        }   
-
-        foreach(Entity obstacle; obstacles) {
-            obstacle.draw();
-        }
+        }    
 
         //End scene rendering
 		popView();
@@ -177,30 +214,16 @@ private final class Scene: WidgetGroup {
         super.draw();
 	}
 
-    void onStage1() {
-        createGrid(Vec2u(20, 20), "netherworld", Vec2i(0,0), Vec2i(19,19));
-        player = new Player(Vec2i(0, 0), "reimu_idle");
+    void onNewStage(int level) {
+        removeChildren();
+        reset();
+
+        _stages[level]();
+
+        player = new Player(currentGrid.spawnPos, "reimu_idle");
         moveCameraTo(player.position, 1f);
 
-        auto enemy = new Enemy(Vec2i(14, 10), "ghost", Vec2f(0.5f, 1f));
-        enemies.push(enemy);
-        enemy = new Enemy(Vec2i(5, 10), "ghost", Vec2f(0.5f, 1f));
-        enemies.push(enemy);
-
-       /* auto power = new Item(Vec2i(1, 1), ItemType.POWER, Vec2f(0.5f, 0.5f));
-        _items.push(power);*/
-
-        auto bomb = new Item(Vec2i(1, 1), ItemType.BOMB, Vec2f(0.7f, 0.85f));
-        items.push(bomb);
-
-        auto yinyang = new YinYang(Vec2i(0, 5), Direction.RIGHT);
-        enemies.push(yinyang);
-
-        auto tree1 = new Obstacle(Vec2i(1, 5), ObstacleType.TREE);
-        obstacles.push(tree1);
-
         //UI
-        removeChildren();
         _arrows = new GUI(player);
         addChild(_arrows);
         _inventory = new Inventory(items);
@@ -208,9 +231,13 @@ private final class Scene: WidgetGroup {
         addChild(_inventory);
     }
 
-    void onStage2() {
-        createGrid(Vec2u(20, 20), "plaine", Vec2i(0,0), Vec2i(3,3));
-        player = new Player(Vec2i(0, 0), "reimu_omg");
-        moveCameraTo(player.position, 1f);
+    void onNextLevel() {
+        _level ++;
+        if(_level == _stages.length) {
+            writeln("END OF STAGES");
+            return;
+        }
+        onNewStage(_level);
     }
 }
+
